@@ -2,17 +2,17 @@
     @if ($empleado->Documentos->count())
         @foreach ($empleado->Documentos as $doc)
             <div
-                class=" bg-green-200 flex flex-col items-center justify-center relative overflow-hidden w-full border shadow-md rounded-md hover:cursor-pointer ">
-                <div class="bg-green-100 p-4 w-full flex justify-between items-center">
+                class=" bg-indigo-200 flex flex-col items-center justify-center relative overflow-hidden w-full border shadow-md rounded-md hover:cursor-pointer ">
+                <div class="bg-indigo-100 p-4 w-full flex justify-between items-center">
                     <div class="flex items-center gap-2 ">
-                        <p class="ml-4 text-lg text-green-600 leading-7 font-semibold">
+                        <p class="ml-4 text-lg text-indigo-600 leading-7 font-semibold">
                             {{ $doc->TipoDocumento->nombreTipo }}
                         </p>
                     </div>
                 </div>
                 <div class="w-full bg-white">
                     <div class="flex flex-row w-full divide-x divide-gray-400/20">
-                        <div class="px-8 py-4 bg-green-100/30 w-1/2 md:w-2/3">
+                        <div class="px-8 py-4 bg-indigo-100/30 w-1/2 md:w-2/3">
                             <p class="text-gray-500 text-xs">
                                 <i class="fas fa-calendar-check"></i>
                                 fecha de inicio:
@@ -28,7 +28,7 @@
                             </p>
                         </div>
 
-                        <div class="bg-green-100/30 w-1/2 md:w-1/3 flex justify-center space-x-2 items-center px-3">
+                        <div class="bg-indigo-100/30 w-1/2 md:w-1/3 flex justify-center space-x-2 items-center px-3">
                             <a href="{{ Storage::url($doc->ruta) }}" target="__blank" rel="noopener noreferrer"
                                 class="group flex py-2 px-2 text-center items-center rounded-md bg-blue-300 font-bold text-white cursor-pointer hover:bg-blue-400 hover:animate-pulse">
                                 <i class="fas fa-eye"></i>

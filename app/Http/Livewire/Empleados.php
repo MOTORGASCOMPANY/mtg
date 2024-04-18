@@ -38,7 +38,10 @@ class Empleados extends Component
         }
 
         if (!empty($this->search)) {
-            $query->where('nombreEmpleado', 'like', '%' . $this->search . '%');
+            // Utilizamos la relación 'empleado' para acceder al campo 'name' de la tabla 'users'
+            $query->whereHas('empleado', function ($query) {
+                $query->where('name', 'like', '%' . $this->search . '%');
+            });
         }
 
         $empleados = $query->orderBy($this->sort, $this->direction)->paginate($this->cant);

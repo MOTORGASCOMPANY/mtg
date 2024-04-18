@@ -61,6 +61,7 @@ use App\Http\Livewire\RevisionInventario;
 use App\Http\Livewire\ServicioModi;
 use App\Http\Livewire\TallerRevision;
 use App\Http\Livewire\Tablas\Tiposservicios;
+use App\Http\Livewire\TiposDocumentosEmple;
 use App\Http\Livewire\TiposManual;
 use App\Http\Livewire\Usuarios;
 use App\Http\Livewire\VistaEliminacion;
@@ -241,9 +242,11 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
 
     //Rutas para contrato trabajo
     Route::get('/ContratoTrabajo',ContratosTrabajos::class)->name('ContratoTrabajo');
-    Route::get('/Empleados',Empleados::class)->name('Empleados');
+    Route::get('/Empleados',Empleados::class)->middleware('can:Empleados')->name('Empleados');
     Route::get('/Empleado/{idEmpleado}/download',[DocumentosController::class,'downloadEmpleado'])->name('download_docEmpleado');
     Route::get('/Empleado/{idEmpleado}',EditarEmpleado::class)->name('editar-empleado');
+    Route::get('/Tablas/TiposDocumentosEmpleados',TiposDocumentosEmple::class)->name('table.TiposDocumentosEmpleados');
+
 
 
     //RUTAS PARA STREAM Y DESCARGA DE PDFS

@@ -39,8 +39,18 @@
             <table class="w-full whitespace-nowrap">
                 <thead class="bg-slate-600 border-b font-bold text-white">
                     <tr>
-                        <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left">
-                            #
+                        <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left"
+                            wire:click="order('id')">
+                            ID
+                            @if ($sort == 'id')
+                                @if ($direction == 'asc')
+                                    <i class="fas fa-sort-numeric-up-alt float-right mt-0.5"></i>
+                                @else
+                                    <i class="fas fa-sort-numeric-down-alt float-right mt-0.5"></i>
+                                @endif
+                            @else
+                                <i class="fas fa-sort float-right mt-0.5"></i>
+                            @endif
                         </th>
                         <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left">
                             Empleado
@@ -63,7 +73,7 @@
                             <td class="pl-5">
                                 <div class="flex items-center">
                                     <p class="text-indigo-900 p-1 bg-indigo-200 rounded-md">
-                                        {{ $loop->iteration }}
+                                        {{ $emple->id }} {{-- $loop->iteration --}}
                                     </p>
                                 </div>
                             </td>
@@ -101,13 +111,14 @@
                                             Contrato
                                         </span>
                                     </button>
-                                    <a wire:click="redirectContrato({{ $emple->id }})" 
-                                        class="group flex py-2 px-2 text-center items-center rounded-md bg-green-300 font-bold text-white cursor-pointer hover:bg-green-400 hover:animate-pulse">                                                        
+                                    <a wire:click="redirectContrato({{ $emple->id }})"
+                                        class="group flex py-2 px-2 text-center items-center rounded-md bg-green-300 font-bold text-white cursor-pointer hover:bg-green-400 hover:animate-pulse">
                                         <i class="fas fa-folder-plus"></i>
-                                        <span class="group-hover:opacity-100 transition-opacity bg-gray-800 px-1 text-sm text-gray-100 rounded-md absolute left-1/2-translate-x-1/2 translate-y-full opacity-0 m-4 mx-auto z-100">
-                                           Datos/Doc
+                                        <span
+                                            class="group-hover:opacity-100 transition-opacity bg-gray-800 px-1 text-sm text-gray-100 rounded-md absolute left-1/2-translate-x-1/2 translate-y-full opacity-0 m-4 mx-auto z-100">
+                                            Datos/Doc
                                         </span>
-                                    </a>  
+                                    </a>
                                     @hasanyrole('administrador|supervisor|Administrador del sistema')
                                         <button wire:click="$emit('deleteContrato',{{ $emple->id }})"
                                             class="group flex py-2 px-2 text-center items-center rounded-md bg-red-500 font-bold text-white cursor-pointer hover:bg-red-700 hover:animate-pulse">

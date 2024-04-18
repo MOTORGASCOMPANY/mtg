@@ -2,19 +2,19 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\TipoManual;
+use App\Models\TipoDocumentoEmpleado;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-class TiposManual extends Component
+class TiposDocumentosEmple extends Component
 {
-    public $sort,$direction,$cant,$search,$tipoManual;
+    public $sort,$direction,$cant,$search,$tipoDocumentoEmple;
     public $editando=false;
 
-    protected $listeners=["render","eliminarManual"];
+    protected $listeners = ['render', 'eliminarTipo'];
 
     protected $rules=[
-        "tipoManual.nombreTipo"=>"required|min:3",       
+        "tipoDocumentoEmple.nombreTipo"=>"required|min:3",       
     ];
 
     public function mount(){
@@ -23,22 +23,21 @@ class TiposManual extends Component
         $this->cant=10;       
     }
 
-
     /*public function render()
     {
-        return view('livewire.tipos-manual');
+        return view('livewire.tipos-documentos-emple');
     }*/
 
     public function render()
     {
-        $tiposDeManuales=TipoManual::
+        $tiposDocumentosEmple=TipoDocumentoEmpleado::
         where([           
             ['nombreTipo','like','%'.$this->search.'%']
         ])
         ->orWhere("id",'like','%'.$this->search.'%')
         ->orderBy($this->sort,$this->direction)
         ->paginate($this->cant);
-        return view('livewire.tipos-manual',compact("tiposDeManuales"));
+        return view('livewire.tipos-documentos-emple',compact("tiposDocumentosEmple"));
     }
 
     public function order($sort)
@@ -57,19 +56,19 @@ class TiposManual extends Component
 
     public function actualizar(){
         $this->validate();
-        $this->tipoManual->save();       
+        $this->tipoDocumentoEmple->save();       
         $this->reset(["editando"]);
         $this->emit("minAlert", ["titulo" => "¡BUEN TRABAJO!", "mensaje" => "Se actualizó correctamente el registro", "icono" => "success"]); 
     }
 
-    public function editar(TipoManual $tipoman){
-        $this->tipoManual=$tipoman;        
+    public function editar(TipoDocumentoEmpleado $tipoman){
+        $this->tipoDocumentoEmple=$tipoman;        
         $this->editando=true;
     }
 
-    public function eliminarManual($registroId)
+    public function eliminarTipo($tipoId)
     {
-        TipoManual::destroy($registroId);
+        TipoDocumentoEmpleado::destroy($tipoId);
     }
 
 }

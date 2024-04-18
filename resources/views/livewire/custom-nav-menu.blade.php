@@ -707,7 +707,24 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                         aria-label="submenu">
                                         <x-jet-responsive-nav-link class="text-sm"
                                             href="{{ route('table.TiposManual') }}" :active="request()->routeIs('table.TiposManual')">
-                                            Tipos de Areas
+                                            Tipos de areas Manual
+                                        </x-jet-responsive-nav-link>
+
+                                    </ul>
+
+                                </div>
+                                <div x-show.transition="Open" style="display:none;">
+                                    <ul x-transition:enter="transition-all ease-in-out duration-300"
+                                        x-transition:enter-start="opacity-25 max-h-0"
+                                        x-transition:enter-end="opacity-100 max-h-xl"
+                                        x-transition:leave="transition-all ease-in-out duration-300"
+                                        x-transition:leave-start="opacity-100 max-h-xl"
+                                        x-transition:leave-end="opacity-0 max-h-0"
+                                        class="mt-0.5 divide-y-2 divide-gray-600 overflow-hidden text-sm font-medium bg-gray-600 text-white shadow-inner"
+                                        aria-label="submenu">
+                                        <x-jet-responsive-nav-link class="text-sm"
+                                            href="{{ route('table.TiposDocumentosEmpleados') }}" :active="request()->routeIs('table.TiposDocumentosEmpleados')">
+                                            Tipos doc Empleados
                                         </x-jet-responsive-nav-link>
 
                                     </ul>
@@ -724,7 +741,7 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                     x-on:click="Open = !Open">
                                     <span class="inline-flex items-center space-x-6  text-sm  text-white ">
                                         <i class="fa-solid fa-flag"></i>
-                                        <span class="select-none font">Nosotros</span>
+                                        <span class="select-none font">RR.HH</span>
                                     </span>
                                     <i class="fa-solid fa-caret-down ml-1  text-white w-4 h-4" x-show="!Open"></i>
 

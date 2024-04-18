@@ -4,16 +4,16 @@
             <x-slot name="titulo">
                 <h2 class="text-indigo-600 font-bold text-3xl">
                     <i class="fa-solid fa-table fa-xl"></i>
-                    &nbsp;Tabla Manual de Funciones
+                    &nbsp;Tabla Documentos de empleados
                 </h2>
             </x-slot>
 
             <x-slot name="btnAgregar">
-                @livewire('create-tipo-manual')
+                @livewire('create-tipo-documento-empleado')
             </x-slot>
 
             <x-slot name="contenido">
-                @if (count($tiposDeManuales))
+                @if (count($tiposDocumentosEmple))
                     <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
                         <div class="py-2 inline-block min-w-full sm:px-6 lg:px-8">
                             <div class="overflow-x-auto">
@@ -66,7 +66,7 @@
                                         </tr>
                                     </thead>
                                     <tbody class="bg-white divide-y divide-gray-300">
-                                        @foreach ($tiposDeManuales as $item)
+                                        @foreach ($tiposDocumentosEmple as $item)
                                             <tr tabindex="0" class="focus:outline-none h-16 border border-slate-300 rounded hover:bg-gray-200">
                                                 <td class="pl-5">
                                                     <div class="flex items-center">
@@ -95,10 +95,11 @@
                                                                 class="px-2 py-2 bg-indigo-600 rounded-md flex items-center justify-center">
                                                                 <i class="fas fa-pen text-white"></i>
                                                             </button>
-                                                            <button wire:click="$emit('deleteRegistro',{{ $item->id }})"
+                                                            <button wire:click="$emit('deleteRegistro', {{ $item->id }})"
                                                                 class="px-2 py-2 bg-red-600 rounded-md flex items-center justify-center">
                                                                 <i class="fas fa-trash text-white"></i>
-                                                            </button>                                                        
+                                                            </button>
+                                                                                                                  
                                                     </div>
                                                 </td>
                                             </tr>
@@ -109,12 +110,12 @@
                         </div>
                     </div>
 
-                    @if ($tiposDeManuales->hasPages())
+                    @if ($tiposDocumentosEmple->hasPages())
                         <div>
                             <div class="-mx-4 sm:-mx-8 px-4 sm:px-8 py-2 overflow-x-auto">
                                 <div class="inline-block min-w-full shadow rounded-lg overflow-hidden">
                                     <div class="px-5 py-5 bg-white border-t">
-                                        {{ $tiposDeManuales->links() }}
+                                        {{ $tiposDocumentosEmple->links() }}
                                     </div>
                                 </div>
                             </div>
@@ -138,10 +139,10 @@
         <x-slot name="content">
             <div class="mb-4">
                 <x-jet-label value="Nombre:" />
-                <x-jet-input wire:model="tipoManual.nombreTipo" type="text" class="w-full" />
-                <x-jet-input-error for="tipoManual.nombreTipo" />
+                <x-jet-input wire:model="tipoDocumentoEmple.nombreTipo" type="text" class="w-full" />
+                <x-jet-input-error for="tipoDocumentoEmple.nombreTipo" />
             </div>
-            <x-jet-input-error for="tipoManual.nombreTipo" />
+            <x-jet-input-error for="tipoDocumentoEmple.nombreTipo" />
         </x-slot>
 
         <x-slot name="footer">
@@ -159,7 +160,7 @@
 
     @push('js')
         <script>
-            Livewire.on('deleteRegistro', registroId => {
+            Livewire.on('deleteRegistro', tipoId => {
                 Swal.fire({
                     title: '¿Estas seguro de eliminar este registro?',
                     text: "una vez eliminado este registro, no podras recuperarlo.",
@@ -171,7 +172,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
 
-                        Livewire.emitTo('tipos-manual', 'eliminarManual', registroId);
+                        Livewire.emitTo('tipos-documentos-emple', 'eliminarTipo', tipoId);
 
                         Swal.fire(
                             '¡Listo!',

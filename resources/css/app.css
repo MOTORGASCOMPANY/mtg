@@ -1,0 +1,19 @@
+
+@import "filepond/dist/filepond.min.css";
+@import "flatpickr/dist/flatpickr.min.css";
+@import "quill/dist/quill.snow.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.filepond--panel-root {
+    background-color:rgb(218, 225, 253); 
+    border: 2px dashed rgb(158, 136, 255);   
+}
+
+[data-filepond-item-state='processing-complete'] .filepond--item-panel {
+    background-color:rgb(28, 167, 86);
+}
+

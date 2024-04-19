@@ -44,6 +44,7 @@ use App\Http\Livewire\Logona;
 use App\Http\Livewire\ManualFunciones;
 use App\Http\Livewire\Memorandos;
 use App\Http\Livewire\NotificacionesPendientes;
+use App\Http\Livewire\Organigramas;
 use App\Http\Livewire\PreciospoInspector;
 use App\Http\Livewire\PrestamoMateriales;
 use App\Http\Livewire\Prueba;
@@ -235,6 +236,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
     Route::get('/ManualFunciones/{id}/download',[DocumentosController::class,'downloadManual'])->name('download_docManual');
     Route::get('/Tablas/TiposManual',TiposManual::class)->name('table.TiposManual');
 
+    //Ruta para Organigrama
+    Route::get('/Organigrama',Organigramas::class)->name('Organigrama');
+    Route::get('/Organigrama/{id}/download',[DocumentosController::class,'downloadOrganigrama'])->name('download_docOrganigrama');
 
     //Ruta para Memorandos
     Route::get('/Memorando',Memorandos::class)->middleware('can:Memorando')->name('Memorando');

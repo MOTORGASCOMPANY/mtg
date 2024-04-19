@@ -131,7 +131,7 @@
                         @if ($remitente == 'LOPEZ HENRIQUEZ SPASOJE BRATZO')
                             <img src="{{ public_path('/images/firmaIng.png') }}" width="250" height="100" />
                         @elseif ($remitente == 'LESLY PAMELA EGOAVIL LOMOTE')
-                            <img src="{{ public_path('/images/firmaJR.png') }}" width="250" height="100" />
+                            <img src="{{ public_path('/images/firmaAdm.jpg') }}" width="250" height="100" />
                         @else
                         @endif
                     </p>

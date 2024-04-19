@@ -52,7 +52,7 @@ class PreciospoInspector extends Component
         $this->serviciosNuevos = $precios->pluck('precio', 'idServicio')->toArray();
     }
 
-    public function guardarServicios()
+    /*public function guardarServicios()
     {
         $userId = $this->userIdSeleccionado;
         if (!empty($this->serviciosNuevos)) {  // Validar que $serviciosNuevos no esté vacío y contenga datos válidos
@@ -72,6 +72,32 @@ class PreciospoInspector extends Component
             }
             $this->serviciosNuevos = [];
         }
+        $this->editar = false;
+    }*/
+
+    public function guardarServicios()
+    {
+        $userId = $this->userIdSeleccionado;
+        foreach ($this->serviciosNuevos as $tipoServicioId => $precio) {
+            if ($precio !== null && $precio !== '' && is_numeric($precio)) {
+                PrecioInspector::updateOrCreate(//crear o actualizar precio
+                    [
+                        'idUsers' => $userId,
+                        'idServicio' => $tipoServicioId,
+                    ],
+                    [
+                        'precio' => $precio,
+                        'estado' => 0,
+                    ]
+                );
+            } else {
+                // Si el precio es nulo o esta vacio elimina el registro
+                PrecioInspector::where('idUsers', $userId)
+                    ->where('idServicio', $tipoServicioId)
+                    ->delete();
+            }
+        }
+        $this->serviciosNuevos = [];
         $this->editar = false;
     }
 }

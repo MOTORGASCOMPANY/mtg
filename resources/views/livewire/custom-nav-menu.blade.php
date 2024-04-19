@@ -54,7 +54,7 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
             </svg>
         </button>
         <a href="{{ route('dashboard') }}" class="py-2 h-1/2">
-            <img src="{{ asset('images/images/logona.png') }}" width="120" />
+            <img src="{{ asset('images/images/logo.png') }}" width="120" />
         </a>
 
 
@@ -774,7 +774,7 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                         class="mt-0.5 divide-y-2 divide-gray-600 overflow-hidden text-sm font-medium bg-gray-600 text-white shadow-inner"
                                         aria-label="submenu">
                                         <x-jet-responsive-nav-link class="text-sm"
-                                            href="" :active="request()->routeIs('')">
+                                            href="Organigrama" :active="request()->routeIs('Organigrama')">
                                             Organigrama
                                         </x-jet-responsive-nav-link>
 

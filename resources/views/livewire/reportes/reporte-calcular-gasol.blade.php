@@ -99,6 +99,8 @@
             </div>
         </div>
 
+
+        
         <!-- Tabla detallado -->
         @if (isset($reportePorInspector))
             <div wire.model="resultados">
@@ -197,7 +199,7 @@
                                                         </td>
                                                         <td
                                                             class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
-                                                            @if ($item->tiposervicio == 'Chip por deterioro')
+                                                           {{-- @if ($item->tiposervicio == 'Chip por deterioro')
                                                                 @php
                                                                     $ubicacionParts = explode(
                                                                         '/',
@@ -211,6 +213,8 @@
                                                             @else
                                                                 {{ $item->placa ?? 'En tramite' }}
                                                             @endif
+                                                            --}}
+                                                            {{ $item->placa ?? 'En tramite' }}
                                                         </td>
                                                         <td
                                                             class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">

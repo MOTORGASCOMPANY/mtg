@@ -52,7 +52,7 @@
     <!-- Start header -->
     <header class="top-header">
         <div class="header_top">
-            
+
             <div class="container">
                 <div class="row">
                     <div class="logo_section">
@@ -68,42 +68,48 @@
                             <li><a class="join_bt" href="/login">Iniciar Sesión</a></li>
                         </ul>
                     </div>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3904.084587580836!2d-77.07317922412324!3d-11.89919823917244!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105d152df9e46bd%3A0x5492153214317236!2sEcr%20Development!5e0!3m2!1ses-419!2spe!4v1713802165444!5m2!1ses-419!2spe" width="400" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <div id="ubicacion"></div>
+                    <button onclick="obtenerUbicacion()">Obtener Ubicación</button>
+                
                 </div>
             </div>
-        
+
         </div>
         <div class="header_bottom">
-          <div class="container">
-            <div class="col-sm-12">
-                <div class="menu_orange_section" style="background: #ff880e;">
-                   <nav class="navbar header-nav navbar-expand-lg"> 
-                     <div class="menu_section">
-                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-wd" aria-controls="navbar-wd" aria-expanded="false" aria-label="Toggle navigation">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-                <div class="collapse navbar-collapse justify-content-end" id="navbar-wd">
-                    <ul class="navbar-nav">
-                        <li><a class="nav-link active" href="index">Inicio</a></li>
-                        <li><a class="nav-link" href="about">Nosotros</a></li>
-                        <li><a class="nav-link" href="services">Servicios</a></li>
-                        <li><a class="nav-link" href="contact">Contacto</a></li>
-                    </ul>
-                </div>
-                     </div>
-                 </nav>
-                 <div class="search-box">
-                    <input type="text" class="search-txt" placeholder="Search">
-                    <a class="search-btn">
-                        <img src="images/images/search_icon.png" alt="#" />
-                    </a>
-                </div> 
+            <div class="container">
+                <div class="col-sm-12">
+                    <div class="menu_orange_section" style="background: #ff880e;">
+                        <nav class="navbar header-nav navbar-expand-lg">
+                            <div class="menu_section">
+                                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                                    data-target="#navbar-wd" aria-controls="navbar-wd" aria-expanded="false"
+                                    aria-label="Toggle navigation">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </button>
+                                <div class="collapse navbar-collapse justify-content-end" id="navbar-wd">
+                                    <ul class="navbar-nav">
+                                        <li><a class="nav-link active" href="index">Inicio</a></li>
+                                        <li><a class="nav-link" href="about">Nosotros</a></li>
+                                        <li><a class="nav-link" href="services">Servicios</a></li>
+                                        <li><a class="nav-link" href="contact">Contacto</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </nav>
+                        <div class="search-box">
+                            <input type="text" class="search-txt" placeholder="Search">
+                            <a class="search-btn">
+                                <img src="images/images/search_icon.png" alt="#" />
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
-          </div>
         </div>
-        
+
     </header>
     <!-- End header -->
 
@@ -120,15 +126,15 @@
         </div>
     </div>
     <!-- End Banner -->
-    
-   <!-- section -->
+
+    <!-- section -->
     <div class="section layout_padding">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
                     <div class="full">
                         <div class="heading_main text_align_center">
-                           <h2><span class="theme_color"></span>Contacto</h2>    
+                            <h2><span class="theme_color"></span>Contacto</h2>
                         </div>
                     </div>
                 </div>
@@ -168,7 +174,7 @@
         </div>
     </div>
     <!-- end contact_form -->
-   
+
     <!-- Start Footer -->
     <footer class="footer-box">
         <div class="container">
@@ -214,8 +220,8 @@
                                     <ul class="full">
                                         <li><img src="images/images/i5.png"><span>Urb. Lucyana jr. j.s.
                                                 Chocano<br>Frente al parque Feliciana</span></li>
-                                        <li><a href="mailto:admin@motorgasperu.com"><img src="images/images//i6.png" 
-                                            alt="#" />admin@motorgasperu.com</a></li>
+                                        <li><a href="mailto:admin@motorgasperu.com"><img src="images/images//i6.png"
+                                                    alt="#" />admin@motorgasperu.com</a></li>
                                         <li><a href="https://wa.me/931719175"><img src="images/images/i7.png"
                                                     alt="#" />931719175</a></li>
                                     </ul>
@@ -250,7 +256,7 @@
 
     <!-- ALL JS FILES -->
     <script src="js/jquery.min.js"></script>
-	<script src="js/popper.min.js"></script>
+    <script src="js/popper.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <!-- ALL PLUGINS -->
     <script src="js/jquery.magnific-popup.min.js"></script>
@@ -262,7 +268,23 @@
     <script src="js/isotope.min.js"></script>
     <script src="js/images-loded.min.js"></script>
     <script src="js/custom.js"></script>
-	
+    
+    <script>
+        function obtenerUbicacion() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(mostrarUbicacion);
+            } else {
+                alert("La geolocalización no está soportada por este navegador.");
+            }
+        }
+
+        function mostrarUbicacion(position) {
+            var ubicacion = document.getElementById("ubicacion");
+            ubicacion.innerHTML = "Latitud: " + position.coords.latitude + "<br>Longitud: " + position.coords.longitude;
+        }
+    </script>
+    
+
 </body>
 
 </html>

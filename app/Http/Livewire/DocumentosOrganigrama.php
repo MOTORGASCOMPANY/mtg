@@ -32,7 +32,7 @@ class DocumentosOrganigrama extends Component
         $this->openEdit=true;
     }
 
-    public function editardoc(){
+    public function editarDocumento(){
 
         $rules=[
             "doc.documento"=>"required",   

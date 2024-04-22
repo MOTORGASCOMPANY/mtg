@@ -58,6 +58,7 @@ use App\Http\Livewire\Reportes\ReporteFotosPorInspector;
 use App\Http\Livewire\Reportes\ReporteGeneralGnv;
 use App\Http\Livewire\Reportes\ReporteMateriales;
 use App\Http\Livewire\Reportes\ReporteServiciosPorInspector;
+use App\Http\Livewire\Reportes\ReportesMtg;
 use App\Http\Livewire\RevisionInventario;
 use App\Http\Livewire\ServicioModi;
 use App\Http\Livewire\TallerRevision;
@@ -217,6 +218,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
     Route::get('/Reporte-calcular-chip',ReporteCalcularChip::class)->name('reportes.reporteCalcularChip');
     Route::get('/Reporte-calcular-detalle',ReporteCalcularGasol::class)->name('reportes.reporteCalcularGasol');
     Route::get('/Reporte-actualizar-precio',ActualizarPrecios::class)->name('reportes.reporteActualizarPrecio');
+    Route::get('/Reporte-MTG',ReportesMtg::class)->name('reporteMTG');
 
 
     //Prueba Fotos

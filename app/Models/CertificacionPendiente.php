@@ -59,13 +59,27 @@ class CertificacionPendiente extends Model
     }
 
     //Scope para reporte 
-    public function scopeEstado($query, $estado)
+    public function scopeIdTalleres($query, $search): void
     {
-        return $query->where('estado', $estado);
+        if ($search) {
+            $query->whereHas('Taller', function (Builder $query) use ($search) {
+                $query->whereIn('id', $search);
+            });
+        }
     }
 
-    public function scopeFiltrarPorFechas($query, $fechaInicio, $fechaFin)
+    public function scopeIdInspectores(Builder $query, $search): void
     {
-        return $query->whereBetween('created_at', [$fechaInicio, $fechaFin]);
+        if ($search) {
+            $query->whereIn('idInspector', $search);
+        }
+    }   
+    
+
+    public function scopeRangoFecha(Builder $query, string $desde, string $hasta): void
+    {
+        if ($desde && $hasta) {
+            $query->whereBetween('created_at', [$desde . ' 00:00', $hasta . ' 23:59']);
+        }
     }
 }

@@ -593,7 +593,7 @@ a.navbar-brand {
 	color: #ff880e;
 }
 .theme_color2 {
-	color: #d48d8d;
+	color: #ff880e;
 }
 
 .menu_orange_section {
@@ -1967,7 +1967,7 @@ p {
 .heading_main h2::after {
     width: 250px;
     height: 8px;
-    background: #d48d8d; /* */
+    background: #ff880e; /* */
     content: "";
     display: block;
     transform: skew(-30deg);
@@ -2347,7 +2347,7 @@ ul.bottom_menu li {
 }
 .field2 input {
     width: 100%;
-    background: #d48d8d;
+    background: #ff880e;
     min-height: 65px;
     border: none;
     margin: 15px 0;
@@ -2408,7 +2408,7 @@ ul.bottom_menu li {
 .contact_form_inner2 button:hover,
 .contact_form_inner2 button:focus {
     color: #050000;
-    background: #d48d8d;
+    background: #ff880e;
 }
 
 

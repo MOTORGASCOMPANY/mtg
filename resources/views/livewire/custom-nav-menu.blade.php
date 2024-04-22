@@ -707,7 +707,7 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                         aria-label="submenu">
                                         <x-jet-responsive-nav-link class="text-sm"
                                             href="{{ route('table.TiposManual') }}" :active="request()->routeIs('table.TiposManual')">
-                                            Tipos de areas Manual
+                                            Tipos areas Manual
                                         </x-jet-responsive-nav-link>
 
                                     </ul>
@@ -791,7 +791,7 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                         aria-label="submenu">
                                         <x-jet-responsive-nav-link class="text-sm"
                                             href="{{ route('Empleados') }}" :active="request()->routeIs('Empleados')">
-                                            Contratos
+                                            Contrato
                                         </x-jet-responsive-nav-link>
 
                                     </ul>
@@ -827,7 +827,7 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                         aria-label="submenu">
                                         <x-jet-responsive-nav-link class="text-sm"
                                             href="{{ route('ListaMemorando') }}" :active="request()->routeIs('ListaMemorando')">
-                                            Lista Memorandums
+                                            Memorandums
                                         </x-jet-responsive-nav-link>
 
                                     </ul>

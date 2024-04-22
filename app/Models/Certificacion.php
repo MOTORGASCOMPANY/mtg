@@ -136,7 +136,23 @@ class Certificacion extends Model
         }
     }
 
-    //Scope para reporte 
+    public function scopeIdTalleres($query, $search): void
+    {
+        if ($search) {
+            $query->whereHas('Taller', function (Builder $query) use ($search) {
+                $query->whereIn('id', $search);
+            });
+        }
+    }
+
+    public function scopeIdInspectores(Builder $query, $search): void
+    {
+        if ($search) {
+            $query->whereIn('idInspector', $search);
+        }
+    }
+
+    //Scope para reporte  
     public function scopePagado($query)
     {
         return $query->where('pagado', 0);
@@ -212,6 +228,42 @@ class Certificacion extends Model
             return $hoja;
         } elseif (in_array($idServicio, [5])) {
             $hoja = Certificacion::find($this->attributes['id'])->Materiales->where('idTipoMaterial', 4)->first();
+            return $hoja;
+        } else {
+            return $hoja;
+        }
+    }
+
+    public function getNumHojaAttribute()
+    {
+        $idServicio = $this->Servicio->tipoServicio->id;
+        $hoja = null;
+        if (in_array($idServicio, [1, 2, 7, 8, 10, 12])) {
+            $hoja = Certificacion::find($this->attributes['id'])->Materiales->where('idTipoMaterial', 1)->first()->numSerie;
+            return $hoja;
+        } elseif (in_array($idServicio, [3, 4, 9, 13])) {
+            $hoja = Certificacion::find($this->attributes['id'])->Materiales->where('idTipoMaterial', 3)->first()->numSerie;
+            return $hoja;
+        } elseif (in_array($idServicio, [5])) {
+            $hoja = Certificacion::find($this->attributes['id'])->Materiales->where('idTipoMaterial', 4)->first()->numSerie;
+            return $hoja;
+        } else {
+            return $hoja;
+        }
+    }
+
+    public function getUbicacionHojaAttribute()
+    {
+        $idServicio = $this->Servicio->tipoServicio->id;
+        $hoja = null;
+        if (in_array($idServicio, [1, 2, 7, 8, 10, 12])) {
+            $hoja = Certificacion::find($this->attributes['id'])->Materiales->where('idTipoMaterial', 1)->first()->ubicacion;
+            return $hoja;
+        } elseif (in_array($idServicio, [3, 4, 9, 13])) {
+            $hoja = Certificacion::find($this->attributes['id'])->Materiales->where('idTipoMaterial', 3)->first()->ubicacion;;
+            return $hoja;
+        } elseif (in_array($idServicio, [5])) {
+            $hoja = Certificacion::find($this->attributes['id'])->Materiales->where('idTipoMaterial', 4)->first()->ubicacion;;
             return $hoja;
         } else {
             return $hoja;

@@ -68,6 +68,35 @@ class ServiciosImportados extends Model
             $query->where('certificador', $search);
         }       
     }
+
+    public function scopeTalleres(Builder $query,  $search): void{   
+        $nombres=[];
+        foreach($search as $id){
+           $taller=Taller::find($id);
+           //dd($taller);
+           if($taller){
+            array_push($nombres, $taller->nombre);
+           }
+        }
+
+        if(count($nombres)>1){
+            $query->whereIn('taller', $nombres);
+        }       
+    }
+
+    public function scopeInspectores(Builder $query,  $search): void{   
+        $nombres=[];
+        foreach($search as $id){
+           $inspector=User::find($id);           
+           if($inspector){
+            array_push($nombres, $inspector->name);
+           }
+        }
+
+        if(!empty($nombres)){
+            $query->whereIn('certificador', $nombres);//dane un minuitook ok
+        }       
+    }
     
 
     public function scopeTaller($query,$search): void{

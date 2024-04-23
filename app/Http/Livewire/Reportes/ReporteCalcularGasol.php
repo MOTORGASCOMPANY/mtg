@@ -217,7 +217,7 @@ class ReporteCalcularGasol extends Component
 
     public function exportarExcel()
     {
-
+        //donde esta tu group by?
         $datosCertificaciones = $this->datosMostrar();
         $datosDiscrepancias = $this->compararDiscrepancias();
         $datosCombinados = $datosCertificaciones->concat($datosDiscrepancias);

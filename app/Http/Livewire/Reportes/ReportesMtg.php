@@ -7,8 +7,10 @@ use App\Models\ServiciosImportados;
 use App\Models\Taller;
 use App\Models\TipoServicio;
 use App\Exports\ReporteCalcularExport;
+use App\Http\Livewire\Talleres;
 use App\Models\Certificacion;
 use App\Models\CertificacionPendiente;
+use App\Models\Desmontes;
 use App\Models\User;
 use Illuminate\Cache\NullStore;
 use Illuminate\Support\Collection;
@@ -20,8 +22,8 @@ class ReportesMtg extends Component
 {
     public $fechaInicio, $fechaFin, $resultados, $talleres, $inspectores, $certis;
     public $ins = [], $taller = [];
-    public $nombreInsp;
-    public $tabla;
+    public $grupoinspectores;
+    public $tabla, $diferencias, $importados;
 
 
     protected $rules = [
@@ -43,7 +45,25 @@ class ReportesMtg extends Component
 
     public function procesar()
     {
-        $this->tabla = new Collection();
+        $this->validate();
+        $this->tabla = $this->generaData();
+        $this->importados = $this->cargaServiciosGasolution();
+        $this->diferencias = $this->encontrarDiferenciaPorPlaca($this->importados, $this->tabla);
+    }
+
+    public function exportarExcel()
+    {
+        $datosCombinados = $this->tabla->concat($this->diferencias);
+        $data = $datosCombinados;
+        if ($data) {
+            $fecha = now()->format('d-m-Y');
+            return Excel::download(new ReporteCalcularExport($data), 'ReporteCalcular' . $fecha . '.xlsx');
+        }
+    }
+
+    public function generaData()
+    {
+        $tabla = new Collection();
         //TODO CERTIFICACIONES:
         $certificaciones = Certificacion::idTalleres($this->taller)
             ->IdInspectores($this->ins)
@@ -59,6 +79,11 @@ class ReportesMtg extends Component
             ->where('estado', 1)
             ->whereNull('idCertificacion')
             ->get();
+        //TODO DESMONTES
+        /*$desmonte = Desmontes::idTalleres($this->taller)
+            ->IdInspectores($this->ins)
+            ->rangoFecha($this->fechaInicio, $this->fechaFin)
+            ->get();*/
 
         //unificando certificaciones     
         foreach ($certificaciones as $certi) {
@@ -73,9 +98,12 @@ class ReportesMtg extends Component
                 "ubi_hoja" => $certi->UbicacionHoja,
                 "precio" => $certi->precio,
                 "pagado" => $certi->pagado,
-                "tipo_modelo" => $certi::class
+                "estado" => $certi->estado,
+                "tipo_modelo" => $certi::class,
+                "fecha" => $certi->created_at,
+
             ];
-            $this->tabla->add($data);
+            $tabla->push($data);
         }
 
         foreach ($cerPendiente as $cert_pend) {
@@ -90,10 +118,114 @@ class ReportesMtg extends Component
                 "ubi_hoja" => Null,
                 "precio" => $cert_pend->precio,
                 "pagado" => $cert_pend->pagado,
-                "tipo_modelo" => $cert_pend::class
+                "estado" => $cert_pend->estado,
+                "tipo_modelo" => $cert_pend::class,
+                "fecha" => $cert_pend->created_at,
             ];
-            $this->tabla->add($data);
-        }        
-        $this->nombreInsp = $this->tabla->groupBy('inspector');
+            $tabla->push($data);
+        }
+
+        /*foreach ($desmonte as $desm) {
+            //modelo preliminar
+            $data = [
+                "id" => $desm->id,
+                "placa" => $desm->placa,
+                "taller" => $desm->Taller->nombre,
+                "inspector" => $desm->Inspector->name,
+                "servicio" => 'Desmonte de Cilindro', // es ese tipo de servicio por defecto
+                "num_hoja" => Null,
+                "ubi_hoja" => Null,
+                "precio" => $desm->precio,
+                "pagado" => $desm->pagado,
+                "estado" => $desm->estado,
+                "tipo_modelo" => $desm::class,
+                "fecha" => $desm->created_at,
+            ];
+            $tabla->push($data);
+        }*/
+
+        $this->grupoinspectores = $tabla->groupBy('inspector');
+        return $tabla;
+    }
+
+
+    public function encontrarDiferenciaPorPlaca($lista1, $lista2)
+    {
+        $diferencias = [];
+
+        foreach ($lista1 as $elemento1) {
+            $placa1 = $elemento1['placa'];
+            $encontrado = false;
+
+            foreach ($lista2 as $elemento2) {
+                $placa2 = $elemento2['placa'];
+
+                if ($placa1 === $placa2) {
+                    $encontrado = true;
+                    break;
+                }
+            }
+
+            if (!$encontrado) {
+                $diferencias[] = $elemento1;
+            }
+        }
+
+        return $diferencias;
+    }
+    /*public function encontrarDiferenciaPorPlacaYServicio($lista1, $lista2)
+    {
+        $diferencias = [];
+
+        foreach ($lista1 as $elemento1) {
+            $placa1 = $elemento1['placa'];
+            $servicio1 = $elemento1['servicio'];
+            $encontrado = false;
+
+            foreach ($lista2 as $elemento2) {
+                $placa2 = $elemento2['placa'];
+                $servicio2 = $elemento2['servicio'];
+
+                if ($placa1 === $placa2 && $servicio1 === $servicio2) {
+                    $encontrado = true;
+                    break;
+                }
+            }
+
+            if (!$encontrado) {
+                $diferencias[] = $elemento1;
+            }
+        }
+
+        return $diferencias;
+    }*/
+
+
+    public function cargaServiciosGasolution()
+    {
+        $disc = new Collection();
+        $dis = ServiciosImportados::Talleres($this->taller)
+            ->Inspectores($this->ins)
+            ->RangoFecha($this->fechaInicio, $this->fechaFin)
+            ->get();
+
+        foreach ($dis as $registro) {
+            $data = [
+                "id" => $registro->id,
+                "placa" => $registro->placa,
+                "taller" => $registro->taller,
+                "inspector" => $registro->certificador,
+                "servicio" => $registro->TipoServicio->descripcion,
+                "num_hoja" => Null,
+                "ubi_hoja" => Null,
+                "precio" => $registro->precio,
+                "pagado" => $registro->pagado,
+                "estado" => $registro->estado,
+                "tipo_modelo" => $registro::class,
+                "fecha" => $registro->fecha,
+            ];
+            $disc->push($data);
+        }
+        return $disc;
     }
 }

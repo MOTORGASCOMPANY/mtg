@@ -98,8 +98,8 @@
                 </div>
             </div>
         </div>
-
-
+        
+        
         
         <!-- Tabla detallado -->
         @if (isset($reportePorInspector))

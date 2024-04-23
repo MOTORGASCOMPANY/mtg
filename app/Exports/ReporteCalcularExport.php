@@ -43,22 +43,23 @@ class ReporteCalcularExport implements FromCollection, WithHeadings, WithMapping
         return [
             'C' => NumberFormat::FORMAT_NUMBER,
             'D' => NumberFormat::FORMAT_NUMBER,
-            'E' => NumberFormat::FORMAT_NUMBER,
+            'F' => NumberFormat::FORMAT_NUMBER_00,
+            'G'=>  NumberFormat::FORMAT_DATE_DDMMYYYY,            
         ];
     }
 
     public function headings(): array
     {
         return [
+            'Placa',
             'Taller',
             'Inspector',
-            'Hoja',
-            'Vehículo',
             'Servicio',
+            'Hoja',
+            'Precio',
             'Fecha',
             'Estado',
-            'Pagado',
-            'Precio',
+            'Pagado',           
         ];
     }
 
@@ -78,33 +79,68 @@ class ReporteCalcularExport implements FromCollection, WithHeadings, WithMapping
     }*/
 
     public function map($data): array
-    {
-        if (is_array($data)) {
+    {   
+        $fecha=date('Y-m-d h:i:s',strtotime($data['fecha']));
+        $precio=number_format($data['precio'],2);     
+        
+        switch ( $data['tipo_modelo']) {
+            case 'App\Models\Certificacion':
+                return [
+                    $data['placa'] ?? 'EN TRAMITE',
+                    $data['taller'] ?? 'N.A',
+                    $data['inspector'] ?? 'N.A',
+                    $data['servicio'] ?? 'N.A',
+                    $data['num_hoja'] ?? 'N.E',
+                    $precio ?? 'S.P',
+                    $fecha ?? 'S.F',
+                    $data['estado']?? 'S.E',
+                    $data['pagado'] ,
+                    'certificacion',          
+                ];             
+            break;
+            case 'App\Models\CertificacionPendiente':
+                return [
+                    $data['placa'] ?? 'EN TRAMITE',
+                    $data['taller'] ?? 'N.A',
+                    $data['inspector'] ?? 'N.A',
+                    $data['servicio'] ?? 'N.A',
+                    $data['num_hoja'] ?? 'N.E',
+                    $precio ?? 'S.P',
+                    $fecha ?? 'S.F',
+                    $data['estado']?? 'S.E',
+                    $data['pagado'] ,  
+                    'certificacion pendiente',                 
+                ];                
+            break;
+            case 'App\Models\ServiciosImportados':
+                return [
+                    $data['placa'] ?? 'EN TRAMITE',
+                    $data['taller'] ?? 'N.A',
+                    $data['inspector'] ?? 'N.A',
+                    $data['servicio'] ?? 'N.A',
+                    $data['num_hoja'] ?? 'N.E',
+                    $precio ?? 'S.P',
+                    $fecha ?? 'S.F',
+                    $data['estado']?? 'S.E',
+                    $data['pagado'] ,   
+                    'discrepancia'                
+                ];                
+            break;
+            
+            default:
             return [
-                $data['taller'] ?? 'N.A',
-                $data['certificador'] ?? 'N.A',
-                '',
                 $data['placa'] ?? 'EN TRAMITE',
-                $data['tipoServicio'] ?? 'N.E',
-                $data['fecha'] ?? 'S.F',
-                '',
-                '',
-                $data['precio'] ?? 'S.P',
-                'discrepancia',
-            ];
-        } else {
-            return [
-                $data->taller ?? 'N.A',
-                $data->nombre ?? 'N.A',
-                $data->matenumSerie ?? 'N.A',
-                $data->placa ?? 'EN TRAMITE',
-                $data->tiposervicio ?? 'N.E',
-                $data->created_at ?? 'S.F',
-                $data->estado,
-                $data->pagado,
-                $data->precio ?? 'S.P',
-                'certificacion',
-            ];
+                $data['taller'] ?? 'N.A',
+                $data['inspector'] ?? 'N.A',
+                $data['servicio'] ?? 'N.A',
+                $data['num_hoja'] ?? 'N.E',
+                $precio ?? 'S.P',
+                $fecha ?? 'S.F',
+                $data['estado']?? 'S.E',
+                $data['pagado'] ,
+                'certificacion',          
+                 ];
+                break;
         }
     }
 

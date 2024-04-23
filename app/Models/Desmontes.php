@@ -53,4 +53,29 @@ class Desmontes extends Model
             $query->where('placa', 'like', '%' . $search . '%');
         }
     }
+
+    //Scope para reporte 
+    public function scopeIdTalleres($query, $search): void
+    {
+        if ($search) {
+            $query->whereHas('Taller', function (Builder $query) use ($search) {
+                $query->whereIn('id', $search);
+            });
+        }
+    }
+
+    public function scopeIdInspectores(Builder $query, $search): void
+    {
+        if ($search) {
+            $query->whereIn('idInspector', $search);
+        }
+    }   
+    
+
+    public function scopeRangoFecha(Builder $query, string $desde, string $hasta): void
+    {
+        if ($desde && $hasta) {
+            $query->whereBetween('created_at', [$desde . ' 00:00', $hasta . ' 23:59']);
+        }
+    }
 }

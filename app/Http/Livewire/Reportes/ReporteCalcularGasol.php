@@ -8,7 +8,10 @@ use App\Models\ServiciosImportados;
 use App\Models\Taller;
 use App\Models\TipoServicio;
 use App\Exports\ReporteCalcularExport;
+use App\Models\Certificacion;
+use App\Models\CertificacionPendiente;
 use App\Models\User;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -16,10 +19,11 @@ use Maatwebsite\Excel\Facades\Excel;
 class ReporteCalcularGasol extends Component
 {
 
-    public $fechaInicio, $fechaFin, $resultados, $talleres, $inspectores;
+    public $fechaInicio, $fechaFin, $resultados, $talleres, $inspectores, $certis;
     public $ins = [], $taller = [];
-    public $totalPrecio, $reportePorInspector, $detallesPlacasFaltantes, $certificacionIds = [];
-    public $editando, $tiposServicios = [], $serviciosImportados, $updatedPrices = [];
+    public $grupoinspectores;
+    public $tabla, $diferencias, $importados, $aux, $precios = [];
+    public $tabla2;
 
     protected $rules = [
         "fechaInicio" => 'required|date',
@@ -29,236 +33,140 @@ class ReporteCalcularGasol extends Component
     public function mount()
     {
         $this->inspectores = User::role(['inspector', 'supervisor'])->orderBy('name')->get();
-        $this->talleres = Taller::orderBy('nombre')->get(); //all()->sortBy('nombre')
-        $this->serviciosImportados = ServiciosImportados::all();
+        $this->talleres = Taller::orderBy('nombre')->get();
     }
     public function render()
     {
-        return view('livewire.reportes.reporte-calcular-gasol', [
-            'tiposServicio' => TipoServicio::all(),
-        ]);
+        return view('livewire.reportes.reporte-calcular-gasol');
     }
 
-    public function calcularReporte()
+    public function procesar()
     {
         $this->validate();
-        $resultadosdetalle = $this->datosMostrar();
-        $totalPrecio = $resultadosdetalle->sum('precio');
-        //Cache::put('reporteCalcular', $this->datosMostrar(), now()->addMinutes(10));
-        //$datosCombinados = $this->datosMostrar();
-        $this->totalPrecio = $totalPrecio;
-        $this->reportePorInspector = $resultadosdetalle->groupBy('idInspector');  //collect($this->resultadosdetalle)->groupBy('idInspector')->toArray(); 
-        $this->detallesPlacasFaltantes   = $this->compararDiscrepancias();
+        $this->tabla = $this->generaData();
+        $this->importados = $this->cargaServiciosGasolution();
+        
+        //dd($this->aux);
+        
+        $this->diferencias = $this->encontrarDiferenciaPorPlaca($this->importados, $this->tabla);                
+        $this->tabla2 = $this->tabla->merge($this->diferencias);
+        $this->aux = $this->tabla2->groupBy('inspector');
+        $this->sumaPrecios();
     }
 
-    private function compararDiscrepancias()
+    public function generaData()
     {
-        $certificaciones = DB::table('certificacion')
-            ->select(
-                'certificacion.idVehiculo',
-                'certificacion.estado',
-                'certificacion.created_at',
-                'certificacion.pagado',
-                'certificacion.idInspector',
-                'certificacion.idTaller',
-                'certificacion.idServicio',
-                'vehiculo.placa as placa',
-            )
-            ->join('vehiculo', 'certificacion.idVehiculo', '=', 'vehiculo.id')
-            ->join('servicio', 'certificacion.idServicio', '=', 'servicio.id')
-            ->join('tiposervicio', 'servicio.tipoServicio_idtipoServicio', '=', 'tiposervicio.id')
-            ->whereIn('tiposervicio.descripcion', ['Conversión a GNV', 'Revisión anual GNV', 'Desmonte de Cilindro'])
-            ->where('certificacion.pagado', 0)
-            ->whereIn('certificacion.estado', [3, 1])
-            ->where(function ($query) {
-                $this->agregarFiltros($query);
-            })
-            ->where(function ($query) {
-                $this->fechaCerti($query);
-            })
+        $tabla = new Collection();
+        //TODO CERTIFICACIONES:
+        $certificaciones = Certificacion::idTalleres($this->taller)
+            ->IdInspectores($this->ins)
+            ->rangoFecha($this->fechaInicio, $this->fechaFin)
+            ->where('pagado', 0)
+            ->whereIn('estado', [3, 1])
             ->get();
 
-        $serviciosImportados = DB::table('servicios_importados')
-            ->select(
-                'servicios_importados.fecha',
-                'servicios_importados.placa',
-                'servicios_importados.taller',
-                'servicios_importados.precio',
-                'servicios_importados.certificador',
-                'servicios_importados.tipoServicio',
-            )
-            ->where(function ($query) {
-                if (!empty($this->ins)) {
-                    $query->whereIn('servicios_importados.certificador', $this->ins);
-                }
+        //Lista2
+        foreach ($certificaciones as $certi) {
+            $data = [
+                "id" => $certi->id,
+                "placa" => $certi->Vehiculo->placa,
+                "taller" => $certi->Taller->nombre,
+                "inspector" => $certi->Inspector->name,
+                "servicio" => $certi->Servicio->tipoServicio->descripcion,
+                "num_hoja" => $certi->NumHoja,
+                "ubi_hoja" => $certi->UbicacionHoja,
+                "precio" => $certi->precio,
+                "pagado" => $certi->pagado,
+                "estado" => $certi->estado,
+                "tipo_modelo" => $certi::class,
+                "fecha" => $certi->created_at,
 
-                if (!empty($this->taller)) {
-                    $query->whereIn('servicios_importados.taller', $this->taller);
-                }
-            })
-            ->where(function ($query) {
-                $this->fechaServImpor($query);
-            })
-            ->get();
-
-
-        $serviciosImportadosUnicos = $serviciosImportados->unique(function ($item) {
-            return $item->placa . $item->taller . $item->certificador . $item->tipoServicio . $item->fecha . $item->precio;
-        });
-        //detalles de servicios_importados únicos
-        $detallesServiciosImportados = $serviciosImportadosUnicos->map(function ($item) {
-            return [
-                'placa' => $item->placa,
-                'taller' => $item->taller,
-                'certificador' => $item->certificador,
-                'tipoServicio' => $item->tipoServicio,
-                'fecha' => $item->fecha,
-                'precio' => $item->precio,
             ];
-        });
-        //placas de servicios_importados
-        $placasServiciosImportados = $serviciosImportadosUnicos->pluck('placa')->unique();
-        // Filtrar las placas que están en servicios_importados pero no en certificacion para los tipos de servicio requeridos
-        $placasFaltantes = $placasServiciosImportados->reject(function ($placa) use ($certificaciones) {
-            return $certificaciones->where('placa', $placa)
-                ->whereNotIn('tipoServicio', ['Conversión a GNV', 'Revisión anual GNV','Desmonte de Cilindro', 'Desmonte de Cilindro' ]) // Revisar esto porque desmonte corresponde a la tabla desmonte y no certificacion  (, 'Desmonte de Cilindro')
-                ->isNotEmpty();
-        });
-        // Detalles de las placas faltantes
-        $detallesPlacasFaltantes = $detallesServiciosImportados->filter(function ($item) use ($placasFaltantes) {
-            return $placasFaltantes->contains($item['placa']);
-        });
-        //dd($detallesPlacasFaltantes);
-        return $detallesPlacasFaltantes;
+            $tabla->push($data);
+        }
+        return $tabla;
     }
 
-    private function datosMostrar()
+    public function encontrarDiferenciaPorPlaca($lista1, $lista2)
     {
+        $diferencias = [];
 
-        $certificaciones = DB::table('certificacion')
-            ->select(
-                'certificacion.id',
-                'certificacion.idTaller',
-                'certificacion.idInspector',
-                'certificacion.idVehiculo',
-                'certificacion.idServicio',
-                'certificacion.estado',
-                'certificacion.created_at',
-                'certificacion.precio',
-                'certificacion.pagado',
-                'users.name as nombre',
-                'taller.nombre as taller',
-                'vehiculo.placa as placa',
-                'tiposervicio.descripcion as tiposervicio',
-                DB::raw('(SELECT material.numSerie FROM serviciomaterial 
-                LEFT JOIN material ON serviciomaterial.idMaterial = material.id 
-                WHERE serviciomaterial.idCertificacion = certificacion.id LIMIT 1) as matenumSerie'),
-                DB::raw('(SELECT material.ubicacion FROM serviciomaterial 
-                LEFT JOIN material ON serviciomaterial.idMaterial = material.id 
-                WHERE serviciomaterial.idCertificacion = certificacion.id LIMIT 1) as mateubicacion')
+        foreach ($lista1 as $elemento1) {
+            $placa1 = $elemento1['placa'];
+            $encontrado = false;
 
+            foreach ($lista2 as $elemento2) {
+                $placa2 = $elemento2['placa'];
 
-            )
-            ->join('users', 'certificacion.idInspector', '=', 'users.id')
-            ->join('taller', 'certificacion.idTaller', '=', 'taller.id')
-            ->join('vehiculo', 'certificacion.idVehiculo', '=', 'vehiculo.id')
-            ->join('servicio', 'certificacion.idServicio', '=', 'servicio.id')
-            ->join('tiposervicio', 'servicio.tipoServicio_idtipoServicio', '=', 'tiposervicio.id')
-            //->leftJoin('serviciomaterial', 'certificacion.id', '=', 'serviciomaterial.idCertificacion')
-            //->leftJoin('material', 'serviciomaterial.idMaterial', '=', 'material.id')
-            ->where('certificacion.pagado', 0)
-            ->whereIn('certificacion.estado', [3, 1])
-            ->where(function ($query) {
-                $this->agregarFiltros($query);
-            })
-            ->where(function ($query) {
-                $this->fechaCerti($query);
-            })
+                if ($placa1 === $placa2) {
+                    $encontrado = true;
+                    break;
+                }
+            }
 
+            if (!$encontrado) {
+                $diferencias[] = $elemento1;
+            }
+        }
+
+        return $diferencias;
+    }
+
+    public function cargaServiciosGasolution()
+    {
+        $disc = new Collection();
+        $dis = ServiciosImportados::Talleres($this->taller)
+            ->Inspectores($this->ins)
+            ->RangoFecha($this->fechaInicio, $this->fechaFin)
             ->get();
 
-        $certificadosPendientes = DB::table('certificados_pendientes')
-            ->select(
-                'certificados_pendientes.id',
-                'certificados_pendientes.idTaller',
-                'certificados_pendientes.idInspector',
-                'certificados_pendientes.idVehiculo',
-                'certificados_pendientes.idServicio',
-                'certificados_pendientes.estado',
-                'certificados_pendientes.created_at',
-                'certificados_pendientes.pagado',
-                'certificados_pendientes.precio',
-                'users.name as nombre',
-                'taller.nombre as taller',
-                'vehiculo.placa as placa',
-                DB::raw("'Activación de chip (Anual)' as tiposervicio")
-            )
-
-            ->leftJoin('users', 'certificados_pendientes.idInspector', '=', 'users.id')
-            ->leftJoin('taller', 'certificados_pendientes.idTaller', '=', 'taller.id')
-            ->leftJoin('vehiculo', 'certificados_pendientes.idVehiculo', '=', 'vehiculo.id')
-            ->leftJoin('servicio', 'certificados_pendientes.idServicio', '=', 'servicio.id')
-            ->where('certificados_pendientes.estado', 1)
-            ->whereNull('certificados_pendientes.idCertificacion')
-            ->where(function ($query) {
-                $this->agregarFiltros($query);
-            })
-            ->where(function ($query) {
-                $this->fechaCeriPendi($query);
-            })
-            ->get();
-
-
-
-        $resultadosdetalle = $certificaciones->concat($certificadosPendientes);
-
-        return $resultadosdetalle;
-    }
-
-    public function exportarExcel()
-    {
-        //donde esta tu group by?
-        $datosCertificaciones = $this->datosMostrar();
-        $datosDiscrepancias = $this->compararDiscrepancias();
-        $datosCombinados = $datosCertificaciones->concat($datosDiscrepancias);
-        $data = $datosCombinados;
-        if ($data) {
-            $fecha = now()->format('d-m-Y');
-            return Excel::download(new ReporteCalcularExport($data), 'ReporteCalcular' . $fecha . '.xlsx');
+        //Lista 1
+        foreach ($dis as $registro) {
+            $data = [
+                "id" => $registro->id,
+                "placa" => $registro->placa,
+                "taller" => $registro->taller,
+                "inspector" => $registro->certificador,
+                "servicio" => $registro->TipoServicio->descripcion,
+                "num_hoja" => Null,
+                "ubi_hoja" => Null,
+                "precio" => $registro->precio,
+                "pagado" => $registro->pagado,
+                "estado" => $registro->estado,
+                "tipo_modelo" => $registro::class,
+                "fecha" => $registro->fecha,
+            ];
+            $disc->push($data);
         }
+        return $disc;
     }
 
-    private function fechaCerti($query)
-    {
-        return $query->whereBetween('certificacion.created_at', [
-            $this->fechaInicio . ' 00:00:00',
-            $this->fechaFin . ' 23:59:59'
-        ]);
-    }
 
-    private function fechaCeriPendi($query)
+    public function cuentaServicios($data)
     {
-        return $query->whereBetween('certificados_pendientes.created_at', [
-            $this->fechaInicio . ' 00:00:00',
-            $this->fechaFin . ' 23:59:59'
-        ]);
-    }
-    private function fechaServImpor($query)
-    {
-        return $query->whereBetween('servicios_importados.fecha', [
-            $this->fechaInicio . ' 00:00:00',
-            $this->fechaFin . ' 23:59:59'
-        ]);
-    }
-
-    private function agregarFiltros($query)
-    {
-        if (!empty($this->ins)) {
-            $query->whereIn('idInspector', $this->ins);
+        $cantidades = [];
+        $todo = $data->groupBy('servicio')->sortBy('servicio');
+        foreach ($todo as $servicio => $item) {
+            $cantidades[$servicio] = $item->count();
         }
+        return $cantidades;
+    }
 
-        if (!empty($this->taller)) {
-            $query->whereIn('idTaller', $this->taller);
+    public function sumaPrecios()
+    {
+        //$precios = [];
+        $servicios = ['Revisión anual GNV', 'Conversión a GNV', 'Desmonte de Cilindro', 'Duplicado GNV'];
+        $todo = $this->aux;
+        //dd($todo);
+        foreach ($todo as $servicio => $item) {
+            $precio = 0;
+            foreach ($item as $target) {
+                if (in_array($target['servicio'], $servicios)) {
+                    $precio += $target['precio'];
+                }
+            }
+            $this->precios[$servicio] = $precio;
         }
+        // return $precios;
     }
 }

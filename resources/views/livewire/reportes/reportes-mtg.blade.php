@@ -88,7 +88,7 @@
             </div>
 
 
-            {{-- mano tu tabla que tenias ponla aca --}}
+            {{-- Tabla detallado --}}
             @if (isset($tabla))
                 <div wire.model="resultados">
                     <div class="m-auto flex justify-center items-center bg-gray-300 rounded-md w-full p-4 mt-4">

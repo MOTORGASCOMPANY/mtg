@@ -109,7 +109,7 @@
                 <div class="m-auto flex justify-center items-center bg-gray-300 rounded-md w-full p-4 mt-4">
                     <button wire:click="exportarExcelSimple"
                         class="bg-green-400 px-6 py-4 w-1/3 text-sm rounded-md text-sm text-white font-semibold tracking-wide cursor-pointer ">
-                        <p class="truncate"><i class="fa-solid fa-file-excel fa-lg"></i> Desc. Excel 2 </p>
+                        <p class="truncate"><i class="fa-solid fa-file-excel fa-lg"></i> Desc. Excel </p>
                     </button>
                 </div>
 

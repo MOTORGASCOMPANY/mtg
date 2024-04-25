@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" />
     <link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Alexandria:wght@400;600;700&display=swap">
     -->
+    
     <link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -58,7 +59,7 @@
     </div>
     @vite(['resources/css/app.css','resources/js/app.js'])
     @stack('modals')
-    <script src="https://kit.fontawesome.com/2e81971293.js" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/d1db4754d0.js" crossorigin="anonymous"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     @fcScripts

@@ -26,6 +26,7 @@ class ReporteCalcularSimpleExport implements FromCollection, WithHeadings, WithM
 
     public function __construct($data)
     {
+        //dd($data);
         $this->data = $data;
     }
 
@@ -59,26 +60,29 @@ class ReporteCalcularSimpleExport implements FromCollection, WithHeadings, WithM
             'Conversion Gnv',
             'Desmonte',
             'Duplicado',
-            'Total',
+            'Monto',
         ];
     }
 
     public function map($data): array
     {
+        //dd($data);
         return [
-            'N°' => $this->getIterationNumber(), 
-            'Inspector' => $data['Inspector'] ?? 'N.E',
-            'Anual Gnv' => $data['Anual Gnv'] ?? 'S.P',
-            'Conversion Gnv' => $data['Conversion Gnv'] ?? 'S.P',
-            'Desmonte' => $data['Desmonte'] ?? 'S.P',
-            'Duplicado' => $data['Duplicado'] ?? 'S.P',
-            'Total' => $data['Total'] ?? 'S.P',
+            'N°' => $this->getIterationNumber(),
+            'Inspector' => $data['inspector'] ?? 'N.E',
+            'Anual Gnv' => $data['servicio'] === 'Revisión anual GNV' ? 'S.P' : 'S.N',
+            'Conversion Gnv' => $data['servicio'] === 'Conversión a GNV' ? 'S.P' : 'S.N',
+            'Desmonte' => $data['servicio'] === 'Desmonte de Cilindro' ? 'S.P' : 'S.N',
+            'Duplicado' => $data['servicio'] === 'Duplicado GNV' ? 'S.P' : 'S.N',
+            'Total' => $data['precio'] ?? 'S/0.00',
         ];
     }
+
+
     protected function getIterationNumber()
-{
-    return ++$this->iteration;
-}
+    {
+        return ++$this->iteration;
+    }
 
     public function styles(Worksheet $sheet)
     {

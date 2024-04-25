@@ -59,7 +59,9 @@
     </div>
     @vite(['resources/css/app.css','resources/js/app.js'])
     @stack('modals')
+    <!-- 
     <script src="https://kit.fontawesome.com/d1db4754d0.js" crossorigin="anonymous"></script>
+    -->
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     @fcScripts

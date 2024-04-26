@@ -2,7 +2,7 @@
     <div class="mt-7 overflow-x-auto">
         <div class=" items-center md:block sm:block">
             <div class="px-2 w-64 mb-4 md:w-full">
-                <h2 class="text-indigo-900 font-bold text-3xl">Registro de Empleados</h2>
+                <h2 class="text-indigo-900 font-bold text-3xl">Registro de Empleados2</h2>
             </div>
             <div class="w-full items-center md:flex  md:justify-between">
                 <div class="flex bg-gray-50 items-center p-2 rounded-md mb-4">

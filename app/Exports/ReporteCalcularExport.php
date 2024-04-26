@@ -44,7 +44,7 @@ class ReporteCalcularExport implements FromCollection, WithHeadings, WithMapping
             'C' => NumberFormat::FORMAT_NUMBER,
             'D' => NumberFormat::FORMAT_NUMBER,
             'F' => NumberFormat::FORMAT_NUMBER_00,
-            'G'=>  NumberFormat::FORMAT_DATE_DDMMYYYY,            
+            'G' =>  NumberFormat::FORMAT_DATE_DDMMYYYY,
         ];
     }
 
@@ -59,7 +59,7 @@ class ReporteCalcularExport implements FromCollection, WithHeadings, WithMapping
             'Precio',
             'Fecha',
             'Estado',
-            'Pagado',           
+            'Pagado',
         ];
     }
 
@@ -79,25 +79,36 @@ class ReporteCalcularExport implements FromCollection, WithHeadings, WithMapping
     }*/
 
     public function map($data): array
-    {   
-        $fecha=date('Y-m-d h:i:s',strtotime($data['fecha']));
-        $precio=number_format($data['precio'],2);     
-        
-        switch ( $data['tipo_modelo']) {
+    {
+        $fecha = date('Y-m-d h:i:s', strtotime($data['fecha']));
+        $precio = number_format($data['precio'], 2);
+        $secondPart = '';
+        // Verificar si el servicio es "Chip por deterioro"
+        if ($data['servicio'] == 'Chip por deterioro') {
+            // Obtener la ubicación después del primer '/' si está disponible
+            $ubicacionParts = explode('/', $data['ubi_hoja']);
+            $secondPart = isset($ubicacionParts[1]) ? trim($ubicacionParts[1]) : 'N.A';
+        } else {
+            // Si no es "Chip por deterioro", se devuelve la placa
+            $secondPart = $data['placa'] ?? 'EN TRAMITE';
+        }
+
+
+        switch ($data['tipo_modelo']) {
             case 'App\Models\Certificacion':
                 return [
-                    $data['placa'] ?? 'EN TRAMITE',
+                    $secondPart, //$data['placa'] ?? 'EN TRAMITE'
                     $data['taller'] ?? 'N.A',
                     $data['inspector'] ?? 'N.A',
                     $data['servicio'] ?? 'N.A',
                     $data['num_hoja'] ?? 'N.E',
                     $precio ?? 'S.P',
                     $fecha ?? 'S.F',
-                    $data['estado']?? 'S.E',
-                    $data['pagado'] ,
-                    'certificacion',          
-                ];             
-            break;
+                    $data['estado'] ?? 'S.E',
+                    $data['pagado'],
+                    'certificacion',
+                ];
+                break;
             case 'App\Models\CertificacionPendiente':
                 return [
                     $data['placa'] ?? 'EN TRAMITE',
@@ -107,11 +118,11 @@ class ReporteCalcularExport implements FromCollection, WithHeadings, WithMapping
                     $data['num_hoja'] ?? 'N.E',
                     $precio ?? 'S.P',
                     $fecha ?? 'S.F',
-                    $data['estado']?? 'S.E',
-                    $data['pagado'] ,  
-                    'certificacion pendiente',                 
-                ];                
-            break;
+                    $data['estado'] ?? 'S.E',
+                    $data['pagado'],
+                    'certificacion pendiente',
+                ];
+                break;
             case 'App\Models\ServiciosImportados':
                 return [
                     $data['placa'] ?? 'EN TRAMITE',
@@ -121,25 +132,25 @@ class ReporteCalcularExport implements FromCollection, WithHeadings, WithMapping
                     $data['num_hoja'] ?? 'N.E',
                     $precio ?? 'S.P',
                     $fecha ?? 'S.F',
-                    $data['estado']?? 'S.E',
-                    $data['pagado'] ,   
-                    'discrepancia'                
-                ];                
-            break;
-            
+                    $data['estado'] ?? 'S.E',
+                    $data['pagado'],
+                    'discrepancia'
+                ];
+                break;
+
             default:
-            return [
-                $data['placa'] ?? 'EN TRAMITE',
-                $data['taller'] ?? 'N.A',
-                $data['inspector'] ?? 'N.A',
-                $data['servicio'] ?? 'N.A',
-                $data['num_hoja'] ?? 'N.E',
-                $precio ?? 'S.P',
-                $fecha ?? 'S.F',
-                $data['estado']?? 'S.E',
-                $data['pagado'] ,
-                'certificacion',          
-                 ];
+                return [
+                    $data['placa'] ?? 'EN TRAMITE',
+                    $data['taller'] ?? 'N.A',
+                    $data['inspector'] ?? 'N.A',
+                    $data['servicio'] ?? 'N.A',
+                    $data['num_hoja'] ?? 'N.E',
+                    $precio ?? 'S.P',
+                    $fecha ?? 'S.F',
+                    $data['estado'] ?? 'S.E',
+                    $data['pagado'],
+                    'certificacion',
+                ];
                 break;
         }
     }
@@ -169,15 +180,14 @@ class ReporteCalcularExport implements FromCollection, WithHeadings, WithMapping
                     ->getBorders()
                     ->getAllBorders()
                     ->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-
             } elseif ($style === 'discrepancia') {
                 $sheet->getStyle('A' . $i . ':I' . $i)->applyFromArray([
                     'fill' => [
                         'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
-                        'startColor' => ['rgb' => 'FFC0CB'], 
+                        'startColor' => ['rgb' => 'FFC0CB'],
                     ],
                 ])
-                ->getBorders()
+                    ->getBorders()
                     ->getAllBorders()
                     ->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
             }

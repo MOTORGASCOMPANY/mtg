@@ -79,15 +79,17 @@
                                 class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full truncate" />
                         </div>
                     </div>
-                    
+
                     <button wire:click="calcularReporteSimple"
                         class="bg-indigo-400 hover:bg-indigo-500 px-4 py-4 w-full md:w-auto rounded-md text-white font-semibold tracking-wide cursor-pointer mb-4">
-                        <p class="truncate"> Externo </p>
+                        <p class="truncate"> Semanal </p>
                     </button>
+                    {{--
                     <button wire:click="taller"
                         class="bg-blue-400 hover:bg-blue-500 px-4 py-4 w-full md:w-auto rounded-md text-white font-semibold tracking-wide cursor-pointer mb-4">
                         <p class="truncate"> Taller </p>
                     </button>
+                    --}}
 
                 </div>
                 <div class="w-auto my-4">
@@ -108,12 +110,14 @@
         @if (isset($resultados))
 
             <div wire.model="resultados">
+                {{--
                 <div class="m-auto flex justify-center items-center bg-gray-300 rounded-md w-full p-4 mt-4">
                     <button wire:click="exportarExcelSimple"
                         class="bg-green-400 px-6 py-4 w-1/3 text-sm rounded-md text-sm text-white font-semibold tracking-wide cursor-pointer ">
                         <p class="truncate"><i class="fa-solid fa-file-excel fa-lg"></i> Desc. Excel 2 </p>
                     </button>
                 </div>
+                --}}
                 <div class="bg-gray-200 px-8 py-4 rounded-xl w-full mt-4">
                     <h2 class="text-indigo-600 text-xl font-bold mb-4">Semanal</h2>
                     @if (!empty($resultados))
@@ -148,7 +152,7 @@
                                             </tr>
                                         </thead>
 
-                                        <tbody>                                           
+                                        <tbody>
 
                                             @foreach ($tipoServicios as $tiposervicio => $detalle)
                                                 <tr class="border-b dark:border-neutral-500 bg-orange-200">
@@ -191,12 +195,12 @@
                                                 </tr>
                                             @endforeach
                                             <tr class="border-b dark:border-neutral-500 bg-green-200">
-                                                <td colspan="8" 
+                                                <td colspan="8"
                                                     class="border-r px-6 py-3 dark:border-neutral-500 font-bold text-right">
-                                                    Final: 
+                                                    Final:
                                                 </td>
                                                 <td class="border-r px-6 py-3 dark:border-neutral-500 font-bold">
-                                                    {{ (collect($tipoServicios)->sum('total')) }}
+                                                    {{ collect($tipoServicios)->sum('total') }}
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -207,7 +211,7 @@
                     @endif
                 </div>
 
-
+                {{--
                 <div class="bg-gray-200  px-8 py-4 rounded-xl w-full mt-4">
                     <h2 class="text-indigo-600 text-xl font-bold mb-4">certificaciones</h2>
                     @if (!empty($inspectorTotals))
@@ -276,9 +280,9 @@
                                                 </tr>
                                             @endforeach
                                             <tr class="border-b dark:border-neutral-500 bg-green-200">
-                                                <td colspan="6" {{-- {{$mostrar ? '9':'8'}} --}}
+                                                <td colspan="6" 
                                                     class="border-r px-6 py-3 dark:border-neutral-500 font-bold text-right">
-                                                    Total: {{-- ({{ $certificacionesInspector[0]->nombre }}) --}}
+                                                    Total: 
                                                 </td>
                                                 <td class="border-r px-6 py-3 dark:border-neutral-500 font-bold">
                                                     S/{{ number_format(collect($inspectorTotals)->sum('Total'), 2) }}
@@ -293,6 +297,7 @@
                         </div>
                     @endif
                 </div>
+                --}}
             </div>
         @endif
 

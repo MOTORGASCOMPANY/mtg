@@ -29,6 +29,7 @@
         "filepond-plugin-image-preview": "^4.6.11",
         "pikaday": "^1.8.2",
         "requirejs": "^2.3.6",
-        "swiper": "^8.4.5"
+        "swiper": "^8.4.5",
+        "xlsx": "^0.18.5"
     }
 }

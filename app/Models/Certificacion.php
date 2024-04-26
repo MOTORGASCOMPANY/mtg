@@ -259,6 +259,9 @@ class Certificacion extends Model
         if (in_array($idServicio, [1, 2, 7, 8, 10, 12])) {
             $hoja = Certificacion::find($this->attributes['id'])->Materiales->where('idTipoMaterial', 1)->first()->ubicacion;
             return $hoja;
+        } elseif (in_array($idServicio, [11])) {
+            $hoja = Certificacion::find($this->attributes['id'])->Materiales->where('idTipoMaterial', 2)->first()->ubicacion;;
+            return $hoja;
         } elseif (in_array($idServicio, [3, 4, 9, 13])) {
             $hoja = Certificacion::find($this->attributes['id'])->Materiales->where('idTipoMaterial', 3)->first()->ubicacion;;
             return $hoja;

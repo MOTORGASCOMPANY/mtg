@@ -6,7 +6,7 @@
                 <div class="p-2 w-64 my-4 md:w-full">
                     <h2 class="text-indigo-600 font-bold text-3xl">
                         <i class="fa-solid fa-square-poll-vertical fa-xl"></i>
-                        &nbsp;REPORTE PRUEBA
+                        &nbsp;REPORTE MTG
                     </h2>
                 </div>
 
@@ -101,13 +101,12 @@
 
         </div>
 
-
         {{-- Tabla para externo --}}
         @if (isset($tabla))
 
             <div wire.model="resultados">
                 <div class="m-auto flex justify-center items-center bg-gray-300 rounded-md w-full p-4 mt-4">
-                    <button wire:click="exportarExcelSimple"
+                    <button wire:click="$emit('exportaData')"
                         class="bg-green-400 px-6 py-4 w-1/3 text-sm rounded-md text-sm text-white font-semibold tracking-wide cursor-pointer ">
                         <p class="truncate"><i class="fa-solid fa-file-excel fa-lg"></i> Desc. Excel </p>
                     </button>
@@ -118,7 +117,8 @@
                     <div class="overflow-x-auto m-auto w-full">
                         <div class="inline-block min-w-full py-2 sm:px-6">
                             <div class="overflow-hidden">
-                                <table class="min-w-full border text-center text-sm font-light dark:border-neutral-500">
+                                <table class="min-w-full border text-center text-sm font-light dark:border-neutral-500"
+                                    id='data_1'>
                                     <thead class="border-b font-medium dark:border-neutral-500">
                                         <tr class="bg-indigo-200">
                                             <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
@@ -182,7 +182,7 @@
 
                                             </tr>
                                         @endforeach
-                                        <tr class="border-b dark:border-neutral-500 bg-green-200">
+                                         <tr class="border-b dark:border-neutral-500 bg-green-200">
                                             <td colspan="6"
                                                 class="border-r px-6 py-3 dark:border-neutral-500 font-bold text-right">
                                                 Total:
@@ -190,7 +190,8 @@
                                             <td class="border-r px-6 py-3 dark:border-neutral-500 font-bold">
                                                 S/{{ number_format(collect($precios)->sum(), 2) }}
                                             </td>
-                                        </tr>
+                                        </tr> 
+
                                     </tbody>
 
 
@@ -205,5 +206,25 @@
         @endif
 
     </div>
+    @push('js')
+        {{--
+    <script>
+        Livewire.on('exportaData', () => {
+            data1= document.getElementById('data_1');
+            console.log(data_1);
+
+        });
+    </script>
+    --}}
+        <script>
+            Livewire.on('exportaData', () => {
+                // Obtener los datos de la tabla
+                data = document.getElementById('data_1').innerHTML;
+                console.log(data);
+                // Emitir el evento exportarExcel con los datos de la tabla
+                Livewire.emit('exportarExcel', data);
+            });
+        </script>
+    @endpush
 
 </div>

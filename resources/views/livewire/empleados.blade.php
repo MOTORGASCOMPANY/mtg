@@ -62,6 +62,12 @@
                             Domicilio
                         </th>
                         <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left">
+                            Fecha
+                        </th>
+                        <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left">
+                            Area
+                        </th>
+                        <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left">
                             Acciones
                         </th>
                     </tr>
@@ -97,6 +103,20 @@
                                 <div class="flex items-center">
                                     <p class="text-sm leading-none text-gray-600 ml-2">
                                         {{ $emple->domicilioEmpleado }}
+                                    </p>
+                                </div>
+                            </td>
+                            <td class="pl-2">
+                                <div class="flex items-center">
+                                    <p class="text-sm leading-none text-gray-600 ml-2">
+                                        {{ \Carbon\Carbon::parse($emple->created_at)->format('d-m-Y') }}
+                                    </p>
+                                </div>
+                            </td>
+                            <td class="pl-2">
+                                <div class="flex items-center">
+                                    <p class="text-sm leading-none text-gray-600 ml-2">
+                                        {{ $emple->cargo }}
                                     </p>
                                 </div>
                             </td>

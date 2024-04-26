@@ -214,11 +214,11 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
     Route::get('/Reporte-de-fotos-por-inspector',ReporteFotosPorInspector::class)->name('reportes.reporteFotosPorInspector');
     Route::get('/Reporte-de-documentos-a-vencer',ReporteDocumentosTaller::class)->name('reportes.reporteDocumentosTaller');
     //Rutas para ver los reportes de los servicios
-    Route::get('/Reporte-calcular',ReporteCalcular::class)->name('reportes.reporteCalcular');
+    Route::get('/Reporte-semanal',ReporteCalcular::class)->name('reportes.reporteCalcular');
     Route::get('/Reporte-calcular-chip',ReporteCalcularChip::class)->name('reportes.reporteCalcularChip');
-    Route::get('/Reporte-calcular-detalle',ReporteCalcularGasol::class)->name('reportes.reporteCalcularGasol');
-    Route::get('/Reporte-actualizar-precio',ActualizarPrecios::class)->name('reportes.reporteActualizarPrecio');
-    Route::get('/Reporte-MTG',ReportesMtg::class)->name('reportes.reporteMTG');
+    Route::get('/ReporteCalcular',ReporteCalcularGasol::class)->name('reportes.reporteCalcularGasol');//1
+    Route::get('/Reporte-actualizar-precio',ActualizarPrecios::class)->name('reportes.reporteActualizarPrecio');//2
+    Route::get('/Reporte-MTG',ReportesMtg::class)->name('reportes.reporteMTG');//3
 
 
     //Prueba Fotos

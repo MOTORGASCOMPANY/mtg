@@ -179,7 +179,16 @@
                                                         </td>
                                                         <td
                                                             class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
-                                                            {{ $data['placa'] ?? 'En tramite' }}
+                                                            {{-- {{ $data['placa'] ?? 'En tramite' }} --}}
+                                                            @if ($data['servicio'] == 'Chip por deterioro')
+                                                                @php
+                                                                    $ubicacionParts = explode('/', $data['ubi_hoja']);
+                                                                    $secondPart = isset($ubicacionParts[1]) ? trim($ubicacionParts[1]) : 'N.A';
+                                                                    echo $secondPart;
+                                                                @endphp
+                                                            @else
+                                                                {{ $data['placa'] ?? 'En tramite' }}
+                                                            @endif
                                                         </td>
                                                         <td
                                                             class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
@@ -242,6 +251,19 @@
                                                 </tr>
                                             </tbody>
                                         </table>
+                                        <div class="mt-4">
+                                            <ul class="grid grid-cols-2 gap-4">
+                                                @foreach (collect($certificacion)->groupBy('servicio') as $Servicio => $detalle)
+                                                    <li
+                                                        class="flex items-center justify-between bg-gray-100 p-3 rounded-md shadow">
+                                                        <span
+                                                            class="text-blue-400">{{ 'Cantidad de ' . $Servicio }}</span>
+                                                        <span class="text-green-500">{{ $detalle->count() }}
+                                                            servicios</span>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -305,8 +327,8 @@
                                                     </td>
                                                     <td
                                                         class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
-                                                       
-                                                        {{  $item['servicio'] ?? 'N.A' }}
+
+                                                        {{ $item['servicio'] ?? 'N.A' }}
                                                     </td>
                                                     <td
                                                         class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">

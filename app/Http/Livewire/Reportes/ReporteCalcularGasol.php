@@ -8,6 +8,7 @@ use App\Models\ServiciosImportados;
 use App\Models\Taller;
 use App\Models\TipoServicio;
 use App\Exports\ReporteCalcularExport;
+use App\Exports\ReporteCalcularExport2;
 use App\Exports\ReporteCalcularSimpleExport;
 use App\Models\Certificacion;
 use App\Models\CertificacionPendiente;
@@ -25,6 +26,8 @@ class ReporteCalcularGasol extends Component
     public $grupoinspectores;
     public $tabla, $diferencias, $importados, $aux, $precios = [];
     public $tabla2;
+
+    protected $listeners = ['exportarExcel'];
 
     protected $rules = [
         "fechaInicio" => 'required|date',
@@ -171,73 +174,13 @@ class ReporteCalcularGasol extends Component
     }
 
 
-    /*public function exportarExcelSimple()
+    public function exportarExcel($data)
     {
-        $data = collect($this->aux);
-        $serviciosPermitidos = ['Revisión anual GNV', 'Conversión a GNV', 'Desmonte de Cilindro', 'Duplicado GNV'];
-        $servicios = [];
-
-        foreach ($data as $nombre => $servicio) {
-            foreach ($servicio as $detalle) {
-                // Verificamos si el servicio está en la lista de servicios permitidos
-                if (in_array($detalle['servicio'], $serviciosPermitidos)) {
-                    $servicios[] = [
-                        'inspector' => $nombre,
-                        'servicio' => $detalle['servicio'] ?? null,
-                        'precio' => $detalle['precio'] ?? null,
-                    ];
-                }
-            }
-        }
-
-        if (!empty($servicios)) {
-            return Excel::download(new ReporteCalcularSimpleExport($servicios), 'ReporteCalcular.xlsx');
-        }
-    }*/
-
-    /*public function exportarExcelSimple()
-    {
-        $data = collect($this->aux);
-        $serviciosPermitidos = ['Revisión anual GNV', 'Conversión a GNV', 'Desmonte de Cilindro', 'Duplicado GNV'];
-        $servicios = [];
-
-        foreach ($data as $nombre => $detalleInspector) {
-            $contadorServicios = array_fill_keys($serviciosPermitidos, 0); // Inicializamos el contador de servicios en 0
-
-            foreach ($detalleInspector as $detalle) {
-                if (in_array($detalle['servicio'], $serviciosPermitidos)) {
-                    // Incrementamos el contador del tipo de servicio
-                    $contadorServicios[$detalle['servicio']]++;
-                }
-            }
-
-            // Creamos el detalle del inspector con la cantidad de cada servicio
-            $detalle = [
-                'inspector' => $nombre,
-            ];
-
-            // Agregamos la cantidad de cada servicio al detalle del inspector
-            foreach ($contadorServicios as $servicio => $cantidad) {
-                $detalle[$servicio] = $cantidad;
-            }
-
-            // Calculamos el monto total por inspector sumando los precios de los servicios permitidos
-            $montoTotal = 0;
-            foreach ($detalleInspector as $detalle) {
-                if (in_array($detalle['servicio'], $serviciosPermitidos)) {
-                    $montoTotal += $detalle['precio'];
-                }
-            }
-
-            // Agregamos el monto total al detalle del inspector
-            $detalle['Monto'] = 'S/' . number_format($montoTotal, 2);
-
-            // Agregamos el detalle del inspector al arreglo de servicios
-            $servicios[] = $detalle;
-        }
-
-        if (!empty($servicios)) {
-            return Excel::download(new ReporteCalcularSimpleExport($servicios), 'ReporteCalcular.xlsx');
-        }
-    }*/
+        // Convertir la tabla HTML en un objeto de colección
+        //$tabla = collect([$data]);
+        //dd($tabla);
+        // Generar el archivo de Excel usando la librería Maatwebsite/Excel
+       return Excel::download(new ReporteCalcularExport2($data), 'reporte_calculo.xlsx');
+        
+    }
 }

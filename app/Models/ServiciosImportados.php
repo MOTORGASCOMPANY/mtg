@@ -79,7 +79,7 @@ class ServiciosImportados extends Model
            }
         }
 
-        if(count($nombres)>1){
+        if(!empty($nombres)){ //count($nombres)>1
             $query->whereIn('taller', $nombres);
         }       
     }
@@ -94,7 +94,7 @@ class ServiciosImportados extends Model
         }
 
         if(!empty($nombres)){
-            $query->whereIn('certificador', $nombres);//dane un minuitook ok
+            $query->whereIn('certificador', $nombres);
         }       
     }
     

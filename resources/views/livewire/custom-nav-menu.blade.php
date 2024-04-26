@@ -547,9 +547,9 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                                 Reporte de Documentos a vencer
                                             </x-jet-responsive-nav-link>
                                         @endcan                                        
-                                        @can('reportes.reporteCalcular')
+                                        @can('reportes.reporteCalcularGasol')
                                             <x-jet-responsive-nav-link class="text-sm truncate"
-                                                href="{{ route('reportes.reporteCalcular') }}" :active="request()->routeIs('reportes.reporteCalcular')">
+                                                href="{{ route('reportes.reporteCalcularGasol') }}" :active="request()->routeIs('reportes.reporteCalcularGasol')">
                                                 Reporte MTC
                                             </x-jet-responsive-nav-link>
                                         @endcan

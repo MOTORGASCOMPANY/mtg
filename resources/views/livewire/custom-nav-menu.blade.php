@@ -218,7 +218,7 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                 <div class="inline-flex  items-center justify-between w-full transition-colors duration-150 text-gray-500  cursor-pointer"
                                     x-on:click="Open = !Open">
                                     <span class="inline-flex items-center space-x-6  text-sm text-white ">
-                                        <i class="fa-solid fa-screwdriver-wrench font-thin"></i>
+                                        <i class="fa-solid fa-screwdriver-wrench"></i>
                                         <span class="select-none">Servicios</span>
                                     </span>
                                     <i class="fa-solid fa-caret-down ml-1  text-white w-4 h-4" x-show="!Open"></i>
@@ -360,7 +360,7 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                 <div class="inline-flex  items-center justify-between w-full  transition-colors duration-150 text-gray-500  cursor-pointer"
                                     x-on:click="Open = !Open">
                                     <span class="inline-flex items-center space-x-6  text-sm  text-white ">
-                                        <i class="fa-solid fa-warehouse font-thin"></i>
+                                        <i class="fa-solid fa-warehouse"></i>
                                         <span class="select-none">Talleres</span>
                                     </span>
                                     <i class="fa-solid fa-caret-down ml-1  text-white w-4 h-4" x-show="!Open"></i>
@@ -413,7 +413,7 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                 <div class="inline-flex  items-center justify-between w-full transition-colors duration-150 text-gray-500  cursor-pointer"
                                     x-on:click="Open = !Open">
                                     <span class="inline-flex items-center space-x-6  text-sm  text-white ">
-                                        <i class="fa-solid fa-cubes font-thin"></i>
+                                        <i class="fa-solid fa-cubes"></i>
                                         <span class="select-none">Materiales</span>
                                     </span>
                                     <i class="fa-solid fa-caret-down ml-1  text-white w-4 h-4" x-show="!Open"></i>
@@ -499,7 +499,7 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                 <div class="inline-flex  items-center justify-between w-full  transition-colors duration-150 text-gray-500  cursor-pointer"
                                     x-on:click="Open = !Open">
                                     <span class="inline-flex items-center space-x-6  text-sm  text-white ">
-                                        <i class="fa-solid fa-chart-column font-thin"></i>
+                                        <i class="fa-solid fa-chart-column"></i>
                                         <span class="select-none">Reportes GNV</span>
                                     </span>
                                     <i class="fa-solid fa-caret-down ml-1  text-white w-4 h-4" x-show="!Open"></i>
@@ -625,7 +625,7 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                 <div class="inline-flex  items-center justify-between w-full  transition-colors duration-150 text-gray-500  cursor-pointer"
                                     x-on:click="Open = !Open">
                                     <span class="inline-flex items-center space-x-6  text-sm  text-white ">
-                                        <i class="fa-solid fa-user-shield font-thin"></i>
+                                        <i class="fa-solid fa-user-shield"></i>
                                         <span class="select-none">Usuarios y roles</span>
                                     </span>
                                     <i class="fa-solid fa-caret-down ml-1  text-white w-4 h-4" x-show="!Open"></i>

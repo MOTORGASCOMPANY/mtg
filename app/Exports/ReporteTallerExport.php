@@ -27,7 +27,7 @@ class ReporteTallerExport implements FromView, ShouldAutoSize, WithStyles
     public function styles(Worksheet $sheet)
     {
         // bordes a todas las celdas
-        $sheet->getStyle('A1:I' . $sheet->getHighestRow())
+        $sheet->getStyle('A1:J' . $sheet->getHighestRow())
             ->getBorders()
             ->getAllBorders()
             ->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);

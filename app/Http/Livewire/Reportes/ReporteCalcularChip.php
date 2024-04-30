@@ -22,6 +22,7 @@ class ReporteCalcularChip extends Component
     public $grupotalleres;
     public $tabla, $diferencias, $importados, $aux;
     public $tabla2;
+    public $inspectoresPorTaller = [];
 
     protected $listeners = ['exportarExcel'];
 
@@ -50,6 +51,18 @@ class ReporteCalcularChip extends Component
         //dd($this->diferencias);
         $this->tabla2 = $this->tabla->merge($this->diferencias);
         $this->aux = $this->tabla2->groupBy('taller');
+        $this->generarInspectoresPorTaller();
+    }
+
+    public function generarInspectoresPorTaller()
+    {
+        $inspectoresPorTaller = [];
+
+        foreach ($this->aux as $nombreTaller => $certificaciones) {
+            $inspectoresPorTaller[$nombreTaller] = $certificaciones->pluck('inspector')->unique()->toArray();
+        }
+
+        $this->inspectoresPorTaller = $inspectoresPorTaller;
     }
 
     public function exportarExcel($data)

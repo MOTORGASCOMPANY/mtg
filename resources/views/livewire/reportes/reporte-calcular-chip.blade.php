@@ -99,8 +99,18 @@
                 <div id='data_1'>
                     @foreach ($aux as $nombre => $certificacion)
                         <div class="bg-gray-200  px-8 py-4 rounded-xl w-full mt-4">
-                            <div class="p-2 w-full justify-between m-auto flex items-space-around">
-                                <h2 class="text-indigo-600 text-base font-bold mb-4">{{ 'Taller:' . ' ' . $nombre }}</h2>
+                            <div class="px-8">
+                                <h3 class="text-center text-indigo-600 text-base font-bold">
+                                    {{ 'Reporte Semanal ' . $fechaInicio . ' al ' . $fechaFin }}</h3>
+                                <h4 class="text-indigo-400 text-base">{{ 'Taller: ' . $nombre }}</h4>
+                                @if (count($inspectoresPorTaller[$nombre] ?? []) > 1)
+                                    <h4 class="text-indigo-400 text-base">
+                                        {{ 'Inspectores: ' . implode(' - ', $inspectoresPorTaller[$nombre]) }}</h4>
+                                @elseif (count($inspectoresPorTaller[$nombre] ?? []) == 1)
+                                    <h4 class="text-indigo-400 text-base">
+                                        {{ 'Inspector: ' . $inspectoresPorTaller[$nombre][0] }}
+                                    </h4>
+                                @endif
                             </div>
                             <div class="overflow-x-auto m-auto w-full">
                                 <div class="inline-block min-w-full py-2 sm:px-6">
@@ -115,35 +125,39 @@
                                                     </th>
                                                     <th scope="col"
                                                         class="border-r px-6 py-4 dark:border-neutral-500">
-                                                        Fecha
+                                                        FECHA
                                                     </th>
                                                     <th scope="col"
                                                         class="border-r px-6 py-4 dark:border-neutral-500">
-                                                        Hoja
+                                                        N° CERTIFICADO
                                                     </th>
                                                     <th scope="col"
                                                         class="border-r px-6 py-4 dark:border-neutral-500">
-                                                        Taller
+                                                        TALLER
                                                     </th>
                                                     <th scope="col"
                                                         class="border-r px-6 py-4 dark:border-neutral-500">
-                                                        Inspector
+                                                        INSPECTOR
                                                     </th>
                                                     <th scope="col"
                                                         class="border-r px-6 py-4 dark:border-neutral-500">
-                                                        Placa
+                                                        PLACA
                                                     </th>
                                                     <th scope="col"
                                                         class="border-r px-6 py-4 dark:border-neutral-500">
-                                                        Servicio
+                                                        SERVICIO
                                                     </th>
                                                     <th scope="col"
                                                         class="border-r px-6 py-4 dark:border-neutral-500">
-                                                        Observaciones
+                                                        FAC O BOLT
                                                     </th>
                                                     <th scope="col"
                                                         class="border-r px-6 py-4 dark:border-neutral-500">
-                                                        Monto
+                                                        OBSERVACIONES
+                                                    </th>
+                                                    <th scope="col"
+                                                        class="border-r px-6 py-4 dark:border-neutral-500">
+                                                        MONTO
                                                     </th>
                                                 </tr>
                                             </thead>
@@ -157,7 +171,8 @@
                                                         </td>
                                                         <td
                                                             class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
-                                                            {{ $data['fecha'] ?? 'S.F' }}</td>
+                                                            {{-- {{ $data['fecha'] ?? 'S.F' }}</td> --}}
+                                                            {{ isset($data['fecha']) ? \Carbon\Carbon::parse($data['fecha'])->format('Y-m-d') : 'S.F' }}
                                                         </td>
                                                         <td
                                                             class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
@@ -194,17 +209,21 @@
                                                         </td>
                                                         <td
                                                             class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
-                                                            {{ $data['precio'] ?? 'S.P' }}
+
+                                                        </td>
+                                                        <td
+                                                            class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
+                                                            S/{{ $data['precio'] ?? '0.00' }}
                                                         </td>
                                                     </tr>
                                                 @endforeach
                                                 <tr class="border-b dark:border-neutral-500 bg-green-200">
-                                                    <td colspan="8"
+                                                    <td colspan="9"
                                                         class="border-r px-6 py-3 dark:border-neutral-500 font-bold text-right">
                                                         Total:
                                                     </td>
                                                     <td class="border-r px-6 py-3 dark:border-neutral-500 font-bold">
-                                                        {{ number_format(collect($certificacion)->sum('precio'), 2) }}
+                                                        S/{{ number_format(collect($certificacion)->sum('precio'), 2) }}
                                                     </td>
                                                 </tr>
                                             </tbody>

@@ -532,19 +532,19 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                             <x-jet-responsive-nav-link class="text-sm truncate"
                                                 href="{{ route('reportes.reporteServiciosPorInspector') }}"
                                                 :active="request()->routeIs('reportes.reporteServiciosPorInspector')">
-                                                Reporte de Servicios por inspector
+                                                Reporte Servicios por inspector
                                             </x-jet-responsive-nav-link>
                                         @endcan
                                         @can('reportes.reporteFotosPorInspector')
                                             <x-jet-responsive-nav-link class="text-sm truncate"
                                                 href="{{ route('reportes.reporteFotosPorInspector') }}" :active="request()->routeIs('reportes.reporteFotosPorInspector')">
-                                                Reporte de Fotos
+                                                Reporte Fotos
                                             </x-jet-responsive-nav-link>
                                         @endcan
                                         @can('reportes.reporteDocumentosTaller')
                                             <x-jet-responsive-nav-link class="text-sm truncate"
                                                 href="{{ route('reportes.reporteDocumentosTaller') }}" :active="request()->routeIs('reportes.reporteDocumentosTaller')">
-                                                Reporte de Documentos a vencer
+                                                Reporte Documentos a vencer
                                             </x-jet-responsive-nav-link>
                                         @endcan                                        
                                         @can('reportes.reporteCalcularGasol')
@@ -559,16 +559,23 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                                 Reporte MTC Taller
                                             </x-jet-responsive-nav-link>
                                         @endcan
-                                        @can('reportes.reporteActualizarPrecio')
+                                        @can('reportes.reporteCalcular')
                                             <x-jet-responsive-nav-link class="text-sm truncate"
-                                                href="{{ route('reportes.reporteActualizarPrecio') }}" :active="request()->routeIs('reportes.reporteActualizarPrecio')">
-                                                Reporte MTC Actualizar
+                                                href="{{ route('reportes.reporteCalcular') }}" :active="request()->routeIs('reportes.reporteCalcular')">
+                                                Reporte MTC Semanal
                                             </x-jet-responsive-nav-link>
                                         @endcan
+                                        
                                         @can('reportes.reporteMTG')
                                             <x-jet-responsive-nav-link class="text-sm truncate"
                                                 href="{{ route('reportes.reporteMTG') }}" :active="request()->routeIs('reportes.reporteMTG')">
                                                 Reporte MTC Detallado
+                                            </x-jet-responsive-nav-link>
+                                        @endcan
+                                        @can('reportes.reporteActualizarPrecio')
+                                            <x-jet-responsive-nav-link class="text-sm truncate"
+                                                href="{{ route('reportes.reporteActualizarPrecio') }}" :active="request()->routeIs('reportes.reporteActualizarPrecio')">
+                                                Reporte MTC Actualizar
                                             </x-jet-responsive-nav-link>
                                         @endcan
 

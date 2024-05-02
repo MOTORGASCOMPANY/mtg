@@ -52,7 +52,10 @@ class ReporteCalcularGasol extends Component
         //dd($this->aux);        
         $this->diferencias = $this->encontrarDiferenciaPorPlaca($this->importados, $this->tabla);
         $this->tabla2 = $this->tabla->merge($this->diferencias);
-        $this->aux = $this->tabla2->groupBy('inspector');
+        //$this->aux = $this->tabla2->groupBy('inspector')->sortBy();
+        $this->aux = $this->tabla2->groupBy('inspector')->sortBy(function ($item, $key) { //para ordenar 
+            return $key;
+        });
         $this->sumaPrecios();
     }
 

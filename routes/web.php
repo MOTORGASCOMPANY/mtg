@@ -215,10 +215,11 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
     Route::get('/Reporte-de-documentos-a-vencer',ReporteDocumentosTaller::class)->name('reportes.reporteDocumentosTaller');
     //Rutas para ver los reportes de los servicios    
     Route::get('/ReporteCalcular',ReporteCalcularGasol::class)->name('reportes.reporteCalcularGasol');//1
-    Route::get('/Reporte-actualizar-precio',ActualizarPrecios::class)->name('reportes.reporteActualizarPrecio');//2
-    Route::get('/Reporte-MTG',ReportesMtg::class)->name('reportes.reporteMTG');//3 mejorar descarga excell
-    Route::get('/Reporte-semanal',ReporteCalcular::class)->name('reportes.reporteCalcular');//4
-    Route::get('/ReporteCalcular-taller',ReporteCalcularChip::class)->name('reportes.reporteCalcularChip');//5 //mejorar diseño excell
+    Route::get('/ReporteCalcular-taller',ReporteCalcularChip::class)->name('reportes.reporteCalcularChip');//2 //mejorar diseño excell
+    Route::get('/Reporte-semanal',ReporteCalcular::class)->name('reportes.reporteCalcular');//3    
+    Route::get('/Reporte-MTG',ReportesMtg::class)->name('reportes.reporteMTG');//4 mejorar descarga excell
+    Route::get('/Reporte-actualizar-precio',ActualizarPrecios::class)->name('reportes.reporteActualizarPrecio');//5
+    
 
     //Prueba Fotos
     Route::get('/CargaFotos',CargaFotos::class)->name('CargaFotos');

@@ -47,11 +47,31 @@ class ReporteCalcularGasol extends Component
     public function procesar()
     {
         $this->validate();
+        //Carga datos de certificacion
         $this->tabla = $this->generaData();
+        //Carga datos de Servicios Importados
         $this->importados = $this->cargaServiciosGasolution();
-        //dd($this->aux);        
+        //Trim para eliminar espacios por inspector y taller
+        $this->importados = $this->importados->map(function ($item) {
+            $item['placa'] = trim($item['placa']);
+            $item['inspector'] = trim($item['inspector']);
+            $item['taller'] = trim($item['taller']);
+            return $item;
+        });
+        //Diferencias entre importados y tabla
         $this->diferencias = $this->encontrarDiferenciaPorPlaca($this->importados, $this->tabla);
-        $this->tabla2 = $this->tabla->merge($this->diferencias);
+        //$this->tabla2 = $this->tabla->merge($this->diferencias);
+
+        //Merge para combinar tabla y diferencias -  strtolower para ignorar Mayusculas y Minusculas 
+        $this->tabla2 = $this->tabla->merge($this->diferencias, function ($item1, $item2) {
+            $inspector1 = strtolower($item1['inspector']);
+            $inspector2 = strtolower($item2['inspector']);
+            $taller1 = strtolower($item1['taller']);
+            $taller2 = strtolower($item2['taller']);
+            $comparison = strcasecmp($inspector1 . $taller1, $inspector2 . $taller2);
+            return $comparison;
+        });
+
         //$this->aux = $this->tabla2->groupBy('inspector')->sortBy();
         $this->aux = $this->tabla2->groupBy('inspector')->sortBy(function ($item, $key) { //para ordenar 
             return $key;
@@ -116,6 +136,35 @@ class ReporteCalcularGasol extends Component
 
         return $diferencias;
     }
+
+    /*public function encontrarDiferenciaPorPlaca($lista1, $lista2)
+    {
+        $diferencias = [];
+
+        foreach ($lista1 as $elemento1) {
+            $placa1 = $elemento1['placa'];
+            $inspector1 = trim($elemento1['inspector']); // Trim para eliminar espacios en blanco
+
+            $encontrado = false;
+
+            foreach ($lista2 as $elemento2) {
+                $placa2 = $elemento2['placa'];
+                $inspector2 = trim($elemento2['inspector']); // Trim para eliminar espacios en blanco
+
+                if ($placa1 === $placa2 && $inspector1 === $inspector2) {
+                    $encontrado = true;
+                    break;
+                }
+            }
+
+            if (!$encontrado) {
+                $diferencias[] = $elemento1;
+            }
+        }
+
+        return $diferencias;
+    }*/
+
 
     public function cargaServiciosGasolution()
     {
@@ -183,7 +232,6 @@ class ReporteCalcularGasol extends Component
         //$tabla = collect([$data]);
         //dd($tabla);
         // Generar el archivo de Excel usando la librería Maatwebsite/Excel
-       return Excel::download(new ReporteCalcularExport2($data), 'reporte_calculo.xlsx');
-        
+        return Excel::download(new ReporteCalcularExport2($data), 'reporte_calculo.xlsx');
     }
 }

@@ -48,6 +48,13 @@ class ReportesMtg extends Component
         $this->validate();
         $this->tabla = $this->generaData();
         $this->importados = $this->cargaServiciosGasolution();
+        //TRIM PARA ELIMINAR ESPACIOS 
+        $this->importados = $this->importados->map(function ($item) {
+            $item['placa'] = trim($item['placa']);
+            $item['inspector'] = trim($item['inspector']);
+            $item['taller'] = trim($item['taller']);
+            return $item;
+        });
         $this->diferencias = $this->encontrarDiferenciaPorPlaca($this->importados, $this->tabla);
     }
 

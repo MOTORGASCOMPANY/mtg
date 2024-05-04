@@ -47,10 +47,28 @@ class ReporteCalcularChip extends Component
         $this->validate();
         $this->tabla = $this->generaData();
         $this->importados = $this->cargaServiciosGasolution();
-        $this->diferencias = $this->encontrarDiferenciaPorPlaca($this->importados, $this->tabla);
-        //dd($this->diferencias);
-        $this->tabla2 = $this->tabla->merge($this->diferencias);
-        $this->aux = $this->tabla2->groupBy('taller');
+        $this->importados = $this->importados->map(function ($item) {
+            $item['placa'] = trim($item['placa']);
+            $item['inspector'] = trim($item['inspector']);
+            $item['taller'] = trim($item['taller']);
+            return $item;
+        });
+        $this->diferencias = $this->encontrarDiferenciaPorPlaca($this->importados, $this->tabla);        
+        //$this->tabla2 = $this->tabla->merge($this->diferencias);
+        //Merge para combinar tabla y diferencias -  strtolower para ignorar Mayusculas y Minusculas 
+        $this->tabla2 = $this->tabla->merge($this->diferencias, function ($item1, $item2) {
+            $inspector1 = strtolower($item1['inspector']);
+            $inspector2 = strtolower($item2['inspector']);
+            $taller1 = strtolower($item1['taller']);
+            $taller2 = strtolower($item2['taller']);
+            $comparison = strcasecmp($inspector1 . $taller1, $inspector2 . $taller2);
+            return $comparison;
+        });
+
+        //$this->aux = $this->tabla2->groupBy('taller');
+        $this->aux = $this->tabla2->groupBy('taller')->sortBy(function ($item, $key) { //para ordenar 
+            return $key;
+        });
         $this->generarInspectoresPorTaller();
     }
 
@@ -68,8 +86,7 @@ class ReporteCalcularChip extends Component
     public function exportarExcel($data)
     {
         //dd($data);
-       return Excel::download(new ReporteTallerExport($data), 'reporte_calculoTaller.xlsx');
-        
+        return Excel::download(new ReporteTallerExport($data), 'reporte_calculoTaller.xlsx');
     }
 
     public function generaData()
@@ -83,7 +100,7 @@ class ReporteCalcularChip extends Component
             ->whereIn('estado', [3, 1])
             ->get();
 
-        //TODO CER-PENDIENTES ESO MANO
+        //TODO CER-PENDIENTES:
         $cerPendiente = CertificacionPendiente::idTalleres($this->taller)
             ->IdInspectores($this->ins)
             ->rangoFecha($this->fechaInicio, $this->fechaFin)

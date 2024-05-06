@@ -19,6 +19,8 @@ class Memorandos extends Component
     public $mostrarCampos = false;
     public $memorando;
     public $imagen;
+    public $memorandoPreview = null;
+
 
     public function mount()
     {
@@ -41,7 +43,7 @@ class Memorandos extends Component
             'motivo' => 'required',
             'fecha' => 'required',
         ]);
-        
+
         $nuevoMemorando =  Memorando::create([
             'idUser' => $this->inspector,
             'remitente' => $this->remitente,
@@ -55,15 +57,34 @@ class Memorandos extends Component
         //$users = User::role('inspector')->get();
         $users = User::findOrFail($this->inspector);
         Notification::send($users, new MemorandoSolicitud($nuevoMemorando));
-        $this->memorando = $nuevoMemorando;       
-        $this->reset(['inspector', 'remitente', 'destinatario', 'cargo', 'cargoremi','motivo', 'fecha']);
+        $this->memorando = $nuevoMemorando;
+        $this->reset(['inspector', 'remitente', 'destinatario', 'cargo', 'cargoremi', 'motivo', 'fecha']);
         $this->mostrarCampos = true;
-        $this->emit("minAlert", ["titulo" => "¡EXCELENTE TRABAJO!", "mensaje" => "El memorando se realizo correctamente", "icono" => "success"]);        
+        $this->emit("minAlert", ["titulo" => "¡EXCELENTE TRABAJO!", "mensaje" => "El memorando se realizo correctamente", "icono" => "success"]);
         //return redirect('Memorando');
     }
 
     public function seleccionarInspector()
     {
         $this->mostrarCampos = true;
+    }
+
+    public function updated($field)
+    {
+        $this->generarVistaPrevia();
+    }
+
+    public function generarVistaPrevia()
+    {
+        $nombreInspector = User::findOrFail($this->inspector)->name; 
+        $memorando = [
+            'fecha' => $this->fecha,
+            'remitente' => $this->remitente,
+            'cargoremi' => $this->cargoremi,
+            'idUser' => $nombreInspector,
+            'cargo' => $this->cargo,
+            'motivo' => $this->motivo,
+        ];
+        $this->memorandoPreview = $memorando;
     }
 }

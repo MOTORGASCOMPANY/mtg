@@ -6,7 +6,7 @@
                     <div class="p-2 w-64 my-4 md:w-full">
                         <h2 class="text-indigo-600 font-bold text-3xl">
                             <i class="fa-solid fa-square-poll-vertical fa-xl"></i>
-                            &nbsp;REPORTE GENERAL DETALLADO
+                            &nbsp;REPORTE GENERAL DETALLADO2
                         </h2>
                     </div>
 

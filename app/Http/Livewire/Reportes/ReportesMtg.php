@@ -157,7 +157,7 @@ class ReportesMtg extends Component
     }
 
 
-    /*public function encontrarDiferenciaPorPlaca($lista1, $lista2)
+    public function encontrarDiferenciaPorPlaca($lista1, $lista2)
     {
         $diferencias = [];
 
@@ -180,9 +180,9 @@ class ReportesMtg extends Component
         }
 
         return $diferencias;
-    }*/
+    }
 
-    public function encontrarDiferenciaPorPlaca($lista1, $lista2)
+    /*public function encontrarDiferenciaPorPlaca($lista1, $lista2)
     {
         $diferencias = [];
         foreach ($lista1 as $elemento1) {
@@ -209,7 +209,7 @@ class ReportesMtg extends Component
         }
 
         return $diferencias;
-    }
+    }*/
 
 
     public function cargaServiciosGasolution()

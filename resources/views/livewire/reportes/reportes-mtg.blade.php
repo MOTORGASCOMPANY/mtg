@@ -12,49 +12,52 @@
 
                     <div class="w-full  items-center md:flex md:flex-row md:justify-between ">
 
-                        <div x-data="{ isOpen: false }" class="flex bg-white items-center p-2 rounded-md mb-4">
-                            <span>Taller: </span>
-                            <div class="relative">
-                                <div x-on:click="isOpen = !isOpen" class="cursor-pointer">
-                                    <input wire:model="taller" type="text" placeholder="Seleccione" readonly
-                                        class="bg-gray-50 border-indigo-500 rounded-md outline-none ml-1 block w-96">
+                        @hasanyrole('administrador|supervisor|Administrador del sistema')
+                            <div x-data="{ isOpen: false }" class="flex bg-white items-center p-2 rounded-md mb-4">
+                                <span>Taller: </span>
+                                <div class="relative">
+                                    <div x-on:click="isOpen = !isOpen" class="cursor-pointer">
+                                        <input wire:model="taller" type="text" placeholder="Seleccione" readonly
+                                            class="bg-gray-50 border-indigo-500 rounded-md outline-none ml-1 block w-96">
+                                    </div>
+                                    <div x-show="isOpen" x-on:click.away="isOpen = false"
+                                        class="absolute z-10 mt-2 bg-white border rounded-md shadow-md max-h-96 overflow-y-auto">
+                                        @isset($talleres)
+                                            @foreach ($talleres as $tallerItem)
+                                                <label for="taller_{{ $tallerItem->id }}"
+                                                    class="block px-4 py-2 cursor-pointer">
+                                                    <input id="taller_{{ $tallerItem->id }}" wire:model="taller" type="checkbox"
+                                                        value="{{ $tallerItem->id }}" class="mr-2">
+                                                    {{ $tallerItem->nombre }}
+                                                </label>
+                                            @endforeach
+                                        @endisset
+                                    </div>
                                 </div>
-                                <div x-show="isOpen" x-on:click.away="isOpen = false"
-                                    class="absolute z-10 mt-2 bg-white border rounded-md shadow-md max-h-96 overflow-y-auto">
-                                    @isset($talleres)
-                                        @foreach ($talleres as $tallerItem)
-                                            <label for="taller_{{ $tallerItem->id }}"
+                            </div>
+
+
+                            <div x-data="{ isOpen: false }" class="flex bg-white items-center p-2 rounded-md mb-4">
+                                <span>Inspector: </span>
+                                <div class="relative">
+                                    <div x-on:click="isOpen = !isOpen" class="cursor-pointer">
+                                        <input wire:model="ins" type="text" placeholder="Seleccione" readonly
+                                            class="bg-gray-50 border-indigo-500 rounded-md outline-none ml-1 block w-96">
+                                    </div>
+                                    <div x-show="isOpen" x-on:click.away="isOpen = false"
+                                        class="absolute z-10 mt-2 bg-white border rounded-md shadow-md max-h-96 overflow-y-auto">
+                                        @foreach ($inspectores as $inspector)
+                                            <label for="inspector_{{ $inspector->id }}"
                                                 class="block px-4 py-2 cursor-pointer">
-                                                <input id="taller_{{ $tallerItem->id }}" wire:model="taller" type="checkbox"
-                                                    value="{{ $tallerItem->id }}" class="mr-2">
-                                                {{ $tallerItem->nombre }}
+                                                <input id="inspector_{{ $inspector->id }}" wire:model="ins" type="checkbox"
+                                                    value="{{ $inspector->id }}" class="mr-2">
+                                                {{ $inspector->name }}
                                             </label>
                                         @endforeach
-                                    @endisset
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div x-data="{ isOpen: false }" class="flex bg-white items-center p-2 rounded-md mb-4">
-                            <span>Inspector: </span>
-                            <div class="relative">
-                                <div x-on:click="isOpen = !isOpen" class="cursor-pointer">
-                                    <input wire:model="ins" type="text" placeholder="Seleccione" readonly
-                                        class="bg-gray-50 border-indigo-500 rounded-md outline-none ml-1 block w-96">
-                                </div>
-                                <div x-show="isOpen" x-on:click.away="isOpen = false"
-                                    class="absolute z-10 mt-2 bg-white border rounded-md shadow-md max-h-96 overflow-y-auto">
-                                    @foreach ($inspectores as $inspector)
-                                        <label for="inspector_{{ $inspector->id }}"
-                                            class="block px-4 py-2 cursor-pointer">
-                                            <input id="inspector_{{ $inspector->id }}" wire:model="ins" type="checkbox"
-                                                value="{{ $inspector->id }}" class="mr-2">
-                                            {{ $inspector->name }}
-                                        </label>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
+                        @endhasanyrole
 
                         <div class="flex items-center space-x-2">
                             <div class="flex bg-white items-center p-2 w-1/2 md:w-48 rounded-md mb-4 ">
@@ -183,7 +186,9 @@
                                                             @if ($data['servicio'] == 'Chip por deterioro')
                                                                 @php
                                                                     $ubicacionParts = explode('/', $data['ubi_hoja']);
-                                                                    $secondPart = isset($ubicacionParts[1]) ? trim($ubicacionParts[1]) : 'N.A';
+                                                                    $secondPart = isset($ubicacionParts[1])
+                                                                        ? trim($ubicacionParts[1])
+                                                                        : 'N.A';
                                                                     echo $secondPart;
                                                                 @endphp
                                                             @else

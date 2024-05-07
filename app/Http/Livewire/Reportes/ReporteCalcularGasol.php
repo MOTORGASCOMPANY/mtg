@@ -51,6 +51,7 @@ class ReporteCalcularGasol extends Component
         $this->tabla = $this->generaData();
         //Carga datos de Servicios Importados
         $this->importados = $this->cargaServiciosGasolution();
+        dd($this->importados);
         //Trim para eliminar espacios por inspector y taller
         $this->tabla = $this->tabla->map(function ($item) {
             $item['placa'] = trim($item['placa']);
@@ -84,7 +85,7 @@ class ReporteCalcularGasol extends Component
         });
 
         //$this->aux = $this->tabla2->groupBy('inspector')->sortBy();
-        $this->aux = $this->importados->groupBy('inspector')->sortBy(function ($item, $key) { //para ordenar 
+        $this->aux = $this->tabla2->groupBy('inspector')->sortBy(function ($item, $key) { //para ordenar 
             return $key;
         });
         $this->sumaPrecios();

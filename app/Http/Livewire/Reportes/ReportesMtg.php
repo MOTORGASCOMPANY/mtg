@@ -49,12 +49,12 @@ class ReportesMtg extends Component
         $this->tabla = $this->generaData();
         $this->importados = $this->cargaServiciosGasolution();
         //TRIM PARA ELIMINAR ESPACIOS 
-        /*$this->importados = $this->importados->map(function ($item) {
+        $this->importados = $this->importados->map(function ($item) {
             $item['placa'] = trim($item['placa']);
             $item['inspector'] = trim($item['inspector']);
             $item['taller'] = trim($item['taller']);
             return $item;
-        });*/
+        });
         $this->diferencias = $this->encontrarDiferenciaPorPlaca($this->importados, $this->tabla);
         //dd($this->diferencias);
     }
@@ -157,7 +157,7 @@ class ReportesMtg extends Component
     }
 
 
-    public function encontrarDiferenciaPorPlaca($lista1, $lista2)
+    /*public function encontrarDiferenciaPorPlaca($lista1, $lista2)
     {
         $diferencias = [];
 
@@ -180,9 +180,9 @@ class ReportesMtg extends Component
         }
 
         return $diferencias;
-    }
+    }*/
 
-    /*public function encontrarDiferenciaPorPlaca($lista1, $lista2)
+    public function encontrarDiferenciaPorPlaca($lista1, $lista2)
     {
         $diferencias = [];
         foreach ($lista1 as $elemento1) {
@@ -209,7 +209,7 @@ class ReportesMtg extends Component
         }
 
         return $diferencias;
-    }*/
+    }
 
 
     public function cargaServiciosGasolution()

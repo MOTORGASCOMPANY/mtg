@@ -156,7 +156,7 @@ class ReportesMtg extends Component
     }
 
 
-    /*public function encontrarDiferenciaPorPlaca($lista1, $lista2)
+    public function encontrarDiferenciaPorPlaca($lista1, $lista2)
     {
         $diferencias = [];
 
@@ -179,9 +179,9 @@ class ReportesMtg extends Component
         }
 
         return $diferencias;
-    }*/
+    }
 
-    public function encontrarDiferenciaPorPlaca($lista1, $lista2)
+    /*public function encontrarDiferenciaPorPlaca($lista1, $lista2)
     {
         $diferencias = [];
         foreach ($lista1 as $elemento1) {
@@ -196,7 +196,7 @@ class ReportesMtg extends Component
                 $servicio2 = $elemento2['servicio'];
 
                 // Verificar si la placa, el inspector y el servicio son iguales
-                if ($placa1 === $placa2 && $inspector1 === $inspector2 && $servicio1 === $servicio2) { 
+                if ($placa1 === $placa2 && $inspector1 === $inspector2 && $servicio1 === $servicio2) {
                     $encontrado = true;
                     break;
                 }
@@ -208,7 +208,7 @@ class ReportesMtg extends Component
         }
 
         return $diferencias;
-    }
+    }*/
 
 
     public function cargaServiciosGasolution()

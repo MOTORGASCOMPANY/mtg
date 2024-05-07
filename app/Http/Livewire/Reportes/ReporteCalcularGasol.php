@@ -58,12 +58,17 @@ class ReporteCalcularGasol extends Component
             $item['taller'] = trim($item['taller']);
             return $item;
         });
-        //Diferencias entre importados y tabla
-        $this->diferencias = $this->encontrarDiferenciaPorPlaca($this->importados, $this->tabla);
+        //Diferencias entre tabla e importados
+        $this->diferencias = $this->encontrarDiferenciaPorPlaca($this->tabla, $this->importados);
         //$this->tabla2 = $this->tabla->merge($this->diferencias);
 
-        //Merge para combinar tabla y diferencias -  strtolower para ignorar Mayusculas y Minusculas 
-        $this->tabla2 = $this->tabla->merge($this->diferencias, function ($item1, $item2) {
+        // Filtrar las diferencias que tienen 'servicio' = 'Duplicado GNV'
+        $duplicadosGNV = $this->diferencias->filter(function ($item) {
+            return $item['servicio'] === 'Duplicado GNV';
+        });
+
+        //Merge para combinar importados y diferencias -  strtolower para ignorar Mayusculas y Minusculas 
+        $this->tabla2 = $this->importados->merge($duplicadosGNV, function ($item1, $item2) {
             $inspector1 = strtolower($item1['inspector']);
             $inspector2 = strtolower($item2['inspector']);
             $taller1 = strtolower($item1['taller']);
@@ -139,7 +144,9 @@ class ReporteCalcularGasol extends Component
 
     public function encontrarDiferenciaPorPlaca($lista1, $lista2)
     {
-        $diferencias = [];
+        //$diferencias = [];
+        $diferencias = collect();
+
         foreach ($lista1 as $elemento1) {
             $placa1 = $elemento1['placa'];
             $inspector1 = $elemento1['inspector'];
@@ -159,7 +166,9 @@ class ReporteCalcularGasol extends Component
             }
 
             if (!$encontrado) {
-                $diferencias[] = $elemento1;
+                //$diferencias[] = $elemento1;
+                // Convertir el elemento actual en un objeto Collection y agregarlo a $diferencias
+                $diferencias->push(collect($elemento1));
             }
         }
 

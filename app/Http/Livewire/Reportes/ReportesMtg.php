@@ -49,6 +49,12 @@ class ReportesMtg extends Component
         $this->tabla = $this->generaData();
         $this->importados = $this->cargaServiciosGasolution();
         //TRIM PARA ELIMINAR ESPACIOS 
+        $this->tabla = $this->tabla->map(function ($item) {
+            $item['placa'] = trim($item['placa']);
+            $item['inspector'] = trim($item['inspector']);
+            $item['taller'] = trim($item['taller']);
+            return $item;
+        });
         $this->importados = $this->importados->map(function ($item) {
             $item['placa'] = trim($item['placa']);
             $item['inspector'] = trim($item['inspector']);

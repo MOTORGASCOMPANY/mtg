@@ -50,12 +50,13 @@ class ReportesMtg extends Component
         $this->importados = $this->cargaServiciosGasolution();
         //TRIM PARA ELIMINAR ESPACIOS 
         $this->importados = $this->importados->map(function ($item) {
-            $item['placa'] = trim($item['placa']);
+            //$item['placa'] = trim($item['placa']);
             $item['inspector'] = trim($item['inspector']);
             $item['taller'] = trim($item['taller']);
             return $item;
         });
         $this->diferencias = $this->encontrarDiferenciaPorPlaca($this->importados, $this->tabla);
+        dd($this->diferencias);
     }
 
     public function exportarExcel()
@@ -156,7 +157,7 @@ class ReportesMtg extends Component
     }
 
 
-    public function encontrarDiferenciaPorPlaca($lista1, $lista2)
+    /*public function encontrarDiferenciaPorPlaca($lista1, $lista2)
     {
         $diferencias = [];
 
@@ -179,24 +180,24 @@ class ReportesMtg extends Component
         }
 
         return $diferencias;
-    }
+    }*/
 
-    /*public function encontrarDiferenciaPorPlaca($lista1, $lista2)
+    public function encontrarDiferenciaPorPlaca($lista1, $lista2)
     {
         $diferencias = [];
         foreach ($lista1 as $elemento1) {
             $placa1 = $elemento1['placa'];
             $inspector1 = $elemento1['inspector'];
-            $servicio1 = $elemento1['servicio'];
+            //$servicio1 = $elemento1['servicio'];
             $encontrado = false;
 
             foreach ($lista2 as $elemento2) {
                 $placa2 = $elemento2['placa'];
                 $inspector2 = $elemento2['inspector'];
-                $servicio2 = $elemento2['servicio'];
+                //$servicio2 = $elemento2['servicio'];
 
                 // Verificar si la placa, el inspector y el servicio son iguales
-                if ($placa1 === $placa2 && $inspector1 === $inspector2 && $servicio1 === $servicio2) {
+                if ($placa1 === $placa2 && $inspector1 === $inspector2) {   //  && $servicio1 === $servicio2
                     $encontrado = true;
                     break;
                 }
@@ -208,7 +209,7 @@ class ReportesMtg extends Component
         }
 
         return $diferencias;
-    }*/
+    }
 
 
     public function cargaServiciosGasolution()

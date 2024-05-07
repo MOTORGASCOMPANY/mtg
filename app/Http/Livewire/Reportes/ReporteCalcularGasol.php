@@ -84,7 +84,7 @@ class ReporteCalcularGasol extends Component
         });
 
         //$this->aux = $this->tabla2->groupBy('inspector')->sortBy();
-        $this->aux = $this->tabla2->groupBy('inspector')->sortBy(function ($item, $key) { //para ordenar 
+        $this->aux = $this->importados->groupBy('inspector')->sortBy(function ($item, $key) { //para ordenar 
             return $key;
         });
         $this->sumaPrecios();

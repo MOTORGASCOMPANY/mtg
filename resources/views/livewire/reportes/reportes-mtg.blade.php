@@ -71,7 +71,6 @@
                                     class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full truncate" />
                             </div>
                         </div>
-
                         <button wire:click="procesar()"
                             class="bg-green-400 px-6 py-4 w-full md:w-auto rounded-md text-white font-semibold tracking-wide cursor-pointer mb-4">
                             <p class="truncate"> Generar reporte </p>

@@ -214,11 +214,11 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
     Route::get('/Reporte-de-fotos-por-inspector',ReporteFotosPorInspector::class)->name('reportes.reporteFotosPorInspector');
     Route::get('/Reporte-de-documentos-a-vencer',ReporteDocumentosTaller::class)->name('reportes.reporteDocumentosTaller');
     //Rutas para ver los reportes de los servicios    
-    Route::get('/ReporteCalcular',ReporteCalcularGasol::class)->name('reportes.reporteCalcularGasol');//1
-    Route::get('/ReporteCalcular-taller',ReporteCalcularChip::class)->name('reportes.reporteCalcularChip');//2 //mejorar diseño excell
-    Route::get('/Reporte-semanal',ReporteCalcular::class)->name('reportes.reporteCalcular');//3    
-    Route::get('/Reporte-MTG',ReportesMtg::class)->name('reportes.reporteMTG');//4 mejorar descarga excell
-    Route::get('/Reporte-actualizar-precio',ActualizarPrecios::class)->name('reportes.reporteActualizarPrecio');//5
+    Route::get('/ReporteCalcular',ReporteCalcularGasol::class)->middleware('can:reportes.reporteCalcularGasol')->name('reportes.reporteCalcularGasol');//1
+    Route::get('/ReporteCalcular-taller',ReporteCalcularChip::class)->middleware('can:reportes.reporteCalcularChip')->name('reportes.reporteCalcularChip');//2 //mejorar diseño excell
+    Route::get('/Reporte-semanal',ReporteCalcular::class)->middleware('can:reportes.reporteCalcular')->name('reportes.reporteCalcular');//3    
+    Route::get('/Reporte-MTG',ReportesMtg::class)->middleware('can:reportes.reporteMTG')->name('reportes.reporteMTG');//4 mejorar descarga excell
+    Route::get('/Reporte-actualizar-precio',ActualizarPrecios::class)->middleware('can:reportes.reporteActualizarPrecio')->name('reportes.reporteActualizarPrecio');//5
     
 
     //Prueba Fotos

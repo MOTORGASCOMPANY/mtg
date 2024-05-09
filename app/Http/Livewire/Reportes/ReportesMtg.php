@@ -14,6 +14,7 @@ use App\Models\Desmontes;
 use App\Models\User;
 use Illuminate\Cache\NullStore;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -24,6 +25,8 @@ class ReportesMtg extends Component
     public $ins = [], $taller = [];
     public $grupoinspectores;
     public $tabla, $diferencias, $importados;
+    public $user;
+
 
 
     protected $rules = [
@@ -33,9 +36,13 @@ class ReportesMtg extends Component
 
     public function mount()
     {
-        $this->inspectores = User::role(['inspector', 'supervisor'])->orderBy('name')->get();
+        //$this->inspectores = User::role(['inspector', 'supervisor'])->orderBy('name')->get();
+        $this->inspectores = User::role(['inspector', 'supervisor'])
+            ->where('id', '!=', 201)
+            ->orderBy('name')
+            ->get();
         $this->talleres = Taller::orderBy('nombre')->get();
-        //$this->serviciosImportados = ServiciosImportados::all();
+        $this->user = Auth::user();
     }
 
     public function render()
@@ -78,28 +85,57 @@ class ReportesMtg extends Component
     public function generaData()
     {
         $tabla = new Collection();
-        //TODO CERTIFICACIONES:
-        $certificaciones = Certificacion::idTalleres($this->taller)
-            ->IdInspectores($this->ins)
-            ->rangoFecha($this->fechaInicio, $this->fechaFin)
-            ->where('pagado', 0)
-            ->whereIn('estado', [3, 1])
-            ->get();
 
-        //TODO CER-PENDIENTES ESO MANO
-        $cerPendiente = CertificacionPendiente::idTalleres($this->taller)
-            ->IdInspectores($this->ins)
-            ->rangoFecha($this->fechaInicio, $this->fechaFin)
-            ->where('estado', 1)
-            ->whereNull('idCertificacion')
-            ->get();
-        //TODO DESMONTES
-        /*$desmonte = Desmontes::idTalleres($this->taller)
-            ->IdInspectores($this->ins)
-            ->rangoFecha($this->fechaInicio, $this->fechaFin)
-            ->get();*/
+        if ($this->user->hasRole('inspector')) {
+            //TODO CERTIFICACIONES PARA INSPECTOR:
+            $certificaciones = Certificacion::idTalleres($this->taller)
+                //->IdInspectores($this->ins)
+                ->whereHas('Inspector', function ($query) {
+                    $query->where('id', $this->user->id);
+                })
+                ->rangoFecha($this->fechaInicio, $this->fechaFin)
+                ->where('pagado', 0)
+                ->whereIn('estado', [3, 1])
+                ->get();
 
-        //unificando certificaciones     
+            //TODO CER-PENDIENTES PARA INSPECTOR:
+            $cerPendiente = CertificacionPendiente::idTalleres($this->taller)
+                ->whereHas('Inspector', function ($query) {
+                    $query->where('id', $this->user->id);
+                })
+                ->rangoFecha($this->fechaInicio, $this->fechaFin)
+                ->where('estado', 1)
+                ->whereNull('idCertificacion')
+                ->get();
+        } else {
+            //TODO CERTIFICACIONES PARA OFICINA:
+            $certificaciones = Certificacion::idTalleres($this->taller)
+                ->IdInspectores($this->ins)
+                // Excluir al inspector con id = 201 
+                /*->whereHas('Inspector', function ($query) {
+                    $query->where('id', '!=', 201);
+                })*/
+                ->whereHas('Inspector', function ($query) {
+                    $query->whereNotIn('id', [37, 117, 201]);
+                    })
+                ->rangoFecha($this->fechaInicio, $this->fechaFin)
+                ->where('pagado', 0)
+                ->whereIn('estado', [3, 1])
+                ->get();
+
+            //TODO CER-PENDIENTES PARA OFICINA:
+            $cerPendiente = CertificacionPendiente::idTalleres($this->taller)
+                ->IdInspectores($this->ins)
+                ->whereHas('Inspector', function ($query) {
+                    $query->whereNotIn('id', [37, 117, 201]);
+                    })
+                ->rangoFecha($this->fechaInicio, $this->fechaFin)
+                ->where('estado', 1)
+                ->whereNull('idCertificacion')
+                ->get();
+        }
+
+        //UNIFICANDO CERTIFICACIONES    
         foreach ($certificaciones as $certi) {
             //modelo preliminar
             $data = [
@@ -138,25 +174,6 @@ class ReportesMtg extends Component
             ];
             $tabla->push($data);
         }
-
-        /*foreach ($desmonte as $desm) {
-            //modelo preliminar
-            $data = [
-                "id" => $desm->id,
-                "placa" => $desm->placa,
-                "taller" => $desm->Taller->nombre,
-                "inspector" => $desm->Inspector->name,
-                "servicio" => 'Desmonte de Cilindro', // es ese tipo de servicio por defecto
-                "num_hoja" => Null,
-                "ubi_hoja" => Null,
-                "precio" => $desm->precio,
-                "pagado" => $desm->pagado,
-                "estado" => $desm->estado,
-                "tipo_modelo" => $desm::class,
-                "fecha" => $desm->created_at,
-            ];
-            $tabla->push($data);
-        }*/
 
         $this->grupoinspectores = $tabla->groupBy('inspector');
         return $tabla;
@@ -221,10 +238,20 @@ class ReportesMtg extends Component
     public function cargaServiciosGasolution()
     {
         $disc = new Collection();
-        $dis = ServiciosImportados::Talleres($this->taller)
-            ->Inspectores($this->ins)
-            ->RangoFecha($this->fechaInicio, $this->fechaFin)
-            ->get();
+
+        if ($this->user->hasRole('inspector')) {
+            //TODO SER-IMPORTADOS PARA INSPECTOR:
+            $dis = ServiciosImportados::Talleres($this->taller)
+                ->Certificador($this->user->name)
+                ->RangoFecha($this->fechaInicio, $this->fechaFin)
+                ->get();
+        } else {
+            //TODO SER-IMPORTADOS PARA OFICINA:
+            $dis = ServiciosImportados::Talleres($this->taller)
+                ->Inspectores($this->ins)
+                ->RangoFecha($this->fechaInicio, $this->fechaFin)
+                ->get();
+        }
 
         foreach ($dis as $registro) {
             $data = [

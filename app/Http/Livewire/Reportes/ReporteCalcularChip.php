@@ -101,6 +101,10 @@ class ReporteCalcularChip extends Component
         //TODO CERTIFICACIONES:
         $certificaciones = Certificacion::idTalleres($this->taller)
             ->IdInspectores($this->ins)
+            // Excluir al inspector con id = 201 
+            ->whereHas('Inspector', function ($query) {
+                $query->whereNotIn('id', [37, 117, 201]);
+                })
             ->rangoFecha($this->fechaInicio, $this->fechaFin)
             ->where('pagado', 0)
             ->whereIn('estado', [3, 1])
@@ -109,6 +113,9 @@ class ReporteCalcularChip extends Component
         //TODO CER-PENDIENTES:
         $cerPendiente = CertificacionPendiente::idTalleres($this->taller)
             ->IdInspectores($this->ins)
+            ->whereHas('Inspector', function ($query) {
+                $query->whereNotIn('id', [37, 117, 201]);
+                })
             ->rangoFecha($this->fechaInicio, $this->fechaFin)
             ->where('estado', 1)
             ->whereNull('idCertificacion')

@@ -67,7 +67,7 @@ class ServiciosImportados extends Model
         if($search){
             $query->where('certificador', $search);
         }       
-    }
+    }    
 
     public function scopeTalleres(Builder $query,  $search): void{   
         $nombres=[];

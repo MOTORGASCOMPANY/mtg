@@ -486,7 +486,7 @@
                         </div>
                     </div>
                 </section>
-                @hasrole('Administrador del sistema|administrador')
+                @hasrole('Administrador del sistema|administrador|supervisor')
                     <div class="w-full my-4 p-2 rounded-lg border border-gray-200">
                         <div class="my-2 flex flex-row justify-center items-center">
                             <a href="{{ route('descargaFotosExp', ['id' => $expediente->id]) }}"

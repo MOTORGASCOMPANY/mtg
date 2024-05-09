@@ -151,6 +151,14 @@ class Certificacion extends Model
             $query->whereIn('idInspector', $search);
         }
     }
+    public function scopeIdTipoServicio($query, $search): void
+    {
+        if ($search) {
+            $query->whereHas('Servicio', function (Builder $query) use ($search) {
+                $query->where('tipoServicio_idtipoServicio', $search);
+            });
+        }
+    }
 
     //Scope para reporte  
     public function scopePagado($query)
@@ -902,12 +910,24 @@ class Certificacion extends Model
     }
 
     public static function certificarGnvPendiente(Taller $taller, Servicio $servicio, Material $hoja, vehiculo $vehiculo, User $inspector, $precio, $externoValue)
-    {
+    {  
+        $tipoServicioId = 2; // ID del tipo de 'Revisión anual GNV'
+        $defaultServicio = Servicio::where('taller_idtaller', $taller->id)
+            ->where('tipoServicio_idtipoServicio', $tipoServicioId)
+            ->first();
+    
+        if ($defaultServicio) {
+            $idServicio = $defaultServicio->id;
+        } else {
+            return null;
+        }
+
         $cert = Certificacion::create([
             "idVehiculo" => $vehiculo->id,
             "idTaller" => $taller->id,
             "idInspector" => $inspector->id,
-            "idServicio" => $servicio->id,
+            //"idServicio" => $servicio->id,
+            "idServicio" => $idServicio,
             "estado" => 1,
             "precio" => $precio,
             "pagado" => 0,

@@ -61,7 +61,7 @@
             </div>
         </div>
 
-        <div class="w-full overflow-x-auto table-responsive"> 
+        <div class="w-full overflow-x-auto table-responsive">
             @if ($certificaciones->count())
 
                 <table class="w-full whitespace-nowrap">
@@ -203,6 +203,7 @@
                                                     Conversion a GNV + chip
                                                 </p>
                                             @break
+
                                             @case(11)
                                                 <p
                                                     class="text-sm leading-none text-gray-600 ml-2 p-2 bg-yellow-200 rounded-full">
@@ -242,9 +243,22 @@
                                 <td class="pl-2">
                                     <div class="flex items-center">
                                         <p class="text-sm font-bold  text-indigo-700 ml-2">
-                                            {{ $certificacion->placa ?? 'N/A' }}</p>
+                                            {{-- $certificacion->placa ?? 'N/A' --}}
+                                            @if ($certificacion->Servicio->tipoServicio->id == 11)
+                                                @php
+                                                    $ubicacionParts = explode('/', $certificacion->UbicacionHoja);
+                                                    $secondPart = isset($ubicacionParts[1])
+                                                        ? trim($ubicacionParts[1])
+                                                        : 'N.A';
+                                                    echo $secondPart;
+                                                @endphp
+                                            @else
+                                                {{ $certificacion->placa ?? 'N/A' }}
+                                            @endif
+                                        </p>
                                     </div>
                                 </td>
+
                                 @if (isset($certificacion->Hoja->numSerie))
                                     <td class="">
                                         <div class="flex items-center justify-center">

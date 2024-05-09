@@ -54,7 +54,7 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
             </svg>
         </button>
         <a href="{{ route('dashboard') }}" class="py-2 h-1/2">
-            <img src="{{ asset('images/images/logo.png') }}" width="120" />
+            <img src="{{ asset('images/images/logo2.png') }}" width="120" />
         </a>
 
 

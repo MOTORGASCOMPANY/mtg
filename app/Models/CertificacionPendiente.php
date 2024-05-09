@@ -67,6 +67,14 @@ class CertificacionPendiente extends Model
             });
         }
     }
+    public function scopeIdTipoServicios($query, $search): void
+    {
+        if ($search) {
+            $query->whereHas('Servicio', function (Builder $query) use ($search) {
+                $query->where('tipoServicio_idtipoServicio', $search);
+            });
+        }
+    }
 
     public function scopeIdInspectores(Builder $query, $search): void
     {

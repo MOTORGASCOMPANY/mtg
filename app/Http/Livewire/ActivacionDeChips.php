@@ -44,7 +44,7 @@ class ActivacionDeChips extends Component
     {
         if (isset($this->vehiculo)) {
             if ($this->vehiculo->esCertificableGnv) {
-                $serv = Servicio::where([["taller_idtaller", $this->idTaller], ["tipoServicio_idtipoServicio", 2]])->first();                 
+                $serv = Servicio::where([["taller_idtaller", $this->idTaller], ["tipoServicio_idtipoServicio", 7]])->first(); //cambie el 7*2 para que guarde como activacion           
                 $precio = 0;
                 //Condicion para jalar el precio de la tabla servicios o precios_inspector                
                 if ($this->serviexterno == false) {

@@ -21,8 +21,9 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ReportesMtg extends Component
 {
-    public $fechaInicio, $fechaFin, $resultados, $talleres, $inspectores, $certis;
+    public $fechaInicio, $fechaFin, $resultados, $talleres, $inspectores, $certis, $tipos;
     public $ins = [], $taller = [];
+    public $servicio;
     public $grupoinspectores;
     public $tabla, $diferencias, $importados;
     public $user;
@@ -42,6 +43,7 @@ class ReportesMtg extends Component
             ->orderBy('name')
             ->get();
         $this->talleres = Taller::orderBy('nombre')->get();
+        $this->tipos = TipoServicio::all();
         $this->user = Auth::user();
     }
 
@@ -90,6 +92,7 @@ class ReportesMtg extends Component
             //TODO CERTIFICACIONES PARA INSPECTOR:
             $certificaciones = Certificacion::idTalleres($this->taller)
                 //->IdInspectores($this->ins)
+                ->IdTipoServicio($this->servicio)
                 ->whereHas('Inspector', function ($query) {
                     $query->where('id', $this->user->id);
                 })
@@ -102,7 +105,8 @@ class ReportesMtg extends Component
             $cerPendiente = CertificacionPendiente::idTalleres($this->taller)
                 ->whereHas('Inspector', function ($query) {
                     $query->where('id', $this->user->id);
-                })
+                })        
+                ->IdTipoServicios($this->servicio)        
                 ->rangoFecha($this->fechaInicio, $this->fechaFin)
                 ->where('estado', 1)
                 ->whereNull('idCertificacion')
@@ -111,10 +115,7 @@ class ReportesMtg extends Component
             //TODO CERTIFICACIONES PARA OFICINA:
             $certificaciones = Certificacion::idTalleres($this->taller)
                 ->IdInspectores($this->ins)
-                // Excluir al inspector con id = 201 
-                /*->whereHas('Inspector', function ($query) {
-                    $query->where('id', '!=', 201);
-                })*/
+                ->IdTipoServicio($this->servicio)                
                 ->whereHas('Inspector', function ($query) {
                     $query->whereNotIn('id', [37, 117, 201]);
                     })
@@ -129,6 +130,7 @@ class ReportesMtg extends Component
                 ->whereHas('Inspector', function ($query) {
                     $query->whereNotIn('id', [37, 117, 201]);
                     })
+                ->IdTipoServicios($this->servicio)
                 ->rangoFecha($this->fechaInicio, $this->fechaFin)
                 ->where('estado', 1)
                 ->whereNull('idCertificacion')
@@ -243,12 +245,14 @@ class ReportesMtg extends Component
             //TODO SER-IMPORTADOS PARA INSPECTOR:
             $dis = ServiciosImportados::Talleres($this->taller)
                 ->Certificador($this->user->name)
+                ->TipoServicio($this->servicio)
                 ->RangoFecha($this->fechaInicio, $this->fechaFin)
                 ->get();
         } else {
             //TODO SER-IMPORTADOS PARA OFICINA:
             $dis = ServiciosImportados::Talleres($this->taller)
                 ->Inspectores($this->ins)
+                ->TipoServicio($this->servicio)
                 ->RangoFecha($this->fechaInicio, $this->fechaFin)
                 ->get();
         }

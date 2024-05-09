@@ -97,6 +97,26 @@ class ServiciosImportados extends Model
             $query->whereIn('certificador', $nombres);
         }       
     }
+
+    public function scopeTipoServicios(Builder $query,  $search): void{   
+        $nombres=[];
+        foreach($search as $id){
+           $tipos=TipoServicio::find($id);
+           if($tipos){
+            array_push($nombres, $tipos->descripcion);
+           }
+        }
+
+        if(!empty($nombres)){
+            $query->whereIn('tipoServicio', $nombres);
+        }       
+    }
+
+    public function scopeTipoServicio($query,$search): void{   
+        if($search){
+            $query->where('tipoServicio', $search);
+        }       
+    } 
     
 
     public function scopeTaller($query,$search): void{

@@ -1,90 +1,97 @@
 <div>
     <div class="sm:px-6 w-full pt-12 pb-4">
 
-        <div class="bg-gray-200  px-8 py-4 rounded-xl w-full ">
-
-            <div class=" items-center md:block sm:block">
-                <div class="p-2 w-64 my-4 md:w-full">
-                    <h2 class="text-indigo-600 font-bold text-3xl">
-                        <i class="fa-solid fa-square-poll-vertical fa-xl"></i>
-                        &nbsp;REPORTE GENERAL TALLER
-                    </h2>
-                </div>
-
-                <div class="w-full  items-center md:flex md:flex-row md:justify-between ">
-
-                    <div x-data="{ isOpen: false }" class="flex bg-white items-center p-2 rounded-md mb-4">
-                        <span>Taller: </span>
-                        <div class="relative">
-                            <div x-on:click="isOpen = !isOpen" class="cursor-pointer">
-                                <input wire:model="taller" type="text" placeholder="Seleccione" readonly
-                                    class="bg-gray-50 border-indigo-500 rounded-md outline-none ml-1 block w-96">
-                            </div>
-                            <div x-show="isOpen" x-on:click.away="isOpen = false"
-                                class="absolute z-10 mt-2 bg-white border rounded-md shadow-md max-h-96 overflow-y-auto">
-                                @isset($talleres)
-                                    @foreach ($talleres as $tallerItem)
-                                        <label for="taller_{{ $tallerItem->id }}" class="block px-4 py-2 cursor-pointer">
-                                            <input id="taller_{{ $tallerItem->id }}" wire:model="taller" type="checkbox"
-                                                value="{{ $tallerItem->id }}" class="mr-2">
-                                            {{ $tallerItem->nombre }}
-                                        </label>
-                                    @endforeach
-                                @endisset
-                            </div>
+        <div class="bg-gray-200 px-8 py-4 rounded-xl w-full">
+            <div class="p-2 w-64 my-4 md:w-full">
+                <h2 class="text-indigo-600 font-bold text-3xl">
+                    <i class="fa-solid fa-square-poll-vertical fa-xl"></i>
+                    &nbsp;REPORTE GENERAL TALLER
+                </h2>
+            </div>
+            <div class="flex items-center space-x-2">
+                <div x-data="{ isOpen: false }" class="flex bg-white items-center p-2 rounded-md mb-4">
+                    <span class="mr-1">Taller: </span>
+                    <div class="relative">
+                        <div x-on:click="isOpen = !isOpen" class="cursor-pointer">
+                            <input wire:model="taller" type="text" placeholder="Seleccione" readonly
+                                class="bg-gray-50 border-indigo-500 rounded-md outline-none px-4 py-2 w-full md:w-80">
                         </div>
-                    </div>
-
-                    <div x-data="{ isOpen: false }" class="flex bg-white items-center p-2 rounded-md mb-4">
-                        <span>Inspector: </span>
-                        <div class="relative">
-                            <div x-on:click="isOpen = !isOpen" class="cursor-pointer">
-                                <input wire:model="ins" type="text" placeholder="Seleccione" readonly
-                                    class="bg-gray-50 border-indigo-500 rounded-md outline-none ml-1 block w-96">
-                            </div>
-                            <div x-show="isOpen" x-on:click.away="isOpen = false"
-                                class="absolute z-10 mt-2 bg-white border rounded-md shadow-md max-h-96 overflow-y-auto">
-                                @foreach ($inspectores as $inspector)
-                                    <label for="inspector_{{ $inspector->id }}" class="block px-4 py-2 cursor-pointer">
-                                        <input id="inspector_{{ $inspector->id }}" wire:model="ins" type="checkbox"
-                                            value="{{ $inspector->id }}" class="mr-2">
-                                        {{ $inspector->name }}
+                        <div x-show="isOpen" x-on:click.away="isOpen = false"
+                            class="absolute z-10 mt-2 bg-white border rounded-md shadow-md max-h-96 overflow-y-auto w-full md:w-80">
+                            @isset($talleres)
+                                @foreach ($talleres as $tallerItem)
+                                    <label for="taller_{{ $tallerItem->id }}" class="block px-4 py-2 cursor-pointer">
+                                        <input id="taller_{{ $tallerItem->id }}" wire:model="taller" type="checkbox"
+                                            value="{{ $tallerItem->id }}" class="mr-2">
+                                        {{ $tallerItem->nombre }}
                                     </label>
                                 @endforeach
-                            </div>
+                            @endisset
                         </div>
                     </div>
+                </div>
 
-                    <div class="flex items-center space-x-2">
-                        <div class="flex bg-white items-center p-2 w-1/2 md:w-48 rounded-md mb-4 ">
-                            <span>Desde: </span>
-                            <x-date-picker wire:model="fechaInicio" placeholder="Fecha de inicio"
-                                class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full truncate" />
+                <div x-data="{ isOpen: false }" class="flex bg-white items-center p-2 rounded-md mb-4">
+                    <span class="mr-1">Inspector: </span>
+                    <div class="relative">
+                        <div x-on:click="isOpen = !isOpen" class="cursor-pointer">
+                            <input wire:model="ins" type="text" placeholder="Seleccione" readonly
+                                class="bg-gray-50 border-indigo-500 rounded-md outline-none px-4 py-2 w-full md:w-80">
                         </div>
-                        <div class="flex bg-white items-center p-2 w-1/2 md:w-48 rounded-md mb-4 ">
-                            <span>Hasta: </span>
-                            <x-date-picker wire:model="fechaFin" placeholder="Fecha de Fin"
-                                class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full truncate" />
+                        <div x-show="isOpen" x-on:click.away="isOpen = false"
+                            class="absolute z-10 mt-2 bg-white border rounded-md shadow-md max-h-96 overflow-y-auto w-full md:w-80">
+                            @foreach ($inspectores as $inspector)
+                                <label for="inspector_{{ $inspector->id }}" class="block px-4 py-2 cursor-pointer">
+                                    <input id="inspector_{{ $inspector->id }}" wire:model="ins" type="checkbox"
+                                        value="{{ $inspector->id }}" class="mr-2">
+                                    {{ $inspector->name }}
+                                </label>
+                            @endforeach
                         </div>
                     </div>
-
-                    <button wire:click="procesar()"
-                        class="bg-green-400 px-6 py-4 w-full md:w-auto rounded-md text-white font-semibold tracking-wide cursor-pointer mb-4">
-                        <p class="truncate"> Generar reporte </p>
-                    </button>
                 </div>
 
-                <div class="w-auto my-4">
-                    <x-jet-input-error for="taller" />
-                    <x-jet-input-error for="ins" />
-                    <x-jet-input-error for="fechaInicio" />
-                    <x-jet-input-error for="fechaFin" />
+                <div class="flex bg-white items-center p-2 w-80 rounded-md mb-4 ">
+                    <span class="mr-1">Servicio: </span>
+                    <select wire:model="servicio"
+                        class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full truncate">
+                        <option value="">SELECCIONE</option>
+                        @isset($tipos)
+                            @foreach ($tipos as $tipo)
+                                <option class="" value="{{ $tipo->id }}">{{ $tipo->descripcion }}</option>
+                            @endforeach
+                        @endisset
+                    </select>
                 </div>
-                <div class="w-full text-center font-semibold text-gray-100 p-4 mb-4 border rounded-md bg-indigo-400 shadow-lg"
-                    wire:loading>
-                    CARGANDO <i class="fa-solid fa-spinner animate-spin"></i>
+
+                <div class="flex bg-white items-center p-2 w-48 rounded-md mb-4 ">
+                    <span>Desde: </span>
+                    <x-date-picker wire:model="fechaInicio" placeholder="Fecha de inicio"
+                        class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full truncate" />
                 </div>
+
+                <div class="flex bg-white items-center p-2 w-48 rounded-md mb-4 ">
+                    <span>Hasta: </span>
+                    <x-date-picker wire:model="fechaFin" placeholder="Fecha de Fin"
+                        class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full truncate" />
+                </div>
+
+                <button wire:click="procesar()"
+                    class="bg-green-400 px-6 py-4 w-full md:w-auto rounded-md text-white font-semibold tracking-wide cursor-pointer mb-4">
+                    <p class="truncate"> Generar reporte </p>
+                </button>
             </div>
+            <div class="w-auto my-4">
+                <x-jet-input-error for="taller" />
+                <x-jet-input-error for="ins" />
+                <x-jet-input-error for="fechaInicio" />
+                <x-jet-input-error for="fechaFin" />
+            </div>
+            <div class="w-full text-center font-semibold text-gray-100 p-4 mb-4 border rounded-md bg-indigo-400 shadow-lg"
+                wire:loading>
+                CARGANDO <i class="fa-solid fa-spinner animate-spin"></i>
+            </div>
+
         </div>
 
         {{-- Tabla taller --}}

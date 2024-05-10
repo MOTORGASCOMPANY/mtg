@@ -10,6 +10,7 @@ use App\Models\ServiciosImportados;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Taller;
+use App\Models\TipoServicio;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Facades\Excel;
@@ -17,8 +18,9 @@ use Livewire\Component;
 
 class ReporteCalcularChip extends Component
 {
-    public $fechaInicio, $fechaFin, $resultados, $talleres, $inspectores, $certis;
+    public $fechaInicio, $fechaFin, $resultados, $talleres, $inspectores, $certis, $tipos;
     public $ins = [], $taller = [];
+    public $servicio;
     public $grupotalleres;
     public $tabla, $diferencias, $importados, $aux;
     public $tabla2;
@@ -35,6 +37,7 @@ class ReporteCalcularChip extends Component
     {
         $this->inspectores = User::role(['inspector', 'supervisor'])->orderBy('name')->get();
         $this->talleres = Taller::orderBy('nombre')->get();
+        $this->tipos = TipoServicio::all();
     }
 
     public function render()
@@ -101,6 +104,7 @@ class ReporteCalcularChip extends Component
         //TODO CERTIFICACIONES:
         $certificaciones = Certificacion::idTalleres($this->taller)
             ->IdInspectores($this->ins)
+            ->IdTipoServicio($this->servicio)
             // Excluir al inspector con id = 201 
             ->whereHas('Inspector', function ($query) {
                 $query->whereNotIn('id', [37, 117, 201]);
@@ -116,6 +120,7 @@ class ReporteCalcularChip extends Component
             ->whereHas('Inspector', function ($query) {
                 $query->whereNotIn('id', [37, 117, 201]);
                 })
+            ->IdTipoServicios($this->servicio)
             ->rangoFecha($this->fechaInicio, $this->fechaFin)
             ->where('estado', 1)
             ->whereNull('idCertificacion')
@@ -224,6 +229,7 @@ class ReporteCalcularChip extends Component
         $disc = new Collection();
         $dis = ServiciosImportados::Talleres($this->taller)
             ->Inspectores($this->ins)
+            ->TipoServicio($this->servicio)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
             ->get();
 

@@ -11,6 +11,7 @@
             @endif
         </div>
     </div>
+
     <div class="divide-y-2 divide-indigo-400">
 
         @hasanyrole('administrador|Administrador del Sistema')
@@ -59,7 +60,7 @@
             </div>
 
             {{--
-        <div x-data="{ open: true }"
+            <div x-data="{ open: true }"
             class=" bg-white flex flex-col items-center justify-center relative overflow-hidden w-full">
             <div @click="open = ! open" class="bg-indigo-100 p-6 w-full flex justify-between items-center">
                 <div class="flex items-center gap-2">
@@ -77,8 +78,8 @@
                
                 
             </div>
-        </div>
-        <div x-data="{ open: true }"
+            </div>
+            <div x-data="{ open: true }"
             class=" bg-white flex flex-col items-center justify-center relative overflow-hidden w-full">
             <div @click="open = ! open" class="bg-indigo-100 p-6 w-full flex justify-between items-center">
                 <div class="flex items-center gap-2">
@@ -96,8 +97,8 @@
                
                 
             </div>
-        </div>
-        --}}
+            </div>
+            --}}
         @endhasanyrole
 
         @hasanyrole('Administrador taller')
@@ -125,6 +126,62 @@
         @endhasanyrole
 
     </div>
+
+    {{-- COMUNICADO --}}
+    @hasanyrole('Administrador taller|inspector|supervisor|administrador')
+        <div class="mt-16 fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog"
+            aria-modal="true">
+            <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                <!-- FONDO OSCURO MODAL -->
+                <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+                <div class="inline-block align-middle bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                    <button class="absolute top-0 right-0 mt-4 mr-4 focus:outline-none" onclick="closeModal()">
+                        <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                            </path>
+                        </svg>
+                    </button>                    
+                    <a class="py-2 h-1/2">
+                        <img src="{{ asset('images/images/logomemo.png') }}" />
+                    </a>
+                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative">
+                        <h3 class="text-lg font-medium text-center text-gray-600 mb-4" id="modal-title">Comunicado</h3>
+                        <p class="text-sm text-gray-500 mb-4" style="text-align: justify;">
+                            Queremos expresarte nuestro más sincero agradecimiento por tu dedicación y compromiso en cada
+                            tarea que realizas como parte de nuestro equipo de trabajo. Tu labor es fundamental para
+                            garantizar la calidad y seguridad en cada certificación que entregamos a nuestros clientes.
+                        </p>
+                        <p class="text-sm text-gray-500 mb-4" style="text-align: justify;">
+                            Esperamos seguir contando con tu invaluable colaboración en este viaje de crecimiento y
+                            superación. Juntos, seguiremos alcanzando nuevas metas y brindando el mejor servicio a nuestros
+                            clientes.
+                        </p>
+                        <p class="text-sm text-gray-500 text-center mb-4">
+                            ¡¡¡ Gracias por confiar en nosotros y por ser parte de nuestra familia !!!
+                            Con aprecio y gratitud,
+                        </p>
+                        <img src="images/images/SERVICIOS.gif" >
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endhasanyrole
+
+    <script>
+        function openModal() {
+            document.body.classList.add('overflow-hidden');
+            document.querySelector('[aria-labelledby="modal-title"]').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.body.classList.remove('overflow-hidden');
+            document.querySelector('[aria-labelledby="modal-title"]').classList.add('hidden');
+        }
+    </script>
+
+
+
 </div>
 
 

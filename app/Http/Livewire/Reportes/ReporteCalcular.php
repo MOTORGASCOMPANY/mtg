@@ -50,9 +50,22 @@ class ReporteCalcular extends Component
         $this->tabla = $this->generaData();
         //$this->grupoTipo = $this->tabla->groupBy('servicio');
         $this->importados = $this->cargaServiciosGasolution();
-        $this->diferencias = $this->encontrarDiferenciaPorPlaca($this->importados, $this->tabla);
-        $this->tabla2 = $this->tabla->merge($this->diferencias);
-        //dd($this->diferencias);
+        //$this->diferencias = $this->encontrarDiferenciaPorPlaca($this->importados, $this->tabla);
+        $this->diferencias = $this->encontrarDiferenciaPorPlaca($this->tabla, $this->importados);
+        $serviciosPermitidos = ['Conversión a GLP','Revisión anual GLP','Modificación','Duplicado GNV','Conversión a GNV + Chip','Chip por deterioro','Pre-conversión GNV','Pre-conversión GLP'];
+        $servisrestantes = $this->diferencias->filter(function ($item) use ($serviciosPermitidos) {
+            return in_array($item['servicio'], $serviciosPermitidos);
+        });
+
+        //$this->tabla2 = $this->importados->merge($servisrestantes);
+        $this->tabla2 = $this->importados->merge($servisrestantes, function ($item1, $item2) {
+            $inspector1 = strtolower($item1['inspector']);
+            $inspector2 = strtolower($item2['inspector']);
+            $taller1 = strtolower($item1['taller']);
+            $taller2 = strtolower($item2['taller']);
+            $comparison = strcasecmp($inspector1 . $taller1, $inspector2 . $taller2);
+            return $comparison;
+        });
 
         $this->grupoTipo = $this->tabla2->groupBy('servicio')->map(function ($servicio) {
             return $servicio->groupBy(function ($certificacion) {
@@ -95,9 +108,9 @@ class ReporteCalcular extends Component
         $certificaciones = Certificacion::idTalleres($this->taller)
             ->IdInspectores($this->ins)
             // Excluir al inspector con id = 201 
-            ->whereHas('Inspector', function ($query) {
+            /*->whereHas('Inspector', function ($query) {
                 $query->whereNotIn('id', [37, 117, 201]);
-                })
+                })*/
             ->rangoFecha($this->fechaInicio, $this->fechaFin)
             ->where('pagado', 0)
             ->whereIn('estado', [3, 1])
@@ -106,9 +119,9 @@ class ReporteCalcular extends Component
         //TODO CER-PENDIENTES ESO MANO
         $cerPendiente = CertificacionPendiente::idTalleres($this->taller)
             ->IdInspectores($this->ins)
-            ->whereHas('Inspector', function ($query) {
+            /*->whereHas('Inspector', function ($query) {
                 $query->whereNotIn('id', [37, 117, 201]);
-                })
+                })*/
             ->rangoFecha($this->fechaInicio, $this->fechaFin)
             ->where('estado', 1)
             ->whereNull('idCertificacion')
@@ -211,7 +224,8 @@ class ReporteCalcular extends Component
 
     public function encontrarDiferenciaPorPlaca($lista1, $lista2)
     {
-        $diferencias = [];
+        //$diferencias = [];
+        $diferencias = collect();
 
         foreach ($lista1 as $elemento1) {
             $placa1 = $elemento1['placa'];
@@ -234,7 +248,7 @@ class ReporteCalcular extends Component
                 }
 
                 if (!$encontrado) {
-                    $diferencias[] = $elemento1;
+                    $diferencias->push(collect($elemento1));
                 }
             }
         }

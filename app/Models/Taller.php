@@ -20,6 +20,8 @@ class Taller extends Model
     'idDistrito',
     'rutaLogo',
     'rutaFirma',
+    'autorizado_gnv',
+    'autorizado_glp',
     ];
 
 

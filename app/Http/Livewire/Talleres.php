@@ -60,6 +60,8 @@ class Talleres extends Component
       'taller.idDistrito'=>'required',
       'taller.servicios.*.estado'=> 'nullable',
       'taller.servicios.*.precio'=> 'required|numeric',
+      'taller.autorizado_gnv'=> 'nullable',
+      'taller.autorizado_glp'=> 'nullable',
       'logoNuevo'=>'nullable|mimes:jpg,bmp,png,jpeg,tif,tiff',
       'firmaNuevo'=>'nullable|mimes:jpg,bmp,png,jpeg,tif,tiff',
       'serviciosNuevos.*.estado'=>'nullable',

@@ -21,6 +21,7 @@ class Documento extends Model
         "nombre",
         "estadoDocumento",
         "dias",
+        "combustible",
     ];
 
     public function TipoDocumento()

@@ -1,12 +1,11 @@
 <div class="space-y-4">
     @if ($taller->Documentos->count())
         @foreach ($taller->Documentos as $doc)
-            <div
-                class=" bg-green-200 flex flex-col items-center justify-center relative overflow-hidden w-full border shadow-md rounded-md hover:cursor-pointer ">
+            <div class=" bg-green-200 flex flex-col items-center justify-center relative overflow-hidden w-full border shadow-md rounded-md hover:cursor-pointer ">
                 <div class="bg-green-100 p-4 w-full flex justify-between items-center">
                     <div class="flex items-center gap-2 ">
                         <p class="ml-4 text-lg text-green-600 leading-7 font-semibold">
-                            {{ $doc->TipoDocumento->nombreTipo }}
+                            {{ $doc->TipoDocumento->nombreTipo.' - '.$doc->combustible}}
                         </p>
                     </div>
                 </div>

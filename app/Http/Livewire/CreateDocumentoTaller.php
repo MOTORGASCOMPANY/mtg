@@ -36,7 +36,8 @@ class CreateDocumentoTaller extends Component
 
     public function updatedCombustible()
     {
-    $this->combustibleSeleccionado = true;
+        $this->listaDisponibles();  
+        $this->combustibleSeleccionado = true;
     }
 
     public function mount(){
@@ -54,11 +55,12 @@ class CreateDocumentoTaller extends Component
     
 
     public function updatedAddDocument(){
-        $this->listaDisponibles();   
-        $this->reset(["tipoSel","fechaInicial","fechaCaducidad","documento","empleado"]);
+        //$this->listaDisponibles();   
+        $this->reset(["tipoSel","fechaInicial","fechaCaducidad","documento","empleado","combustible","combustibleSeleccionado"]);
         $this->tipoSel=""; 
     }
 
+    
     public function agregarDocumento(){
 
         $this->validate();
@@ -75,7 +77,8 @@ class CreateDocumentoTaller extends Component
             'tipoDocumento'=>$this->tipoSel, 
             'fechaInicio'=>$this->fechaInicial,
             'fechaExpiracion'=>$this->fechaCaducidad, 
-            'estadoDocumento'=>1,           
+            'estadoDocumento'=>1,  
+            'combustible'=>$this->combustible,         
             'ruta'=>$this->documento->storeAs('public/docsTaller',$nombre.'.'.$this->documento->extension()),
             'extension'=>$this->documento->extension(), 
         ]); 
@@ -97,17 +100,29 @@ class CreateDocumentoTaller extends Component
 
     }
 
-    public function cuentaDis($tipo){
+    public function cuentaDisGNV($tipo){
         $cuenta=0;
         if(isset($this->taller->Documentos)){
             if($this->taller->Documentos->count() >0){
                 foreach($this->taller->Documentos as $doc){                    
-                    if($doc->tipoDocumento == $tipo){
+                    if($doc->tipoDocumento == $tipo && $doc->combustible=='GNV'){
                         $cuenta++;
                     }
                 }
-            }else{
-                $cuenta=0;
+            }
+        }
+        return $cuenta;
+    }
+
+    public function cuentaDisGLP($tipo){
+        $cuenta=0;
+        if(isset($this->taller->Documentos)){
+            if($this->taller->Documentos->count() >0){
+                foreach($this->taller->Documentos as $doc){                                    
+                    if($doc->tipoDocumento == $tipo && $doc->combustible=='GLP'){
+                        $cuenta++;
+                    }
+                }
             }
         }
         return $cuenta;
@@ -116,17 +131,31 @@ class CreateDocumentoTaller extends Component
     public function listaDisponibles(){        
         $aux=[];
         $todos=TipoDocumento::all();
-        foreach($todos as $tip){
-            if($tip->id==9){
-                array_push($aux,array("id"=>$tip->id,"nombre"=>$tip->nombreTipo,"estado"=>1));
-            }else{
-                if($this->cuentaDis($tip->id) >= 1 ){
-                    array_push($aux,array("id"=>$tip->id,"nombre"=>$tip->nombreTipo,"estado"=>0));
-                }else{
+        if($this->combustible=='GNV'){
+            foreach($todos as $tip){
+                if($tip->id==9){
                     array_push($aux,array("id"=>$tip->id,"nombre"=>$tip->nombreTipo,"estado"=>1));
-                }
-            }            
-        }              
+                }else{
+                    if($this->cuentaDisGNV($tip->id) >= 1 ){
+                        array_push($aux,array("id"=>$tip->id,"nombre"=>$tip->nombreTipo,"estado"=>0));
+                    }else{
+                        array_push($aux,array("id"=>$tip->id,"nombre"=>$tip->nombreTipo,"estado"=>1));
+                    }
+                }            
+            }   
+        }else if($this->combustible=='GLP'){
+            foreach($todos as $tip){
+                if($tip->id==9){
+                    array_push($aux,array("id"=>$tip->id,"nombre"=>$tip->nombreTipo,"estado"=>1));
+                }else{
+                    if($this->cuentaDisGLP($tip->id) >= 1 ){
+                        array_push($aux,array("id"=>$tip->id,"nombre"=>$tip->nombreTipo,"estado"=>0));
+                    }else{
+                        array_push($aux,array("id"=>$tip->id,"nombre"=>$tip->nombreTipo,"estado"=>1));
+                    }
+                }            
+            }   
+        }         
         $this->tiposDisponibles=$aux;             
     }
 }

@@ -52,7 +52,7 @@ class ReporteCalcular extends Component
         $this->importados = $this->cargaServiciosGasolution();
         //$this->diferencias = $this->encontrarDiferenciaPorPlaca($this->importados, $this->tabla);
         $this->diferencias = $this->encontrarDiferenciaPorPlaca($this->tabla, $this->importados);
-        $serviciosPermitidos = ['Conversión a GLP','Revisión anual GLP','Modificación','Duplicado GNV','Conversión a GNV + Chip','Chip por deterioro','Pre-conversión GNV','Pre-conversión GLP'];
+        $serviciosPermitidos = ['Conversión a GLP', 'Revisión anual GLP', 'Modificación', 'Duplicado GNV', 'Conversión a GNV + Chip', 'Chip por deterioro', 'Pre-conversión GNV', 'Pre-conversión GLP'];
         $servisrestantes = $this->diferencias->filter(function ($item) use ($serviciosPermitidos) {
             return in_array($item['servicio'], $serviciosPermitidos);
         });
@@ -110,7 +110,7 @@ class ReporteCalcular extends Component
             // Excluir al inspector con id = 201 
             /*->whereHas('Inspector', function ($query) {
                 $query->whereNotIn('id', [37, 117, 201]);
-                })*/
+            })*/
             ->rangoFecha($this->fechaInicio, $this->fechaFin)
             ->where('pagado', 0)
             ->whereIn('estado', [3, 1])
@@ -121,7 +121,7 @@ class ReporteCalcular extends Component
             ->IdInspectores($this->ins)
             /*->whereHas('Inspector', function ($query) {
                 $query->whereNotIn('id', [37, 117, 201]);
-                })*/
+            })*/
             ->rangoFecha($this->fechaInicio, $this->fechaFin)
             ->where('estado', 1)
             ->whereNull('idCertificacion')
@@ -233,23 +233,19 @@ class ReporteCalcular extends Component
             $servicio1 = $elemento1['servicio'];
             $encontrado = false;
 
-            // Excluir el servicio 'Revisión anual GNV' para que no muestre como discrepancia 'Activación de chip (Anual)'
-            if ($servicio1 !== 'Revisión anual GNV') {
-                foreach ($lista2 as $elemento2) {
-                    $placa2 = $elemento2['placa'];
-                    $inspector2 = $elemento2['inspector'];
-                    $servicio2 = $elemento2['servicio'];
+            foreach ($lista2 as $elemento2) {
+                $placa2 = $elemento2['placa'];
+                $inspector2 = $elemento2['inspector'];
+                $servicio2 = $elemento2['servicio'];
 
-                    // Verificar si la placa, el inspector y el servicio son iguales
-                    if ($placa1 === $placa2 && $inspector1 === $inspector2 && $servicio1 === $servicio2) {
-                        $encontrado = true;
-                        break;
-                    }
+                if ($placa1 === $placa2 && $inspector1 === $inspector2 && $servicio1 === $servicio2) {  
+                    $encontrado = true;
+                    break;
                 }
+            }
 
-                if (!$encontrado) {
-                    $diferencias->push(collect($elemento1));
-                }
+            if (!$encontrado) {
+                $diferencias->push(collect($elemento1));
             }
         }
 

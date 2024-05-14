@@ -71,7 +71,7 @@ class ReportesMtg extends Component
             return $item;
         });
         $this->diferencias = $this->encontrarDiferenciaPorPlaca($this->importados, $this->tabla);
-        dd($this->diferencias);
+        //dd($this->diferencias);
     }
 
     public function exportarExcel()

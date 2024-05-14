@@ -18,7 +18,8 @@ class Kernel extends ConsoleKernel
     {
          //$schedule->command('app:cambia_estado_documentos')->everyMinute();
          $schedule->job(new CambiarEstadoDeDocumentosTaller)->daily();
-         $schedule->command('migrar:documentos')->weeklyOn(6, '0:00');
+         //$schedule->command('migrar:documentos')->weeklyOn(6, '0:00');
+         $schedule->command('migrar:documentos')->dailyAt('12:15');
     }
 
     /**

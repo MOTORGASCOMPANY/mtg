@@ -52,7 +52,7 @@ class ReporteCalcular extends Component
         $this->importados = $this->cargaServiciosGasolution();
         //$this->diferencias = $this->encontrarDiferenciaPorPlaca($this->importados, $this->tabla);
         $this->diferencias = $this->encontrarDiferenciaPorPlaca($this->tabla, $this->importados);
-        $serviciosPermitidos = ['Conversión a GLP', 'Revisión anual GLP', 'Modificación', 'Duplicado GNV', 'Conversión a GNV + Chip', 'Chip por deterioro', 'Pre-conversión GNV', 'Pre-conversión GLP'];
+        $serviciosPermitidos = ['Conversión a GLP', 'Revisión anual GLP', 'Modificación', 'Duplicado GNV', 'Conversión a GNV + Chip', 'Chip por deterioro', 'Pre-inicial GNV', 'Pre-inicial GLP'];
         $servisrestantes = $this->diferencias->filter(function ($item) use ($serviciosPermitidos) {
             return in_array($item['servicio'], $serviciosPermitidos);
         });

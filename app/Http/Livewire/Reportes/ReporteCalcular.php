@@ -212,26 +212,30 @@ class ReporteCalcular extends Component
     public function encontrarDiferenciaPorPlaca($lista1, $lista2)
     {
         $diferencias = [];
+
         foreach ($lista1 as $elemento1) {
             $placa1 = $elemento1['placa'];
             $inspector1 = $elemento1['inspector'];
-            //$servicio1 = $elemento1['servicio'];
+            $servicio1 = $elemento1['servicio'];
             $encontrado = false;
 
-            foreach ($lista2 as $elemento2) {
-                $placa2 = $elemento2['placa'];
-                $inspector2 = $elemento2['inspector'];
-                //$servicio2 = $elemento2['servicio'];
+            // Excluir el servicio 'Revisión anual GNV' para que no muestre como discrepancia 'Activación de chip (Anual)'
+            if ($servicio1 !== 'Revisión anual GNV') {
+                foreach ($lista2 as $elemento2) {
+                    $placa2 = $elemento2['placa'];
+                    $inspector2 = $elemento2['inspector'];
+                    $servicio2 = $elemento2['servicio'];
 
-                // Verificar si la placa, el inspector y el servicio son iguales
-                if ($placa1 === $placa2 && $inspector1 === $inspector2) { // && $servicio1 === $servicio2
-                    $encontrado = true;
-                    break;
+                    // Verificar si la placa, el inspector y el servicio son iguales
+                    if ($placa1 === $placa2 && $inspector1 === $inspector2 && $servicio1 === $servicio2) {
+                        $encontrado = true;
+                        break;
+                    }
                 }
-            }
 
-            if (!$encontrado) {
-                $diferencias[] = $elemento1;
+                if (!$encontrado) {
+                    $diferencias[] = $elemento1;
+                }
             }
         }
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\WelcomeController;
 use App\Http\Controllers\DocumentosController;
 use App\Http\Controllers\MemorandoController;
 use App\Http\Livewire\AsignacionMateriales;
@@ -252,6 +253,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
     Route::get('/Empleado/{idEmpleado}/download',[DocumentosController::class,'downloadEmpleado'])->name('download_docEmpleado');
     Route::get('/Empleado/{idEmpleado}',EditarEmpleado::class)->name('editar-empleado');
     Route::get('/Tablas/TiposDocumentosEmpleados',TiposDocumentosEmple::class)->name('table.TiposDocumentosEmpleados');
+
+    Route::get('/comunicado', [WelcomeController::class, 'welcome'])->name('welcome');
+    //Route::post('/comunicado/guardar', [ComunicadoController::class, 'guardar']);
 
 
 

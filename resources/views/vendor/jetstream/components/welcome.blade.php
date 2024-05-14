@@ -127,7 +127,7 @@
 
     </div>
 
-    {{-- COMUNICADO --}}
+    {{-- COMUNICADO 
     @hasanyrole('Administrador taller|inspector|supervisor|administrador')
         <div class="mt-16 fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog"
             aria-modal="true">
@@ -145,6 +145,7 @@
                     <a class="py-2 h-1/2">
                         <img src="{{ asset('images/images/logomemo.png') }}" />
                     </a>
+                    
                     <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative">
                         <h3 class="text-lg font-medium text-center text-gray-600 mb-4" id="modal-title">Comunicado</h3>
                         <p class="text-sm text-gray-500 mb-4" style="text-align: justify;">
@@ -167,6 +168,8 @@
             </div>
         </div>
     @endhasanyrole
+    --}}
+    
 
     <script>
         function openModal() {
@@ -179,8 +182,6 @@
             document.querySelector('[aria-labelledby="modal-title"]').classList.add('hidden');
         }
     </script>
-
-
 
 </div>
 

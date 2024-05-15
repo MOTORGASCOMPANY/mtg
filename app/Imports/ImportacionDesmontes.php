@@ -21,6 +21,7 @@ class ImportacionDesmontes implements ToModel,WithHeadingRow,WithUpserts
     {             
         //dd($row);        
         return new ServiciosImportados([
+            "idImportado" => $row['id'],
             "placa" => $row['placavehiculo'],
             "serie"=>$row['seriecilindro'],
             "certificador" => $row['certificador'],

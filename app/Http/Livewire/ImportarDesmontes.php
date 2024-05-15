@@ -66,9 +66,9 @@ class ImportarDesmontes extends Component
     public function validaCoincidencias($data){
         $cuenta=0;
         foreach($data as $row){
-           // dd($row);
+            //dd($row);
             $fecha=\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[1]);
-            $id=$row[1];
+            $id=$row[0];
             $placa=$row[2];            
             $servicio=ServiciosImportados::where([['placa',$placa],['fecha',$fecha],["tipoServicio",6],['idImportado',$id]])->first();            
             if($servicio!=null){

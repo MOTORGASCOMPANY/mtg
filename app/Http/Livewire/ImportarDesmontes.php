@@ -68,8 +68,9 @@ class ImportarDesmontes extends Component
         foreach($data as $row){
            // dd($row);
             $fecha=\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[1]);
+            $id=$row[1];
             $placa=$row[2];            
-            $servicio=ServiciosImportados::where([['placa',$placa],['fecha',$fecha],["tipoServicio",6]])->first();            
+            $servicio=ServiciosImportados::where([['placa',$placa],['fecha',$fecha],["tipoServicio",6],['idImportado',$id]])->first();            
             if($servicio!=null){
                 $cuenta++;
             }          

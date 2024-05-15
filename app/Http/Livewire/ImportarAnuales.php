@@ -69,7 +69,7 @@ class ImportarAnuales extends Component
         foreach($data as $row){
             $fecha=\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[0]);
             $placa=$row[2];            
-            $servicio=ServiciosImportados::where([['placa',$placa],['fecha',$fecha]])->first();            
+            $servicio=ServiciosImportados::where([['placa',$placa],['fecha',$fecha],['tipoServicio',2]])->first();            
             if($servicio!=null){
                 $cuenta++;
             }          

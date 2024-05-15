@@ -24,7 +24,8 @@ class ServiciosImportados extends Model
                     "fecha",  
                     "tipoServicio",    
                     "estado",
-                    "pagado"                 
+                    "pagado",
+                    "idImportado",                
                     ];
 
 

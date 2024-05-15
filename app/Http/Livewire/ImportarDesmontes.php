@@ -71,7 +71,7 @@ class ImportarDesmontes extends Component
             $id=$row[0];
             $placa=$row[2];            
             $servicio=ServiciosImportados::where([['placa',$placa],['fecha',$fecha],["tipoServicio",6],['idImportado',$id]])->first();            
-            if($servicio!=null){
+            if(!$servicio){ //$servicio!=null
                 $cuenta++;
             }          
         }        

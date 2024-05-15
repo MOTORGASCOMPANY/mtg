@@ -71,7 +71,7 @@ class ImportarConversiones extends Component
         foreach($data as $row){
             $fecha=\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[1]);
             $placa=$row[2];            
-            $servicio=ServiciosImportados::where([['placa',$placa],['fecha',$fecha],["tipoServicio",1]])->first();            
+            $servicio=ServiciosImportados::where([['placa',$placa],['fecha',$fecha],['tipoServicio',1]])->first();            
             if($servicio!=null){
                 $cuenta++;
             }          

@@ -10,12 +10,12 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithUpserts;
 use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 
-class ImportacionDesmontes implements ToModel, WithHeadingRow //, WithUpserts
+class ImportacionDesmontes implements ToModel, WithHeadingRow, WithUpserts
 {
-    /*public function uniqueBy()
+    public function uniqueBy()
     {
         return 'placa_serie';
-    }*/
+    }
 
     public function model(array $row)
     {             

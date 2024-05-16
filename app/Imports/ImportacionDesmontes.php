@@ -12,25 +12,32 @@ use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 
 class ImportacionDesmontes implements ToModel, WithHeadingRow, WithUpserts
 {
-    public function uniqueBy()
+    /*public function uniqueBy()
     {
         return 'placa_serie';
+    }*/
+
+    public function uniqueBy()
+    {
+        return ['idImportado', 'placa', 'serie', 'fecha', 'tipoServicio']; 
     }
 
+
+
     public function model(array $row)
-    {             
+    {
         //dd($row);        
         return new ServiciosImportados([
             "idImportado" => $row['id'],
             "placa" => $row['placavehiculo'],
-            "serie"=>$row['seriecilindro'],
+            "serie" => $row['seriecilindro'],
             "certificador" => $row['certificador'],
             "taller" => $row['nombretaller'],
             "fecha" => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['fechadesmonte']),
-            "precio"=>null,
-            "tipoServicio"=>6,
-            "estado"=>1,
-            "pagado"=>false,
+            "precio" => null,
+            "tipoServicio" => 6,
+            "estado" => 1,
+            "pagado" => false,
         ]);
     }
 

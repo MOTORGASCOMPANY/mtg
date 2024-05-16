@@ -19,7 +19,7 @@ class ImportacionDesmontes implements ToModel, WithHeadingRow, WithUpserts
 
     public function uniqueBy()
     {
-        return ['idImportado', 'placa', 'serie', 'fecha', 'tipoServicio']; 
+        return ['idImportado','serie', 'fecha']; 
     }
 
 

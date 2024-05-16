@@ -44,8 +44,7 @@ class ImportarDesmontes extends Component
             $this->cuenta=count($this->data);
         }else{
             $this->emit("minAlert", ["titulo" => "AVISO DEL SISTEMA", "mensaje" => "El archivo no es válido", "icono" => "warning"]);
-        }
-        
+        }       
        
     }
 

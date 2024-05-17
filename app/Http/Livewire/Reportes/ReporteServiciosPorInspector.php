@@ -55,6 +55,7 @@ class ReporteServiciosPorInspector extends Component
         ->crossJoin(DB::raw('(SELECT @row_number := 0) AS init'))
         ->groupBy('certificador')
         ->whereBetween('fecha', [$this->fechaInicio . ' 00:00', $this->fechaFin . ' 23:59'])
+        ->where ('tipoServicio', '!=' ,6)
         ->get();
 
 

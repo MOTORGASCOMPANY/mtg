@@ -116,9 +116,9 @@ class ReportesMtg extends Component
             $certificaciones = Certificacion::idTalleres($this->taller)
                 ->IdInspectores($this->ins)
                 ->IdTipoServicio($this->servicio)
-                /*->whereHas('Inspector', function ($query) {
+                ->whereHas('Inspector', function ($query) {
                     $query->whereNotIn('id', [37, 117, 201]);
-                })*/
+                })
                 ->rangoFecha($this->fechaInicio, $this->fechaFin)
                 ->where('pagado', 0)
                 ->whereIn('estado', [3, 1])
@@ -127,9 +127,9 @@ class ReportesMtg extends Component
             //TODO CER-PENDIENTES PARA OFICINA:
             $cerPendiente = CertificacionPendiente::idTalleres($this->taller)
                 ->IdInspectores($this->ins)
-                /*->whereHas('Inspector', function ($query) {
+                ->whereHas('Inspector', function ($query) {
                     $query->whereNotIn('id', [37, 117, 201]);
-                })*/
+                })
                 ->IdTipoServicios($this->servicio)
                 ->rangoFecha($this->fechaInicio, $this->fechaFin)
                 ->where('estado', 1)
@@ -246,22 +246,50 @@ class ReportesMtg extends Component
             $servicio1 = $elemento1['servicio'];
             $encontrado = false;
 
-            // Excluir el servicio 'Revisión anual GNV' para que no muestre como discrepancia 'Activación de chip (Anual)'
+
 
             foreach ($lista2 as $elemento2) {
                 $placa2 = $elemento2['placa'];
                 $inspector2 = $elemento2['inspector'];
                 $servicio2 = $elemento2['servicio'];
 
+                /* Igualar el modelo 'App\Models\CertificacionPendiente' que es el servicio 'Activación de chip (Anual)' con el servicio 'Revisión anual GNV' para que no muestre como discrepancia 
                 if ($elemento2['tipo_modelo'] == 'App\Models\CertificacionPendiente') {
                     //dd($elemento1);
                     if ($placa1 === $placa2 && $inspector1 === $inspector2 && $servicio1 == 'Revisión anual GNV') {
-                        
+
                         $encontrado = true;
                         break;
                     }
-                }else{
+                } else {
                     if ($placa1 === $placa2 && $inspector1 === $inspector2 && $servicio1 === $servicio2) {
+                        $encontrado = true;
+                        break;
+                    }
+                }
+
+                // Igualar el servicio 'Conversión a GNV + Chip' con el servicio 'Conversión a GNV' para que no muestre como discrepancia 
+                if ($elemento2['servicio'] == 'Conversión a GNV + Chip') {
+                    if ($placa1 === $placa2 && $inspector1 === $inspector2 && $servicio1 == 'Conversión a GNV') {
+
+                        $encontrado = true;
+                        break;
+                    }
+                } else {
+                    if ($placa1 === $placa2 && $inspector1 === $inspector2 && $servicio1 === $servicio2) {
+                        $encontrado = true;
+                        break;
+                    }
+                }*/
+
+                if ($placa1 === $placa2 && $inspector1 === $inspector2) {
+                    if (
+                        ($elemento2['tipo_modelo'] == 'App\Models\CertificacionPendiente' && $servicio1 == 'Revisión anual GNV') ||
+                        ($servicio2 == 'Conversión a GNV + Chip' && $servicio1 == 'Conversión a GNV')
+                    ) {
+                        $encontrado = true;
+                        break;
+                    } else if ($servicio1 === $servicio2) {
                         $encontrado = true;
                         break;
                     }

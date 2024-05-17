@@ -62,7 +62,7 @@ class ReporteCalcularChip extends Component
             $item['taller'] = trim($item['taller']);
             return $item;
         });
-        $this->diferencias = $this->encontrarDiferenciaPorPlaca($this->importados, $this->tabla);        
+        $this->diferencias = $this->encontrarDiferenciaPorPlaca($this->importados, $this->tabla);
         //$this->tabla2 = $this->tabla->merge($this->diferencias);
         //Merge para combinar tabla y diferencias -  strtolower para ignorar Mayusculas y Minusculas 
         $this->tabla2 = $this->tabla->merge($this->diferencias, function ($item1, $item2) {
@@ -194,7 +194,7 @@ class ReporteCalcularChip extends Component
 
         return $diferencias;
     }*/
-    
+
     /*public function encontrarDiferenciaPorPlaca($lista1, $lista2)
     {
         $diferencias = [];
@@ -241,15 +241,26 @@ class ReporteCalcularChip extends Component
                 $inspector2 = $elemento2['inspector'];
                 $servicio2 = $elemento2['servicio'];
 
-                if ($elemento2['tipo_modelo'] == 'App\Models\CertificacionPendiente') {
-                    //dd($elemento1);
+                /*if ($elemento2['tipo_modelo'] == 'App\Models\CertificacionPendiente') {
                     if ($placa1 === $placa2 && $inspector1 === $inspector2 && $servicio1 == 'Revisión anual GNV') {
-                        
+
                         $encontrado = true;
                         break;
                     }
-                }else{
+                } else {
                     if ($placa1 === $placa2 && $inspector1 === $inspector2 && $servicio1 === $servicio2) {
+                        $encontrado = true;
+                        break;
+                    }
+                }*/
+                if ($placa1 === $placa2 && $inspector1 === $inspector2) {
+                    if (
+                        ($elemento2['tipo_modelo'] == 'App\Models\CertificacionPendiente' && $servicio1 == 'Revisión anual GNV') ||
+                        ($servicio2 == 'Conversión a GNV + Chip' && $servicio1 == 'Conversión a GNV')
+                    ) {
+                        $encontrado = true;
+                        break;
+                    } else if ($servicio1 === $servicio2) {
                         $encontrado = true;
                         break;
                     }

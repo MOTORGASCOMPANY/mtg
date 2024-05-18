@@ -25,7 +25,7 @@ class ReportesMtg extends Component
     public $ins = [], $taller = [];
     public $servicio;
     public $grupoinspectores;
-    public $tabla, $diferencias, $importados;
+    public $tabla, $diferencias, $importados, $chartData;
     public $user;
 
 
@@ -72,7 +72,32 @@ class ReportesMtg extends Component
         });
         $this->diferencias = $this->encontrarDiferenciaPorPlaca($this->importados, $this->tabla);
         //dd($this->diferencias);
+
+        // Generar datos para gráficos
+        $chartData = $this->generateChartData();
+
+        // Emitir evento Livewire para actualizar los datos del gráfico en JavaScript
+        $this->emit('updateChartData', $chartData);
     }
+
+    public function generateChartData()
+    {
+        // Agrupar por servicio
+        $data = $this->tabla->groupBy('servicio')->map(function ($group) {
+            return $group->count();
+        });
+
+        // Convertir los datos en un formato adecuado para el gráfico
+        $labels = $data->keys();
+        $values = $data->values();
+
+        // Devolver los datos del gráfico en un array
+        return [
+            'labels' => $labels,
+            'values' => $values,
+        ];
+    }
+
 
     public function exportarExcel()
     {

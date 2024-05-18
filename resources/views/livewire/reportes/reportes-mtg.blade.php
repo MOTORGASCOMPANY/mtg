@@ -97,10 +97,16 @@
 
 
 
-            {{-- Tabla detallado --}}
+            {{-- TABLA  DETALLADO --}}
             @if (isset($tabla))
                 <div wire.model="resultados">
-                    <div class="m-auto flex justify-center items-center bg-gray-300 rounded-md w-full p-4 mt-4">
+                    <div class="bg-gray-200 rounded-md w-full p-4 mt-4">
+                        <div class="text-center">
+                            <p class="font-bold text-indigo-600 text-xl">RESUMEN DE SERVICIOS REALIZADOS </p>
+                        </div>
+                        <canvas id="myChart" width="50" height="10"></canvas>
+                    </div>
+                    <div class="m-auto flex justify-center items-center bg-gray-200 rounded-md w-full p-4 mt-4">
                         <button wire:click="exportarExcel"
                             class="bg-green-400 px-6 py-4 w-1/3 text-sm rounded-md text-sm text-white font-semibold tracking-wide cursor-pointer ">
                             <p class="truncate"><i class="fa-solid fa-file-excel fa-lg"></i> Desc. Excel </p>
@@ -362,5 +368,34 @@
                 </div>
             @endif
         </div>
-
+        {{-- JS --}}
+        @push('js')
+            <script>
+                document.addEventListener('livewire:load', function() {
+                    Livewire.on('updateChartData', function(chartData) {
+                        var ctx = document.getElementById('myChart').getContext('2d');
+                        var myChart = new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: chartData.labels,
+                                datasets: [{
+                                    label: 'Cantidad de Servicios',
+                                    data: chartData.values,
+                                    backgroundColor: 'rgba(210,220,255)',
+                                    borderColor: 'rgb(96, 72, 250)',
+                                    borderWidth: 1
+                                }]
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+                    });
+                });
+            </script>
+        @endpush
     </div>

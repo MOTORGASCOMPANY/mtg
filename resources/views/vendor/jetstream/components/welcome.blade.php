@@ -14,7 +14,7 @@
 
     <div class="divide-y-2 divide-indigo-400">
 
-        @hasanyrole('administrador|Administrador del Sistema')
+        @hasanyrole('administrador|Administrador del sistema')
             <div x-data="{ open: true }"
                 class=" bg-white flex flex-col items-center justify-center relative overflow-hidden w-full border ">
                 <div @click="open = ! open" class="bg-indigo-100 p-6 w-full flex justify-between items-center">

@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PdfController;
 use App\Http\Controllers\uploadController;
 use App\Http\Livewire\ActualizarPrecios;
+use App\Http\Livewire\ActualizarPreciosGasol;
 use App\Http\Livewire\AdministracionCertificaciones;
 use App\Http\Livewire\AdminPermisos;
 use App\Http\Livewire\AdminRoles;
@@ -219,8 +220,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
     Route::get('/ReporteCalcular-taller',ReporteCalcularChip::class)->middleware('can:reportes.reporteCalcularChip')->name('reportes.reporteCalcularChip');//2 //mejorar diseño excell
     Route::get('/Reporte-semanal',ReporteCalcular::class)->middleware('can:reportes.reporteCalcular')->name('reportes.reporteCalcular');//3    
     Route::get('/Reporte-MTG',ReportesMtg::class)->middleware('can:reportes.reporteMTG')->name('reportes.reporteMTG');//4 mejorar descarga excell
-    Route::get('/Reporte-actualizar-precio',ActualizarPrecios::class)->middleware('can:reportes.reporteActualizarPrecio')->name('reportes.reporteActualizarPrecio');//5
-    
+    Route::get('/Reporte-actualizar-mtg',ActualizarPrecios::class)->middleware('can:reportes.reporteActualizarPrecio')->name('reportes.reporteActualizarPrecio');//5
+    Route::get('/Reporte-actualizar-gasol',ActualizarPreciosGasol::class)->name('reportes.reporteActualizarGasol');//6  ->middleware('can:reportes.reporteActualizarGasol')
+     
 
     //Prueba Fotos
     Route::get('/CargaFotos',CargaFotos::class)->name('CargaFotos');

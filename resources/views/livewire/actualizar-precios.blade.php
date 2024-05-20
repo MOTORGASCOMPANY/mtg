@@ -6,26 +6,11 @@
                 <div class="p-2 w-64 my-4 md:w-full">
                     <h2 class="text-indigo-600 font-bold text-3xl">
                         <i class="fa-solid fa-square-poll-vertical fa-xl"></i>
-                        &nbsp;REPORTE GENERAL ACTUALIZAR
+                        &nbsp;REPORTE ACTUALIZAR CERTIFICACIONES
                     </h2>
                 </div>
 
                 <div class="w-full  items-center md:flex md:flex-row md:justify-between ">
-                    {{--
-                    <div class="flex bg-gray-50 items-center p-2 rounded-md mb-4">
-                        <span>Taller: </span>
-                        <select wire:model="taller"   
-                            class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full truncate">
-                            <option value="">SELECCIONE</option>
-                            @isset($talleres)
-                                @foreach ($talleres as $taller)
-                                    <option value="{{ $taller->id }}">{{ $taller->nombre }}</option>
-                                @endforeach
-                            @endisset
-                        </select>
-                    </div>   
-                    --}}
-
                     <div x-data="{ isOpen: false }" class="flex bg-white items-center p-2 rounded-md mb-4">
                         <span>Taller: </span>
                         <div class="relative">
@@ -125,9 +110,6 @@
                                             class="min-w-full border text-center text-sm font-light dark:border-neutral-500">
                                             <thead class="border-b font-medium dark:border-neutral-500">
                                                 <tr class="bg-indigo-200">
-                                                    {{-- <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
-                                                            <input type="checkbox" wire:model="selectAll" wire:click="toggleSelectAll({{ $inspector->id }})" />
-                                                            </th> --}}
                                                     <th scope="col"
                                                         class="border-r px-6 py-4 dark:border-neutral-500">#
                                                     </th>
@@ -199,12 +181,8 @@
                                                         </td>
                                                         <td
                                                             class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
-                                                            {{-- {{ $item->placa ?? 'En tramite' }} --}}
-                                                            @if ($item->tiposervicio == 'Chip por deterioro')
-                                                                {{-- muestra lo que esta despues de cliente
-                                                                    {{ str_replace('En poder del cliente ', '', $item->mateubicacion) ?? 'N.A' }}
-                                                                --}}
-                                                                {{-- esto me muestra lo que esta despues del / --}}
+                                                             {{ $item->placa ?? 'En tramite' }} 
+                                                            {{--@if ($item->tiposervicio === 'Chip por deterioro')
                                                                 @php
                                                                     $ubicacionParts = explode(
                                                                         '/',
@@ -217,7 +195,7 @@
                                                                 @endphp
                                                             @else
                                                                 {{ $item->placa ?? 'En tramite' }}
-                                                            @endif
+                                                            @endif--}}
                                                         </td>
                                                         <td
                                                             class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">

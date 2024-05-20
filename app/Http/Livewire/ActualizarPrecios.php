@@ -196,41 +196,6 @@ class ActualizarPrecios extends Component
         $this->editando = true;
     }
 
-    /*public function updatePrecios()
-    {
-        if (count($this->updatedPrices) > 0) {
-            foreach ($this->updatedPrices as $key => $nuevoPrecio) {
-                $certificacionIds = $this->certificacionIds;
-
-                // Actualizar precios en Certificacion
-                Certificacion::whereIn('id', $certificacionIds)
-                    ->whereHas('servicio', function ($query) use ($key) {
-                        $query->whereHas('tipoServicio', function ($query) use ($key) {
-                            $query->where('descripcion', $key);
-                        });
-                    })
-                    ->update(['precio' => $nuevoPrecio]);
-
-                // Actualizar precios en CertificacionPendiente
-                CertificacionPendiente::whereIn('id', $certificacionIds)
-                    ->update(['precio' => $nuevoPrecio]);
-                //Actualizar precios en desmonte
-                Desmontes::whereIn('id', $certificacionIds)
-                    ->update(['precio' => $nuevoPrecio]);
-            }
-
-            // Emitir evento para indicar que los precios han sido actualizados
-            $this->emit('preciosActualizados');
-
-            // Refrescar solo la sección de la tabla
-            $this->dispatchBrowserEvent('refresh-table');
-
-            $this->reset(['resultados', 'updatedPrices', 'certificacionIds']);
-            $this->calcularReporte();
-            $this->editando = false;
-        }
-    }*/
-
     public function updatePrecios()
     {
         if (count($this->updatedPrices) > 0) {

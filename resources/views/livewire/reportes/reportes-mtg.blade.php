@@ -97,7 +97,7 @@
 
 
 
-            {{-- TABLA  DETALLADO --}}
+            {{-- TABLA  DETALLADO  --}}
             @if (isset($tabla))
                 <div wire.model="resultados">
                     <div class="bg-gray-200 rounded-md w-full p-4 mt-4">

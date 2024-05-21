@@ -26,8 +26,14 @@ class ContratoTrabajo extends Model
         return $this->belongsTo(User::class, 'idUser');
     }
 
-    public function Documentos(){
+    public function Documentos()
+    {
         return $this->belongsToMany(DocumentoEmpleado::class, 'documentoempleado_user', 'idUser', 'idDocumentoEmpleado');
+    }
+
+    public function vacaciones()
+    {
+        return $this->hasOne(Vacacion::class, 'idContrato', 'id');
     }
 
     public function getRutaVistaContratoTrabajoAttribute()

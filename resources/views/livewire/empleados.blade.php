@@ -2,7 +2,7 @@
     <div class="mt-7 overflow-x-auto">
         <div class=" items-center md:block sm:block">
             <div class="px-2 w-64 mb-4 md:w-full">
-                <h2 class="text-indigo-900 font-bold text-3xl">Registro de Empleados2</h2>
+                <h2 class="text-indigo-900 font-bold text-3xl">Registro de Empleados</h2>
             </div>
             <div class="w-full items-center md:flex  md:justify-between">
                 <div class="flex bg-gray-50 items-center p-2 rounded-md mb-4">
@@ -26,7 +26,7 @@
                     <input class="bg-gray-50 outline-none block rounded-md border-indigo-500 w-full" type="text"
                         wire:model="search" placeholder="buscar...">
                 </div>
-                @hasanyrole('administrador|supervisor|Administrador del sistema')
+                @hasanyrole('administrador|Administrador del sistema')
                     <button wire:click="agregar"
                         class="bg-indigo-600 px-6 py-4 rounded-md text-white font-semibold tracking-wide cursor-pointer">
                         Agregar
@@ -38,6 +38,20 @@
         @if ($empleados->count() > 0)
             <table class="w-full whitespace-nowrap">
                 <thead class="bg-slate-600 border-b font-bold text-white">
+                    <tr>
+                        <!-- Encabezados de la primera fila -->
+                        <th scope="col" class=" bg-gray-100 px-6 py-4" colspan="6"></th>
+                        <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 vacaciones-cell" colspan="3">
+                            <div class="flex justify-center items-center">
+                                <span>Vacaciones</span>
+                            </div>
+                        </th>
+                        <th scope="col" class="bg-gray-100 px-6 py-4 encabezado">
+                            <div class="flex justify-center items-center">
+                                <span></span>
+                            </div>
+                        </th>
+                    </tr>
                     <tr>
                         <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left"
                             wire:click="order('id')">
@@ -67,8 +81,27 @@
                         <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left">
                             Area
                         </th>
+                        <th scope="col" class="text-sm font-medium font-semibold text-white  py-4 vacaciones-cell"
+                            >
+                            <div class="flex justify-center items-center flex-col">
+                                <span>Ganados</span>
+                            </div>
+                        </th>
+                        <th scope="col" class="text-sm font-medium font-semibold text-white  py-4 vacaciones-cell"                            >
+                            <div class="flex justify-center items-center flex-col">
+                                <span>Tomados</span>
+                            </div>
+                        </th>
+                        <th scope="col" class="text-sm font-medium font-semibold text-white  py-4 vacaciones-cell"
+                            >
+                            <div class="flex justify-center items-center flex-col">
+                                <span>Restantes</span>
+                            </div>
+                        </th>
                         <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left">
-                            Acciones
+                            <div class="flex justify-center items-center">
+                                <span>Acciones</span>
+                            </div>
                         </th>
                     </tr>
                 </thead>
@@ -120,9 +153,29 @@
                                     </p>
                                 </div>
                             </td>
-                            <td>
-                                <div
-                                    class="bg-white-100/30 w-1/2 md:w-1/3 flex justify-center space-x-2 items-center px-3">
+                            <td class="vacaciones-cell">
+                                <div class="flex justify-center items-center">
+                                    <p class="text-sm leading-none text-white-600 ml-2">
+                                        {{ $emple->vacaciones->dias_ganados ?? 'N.A' }}
+                                    </p>
+                                </div>
+                            </td>
+                            <td class="vacaciones-cell">
+                                <div class="flex justify-center items-center">
+                                    <p class="text-sm leading-none text-white-600 ml-2">
+                                        {{ $emple->vacaciones->dias_tomados ?? 'N.A' }}
+                                    </p>
+                                </div>
+                            </td>
+                            <td class="vacaciones-cell">
+                                <div class="flex justify-center items-center">
+                                    <p class="text-sm leading-none text-white-600 ml-2">
+                                        {{ $emple->vacaciones->dias_restantes ?? 'N.A' }}
+                                    </p>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <div class="flex justify-center items-center space-x-2">
                                     <button wire:click="verContrato({{ $emple->id }})"
                                         class="group flex py-2 px-2 text-center items-center rounded-md bg-blue-300 font-bold text-white cursor-pointer hover:bg-blue-400 hover:animate-pulse">
                                         <i class="fas fa-eye"></i>
@@ -193,4 +246,21 @@
             });
         </script>
     @endpush
+
+    {{-- CSS --}}
+    @push('styles')
+        <style>
+            .vacaciones-cell {
+                background-color: rgb(165, 173, 55);
+                color: white;
+                border: 1px solid rgb(156, 154, 45);
+                text-align: center;
+            }
+            .encabezado{
+                background-color: rgb(255, 255, 255); 
+            }
+        </style>
+
+    @endpush
+
 </div>

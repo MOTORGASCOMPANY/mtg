@@ -221,7 +221,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
     Route::get('/Reporte-semanal',ReporteCalcular::class)->middleware('can:reportes.reporteCalcular')->name('reportes.reporteCalcular');//3    
     Route::get('/Reporte-MTG',ReportesMtg::class)->middleware('can:reportes.reporteMTG')->name('reportes.reporteMTG');//4 mejorar descarga excell
     Route::get('/Reporte-actualizar-mtg',ActualizarPrecios::class)->middleware('can:reportes.reporteActualizarPrecio')->name('reportes.reporteActualizarPrecio');//5
-    Route::get('/Reporte-actualizar-gasol',ActualizarPreciosGasol::class)->name('reportes.reporteActualizarGasol');//6  ->middleware('can:reportes.reporteActualizarGasol')
+    Route::get('/Reporte-actualizar-gasol',ActualizarPreciosGasol::class)->middleware('can:reportes.reporteActualizarGasol')->name('reportes.reporteActualizarGasol');//6  
      
 
     //Prueba Fotos
@@ -250,7 +250,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
     Route::get('/ListaMemorando',ListaMemorandos::class)->middleware('can:ListaMemorando')->name('ListaMemorando');
 
     //Rutas para contrato trabajo
-    Route::get('/ContratoTrabajo',ContratosTrabajos::class)->name('ContratoTrabajo');
+    Route::get('/Contratos',ContratosTrabajos::class)->name('ContratoTrabajo');
     Route::get('/Empleados',Empleados::class)->middleware('can:Empleados')->name('Empleados');
     Route::get('/Empleado/{idEmpleado}/download',[DocumentosController::class,'downloadEmpleado'])->name('download_docEmpleado');
     Route::get('/Empleado/{idEmpleado}',EditarEmpleado::class)->name('editar-empleado');

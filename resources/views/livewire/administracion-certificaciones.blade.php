@@ -385,6 +385,7 @@
                                         </a>
                                     </div>
                                 </td>
+                                @hasanyrole('administrador|Administrador del sistema')
                                 <td class="pl-4">
                                     <div class="relative flex justify-center px-5">
                                         <div class="inline-block text-left" x-data="{ menu: false }">
@@ -428,6 +429,7 @@
                                         </div>
                                     </div>
                                 </td>
+                                @endhasanyrole
                             </tr>
                             <tr class="h-3"></tr>
                         @endforeach

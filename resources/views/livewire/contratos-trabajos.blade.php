@@ -1,4 +1,4 @@
-<div class="container mx-auto">
+<div class="container mx-auto mt-8">
     <div class="block justify-center mt-2 pt-8 max-h-max pb-8">
         <h1 class="text-center text-xl my-2 font-bold text-indigo-600"> REALIZAR CONTRATO</h1>
 

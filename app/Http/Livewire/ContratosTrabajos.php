@@ -4,6 +4,8 @@ namespace App\Http\Livewire;
 
 use App\Models\User;
 use App\Models\ContratoTrabajo;
+use App\Models\Vacacion;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use App\Traits\pdfTrait;
 use DateTime;
@@ -48,6 +50,20 @@ class ContratosTrabajos extends Component
             'fechaExpiracion' => $this->fechaExpiracion,
             'cargo' => $this->cargo,
             'pago' => $this->pago,
+        ]);
+
+        // Calcular días de vacaciones
+        $fechaInicio = new DateTime($this->fechaInicio);
+        $fechaExpiracion = new DateTime($this->fechaExpiracion);
+        $diferencia = $fechaInicio->diff($fechaExpiracion);
+        $diasVacaciones = $diferencia->days / 365 * 15;
+
+        // Crear registro de vacaciones
+        Vacacion::create([
+            'idContrato' => $nuevoMemorando->id,
+            'dias_ganados' => $diasVacaciones,
+            'dias_tomados' => 0,
+            'dias_restantes' => $diasVacaciones,
         ]);
 
 

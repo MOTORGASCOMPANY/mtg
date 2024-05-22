@@ -11,7 +11,7 @@ class VacacionAsignada extends Model
     protected $table = 'vacacion_asignada';
 
     protected $fillable = [
-        'idContrato',
+        'idVacacion',
         'tipo',
         'razon',
         'd_tomados',
@@ -19,8 +19,8 @@ class VacacionAsignada extends Model
         'observacion',
     ];
 
-    public function contratoTrabajo()
+    public function Vacacion()
     {
-        return $this->belongsTo(ContratoTrabajo::class, 'idContrato');
+        return $this->belongsTo(Vacacion::class, 'idVacacion');
     }
 }

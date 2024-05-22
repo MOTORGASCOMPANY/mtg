@@ -68,6 +68,7 @@ use App\Http\Livewire\Tablas\Tiposservicios;
 use App\Http\Livewire\TiposDocumentosEmple;
 use App\Http\Livewire\TiposManual;
 use App\Http\Livewire\Usuarios;
+use App\Http\Livewire\VacacionesAsignadas;
 use App\Http\Livewire\VistaEliminacion;
 use App\Http\Livewire\VistaSolicitudAnul;
 use App\Http\Livewire\VistaSolicitudMemorando;
@@ -249,13 +250,16 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
     Route::get('/Memorando',Memorandos::class)->middleware('can:Memorando')->name('Memorando');
     Route::get('/ListaMemorando',ListaMemorandos::class)->middleware('can:ListaMemorando')->name('ListaMemorando');
 
-    //Rutas para contrato trabajo
-    Route::get('/Contratos',ContratosTrabajos::class)->name('ContratoTrabajo');
-    Route::get('/Empleados',Empleados::class)->middleware('can:Empleados')->name('Empleados');
-    Route::get('/Empleado/{idEmpleado}/download',[DocumentosController::class,'downloadEmpleado'])->name('download_docEmpleado');
-    Route::get('/Empleado/{idEmpleado}',EditarEmpleado::class)->name('editar-empleado');
-    Route::get('/Tablas/TiposDocumentosEmpleados',TiposDocumentosEmple::class)->name('table.TiposDocumentosEmpleados');
+    //Rutas para contrato trabajo - documentos empleado - vacaciones
+    
+    Route::get('/Empleados',Empleados::class)->middleware('can:Empleados')->name('Empleados'); //Lista de empleados
+    Route::get('/Contratos',ContratosTrabajos::class)->name('ContratoTrabajo'); //Crear contrato trabajo
+    Route::get('/Empleado/{idEmpleado}',EditarEmpleado::class)->name('editar-empleado'); //Para subir sus doc del empleado
+    Route::get('/AsignarVacacion/{contratoId}',VacacionesAsignadas::class)->name('AsignarVacacion'); //Para asignar sus vacaciones del empleado
+    Route::get('/Empleado/{idEmpleado}/download',[DocumentosController::class,'downloadEmpleado'])->name('download_docEmpleado'); //Para descargar doc de empleado 
+    Route::get('/Tablas/TiposDocumentosEmpleados',TiposDocumentosEmple::class)->name('table.TiposDocumentosEmpleados'); //Tabla para tipos de doc de empleado
 
+    //Rutas para comunicado
     Route::get('/comunicado', [WelcomeController::class, 'welcome'])->name('welcome');
     //Route::post('/comunicado/guardar', [ComunicadoController::class, 'guardar']);
 

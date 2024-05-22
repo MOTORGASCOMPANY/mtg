@@ -29,7 +29,7 @@
                 @hasanyrole('administrador|Administrador del sistema')
                     <button wire:click="agregar"
                         class="bg-indigo-600 px-6 py-4 rounded-md text-white font-semibold tracking-wide cursor-pointer">
-                        Agregar
+                        Crear Contrato
                     </button>
                 @endhasanyrole
             </div>
@@ -38,22 +38,24 @@
         @if ($empleados->count() > 0)
             <table class="w-full whitespace-nowrap">
                 <thead class="bg-slate-600 border-b font-bold text-white">
+
                     <tr>
-                        <!-- Encabezados de la primera fila -->
-                        <th scope="col" class=" bg-gray-100 px-6 py-4" colspan="6"></th>
-                        <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 vacaciones-cell" colspan="3">
+                        <th scope="col" class=" bg-gray-100" colspan="6"></th>
+                        <th scope="col" class="text-sm font-medium font-semibold text-black vacaciones-cell"
+                            colspan="3">
                             <div class="flex justify-center items-center">
                                 <span>Vacaciones</span>
                             </div>
                         </th>
-                        <th scope="col" class="bg-gray-100 px-6 py-4 encabezado">
+                        <th scope="col" class="bg-gray-100">
                             <div class="flex justify-center items-center">
                                 <span></span>
                             </div>
                         </th>
                     </tr>
+
                     <tr>
-                        <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left"
+                        <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-3 text-left"
                             wire:click="order('id')">
                             ID
                             @if ($sort == 'id')
@@ -66,39 +68,37 @@
                                 <i class="fas fa-sort float-right mt-0.5"></i>
                             @endif
                         </th>
-                        <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left">
+                        <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-3 text-left">
                             Empleado
                         </th>
-                        <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left">
+                        <th scope="col" class="text-sm font-medium font-semibold text-white px-4 py-3 text-left">
                             Dni
                         </th>
-                        <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left">
+                        <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-3 text-left">
                             Domicilio
                         </th>
-                        <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left">
+                        <th scope="col" class="text-sm font-medium font-semibold text-white px-4 py-3 text-left">
                             Fecha
                         </th>
-                        <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left">
+                        <th scope="col" class="text-sm font-medium font-semibold text-white px-4 py-3 text-left">
                             Area
                         </th>
-                        <th scope="col" class="text-sm font-medium font-semibold text-white  py-4 vacaciones-cell"
-                            >
+                        <th scope="col" class="text-sm font-medium font-semibold text-black  py-3 vacaciones-cell">
                             <div class="flex justify-center items-center flex-col">
                                 <span>Ganados</span>
                             </div>
                         </th>
-                        <th scope="col" class="text-sm font-medium font-semibold text-white  py-4 vacaciones-cell"                            >
+                        <th scope="col" class="text-sm font-medium font-semibold text-black py-3 vacaciones-cell">
                             <div class="flex justify-center items-center flex-col">
                                 <span>Tomados</span>
                             </div>
                         </th>
-                        <th scope="col" class="text-sm font-medium font-semibold text-white  py-4 vacaciones-cell"
-                            >
+                        <th scope="col" class="text-sm font-medium font-semibold text-black py-3 vacaciones-cell">
                             <div class="flex justify-center items-center flex-col">
                                 <span>Restantes</span>
                             </div>
                         </th>
-                        <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left">
+                        <th scope="col" class="text-sm font-medium font-semibold text-white px-12 py-3 text-left">
                             <div class="flex justify-center items-center">
                                 <span>Acciones</span>
                             </div>
@@ -155,21 +155,21 @@
                             </td>
                             <td class="vacaciones-cell">
                                 <div class="flex justify-center items-center">
-                                    <p class="text-sm leading-none text-white-600 ml-2">
+                                    <p class="text-sm leading-none text-white-600">
                                         {{ $emple->vacaciones->dias_ganados ?? 'N.A' }}
                                     </p>
                                 </div>
                             </td>
                             <td class="vacaciones-cell">
                                 <div class="flex justify-center items-center">
-                                    <p class="text-sm leading-none text-white-600 ml-2">
+                                    <p class="text-sm leading-none text-white-600">
                                         {{ $emple->vacaciones->dias_tomados ?? 'N.A' }}
                                     </p>
                                 </div>
                             </td>
                             <td class="vacaciones-cell">
                                 <div class="flex justify-center items-center">
-                                    <p class="text-sm leading-none text-white-600 ml-2">
+                                    <p class="text-sm leading-none text-white-600">
                                         {{ $emple->vacaciones->dias_restantes ?? 'N.A' }}
                                     </p>
                                 </div>
@@ -192,7 +192,15 @@
                                             Datos/Doc
                                         </span>
                                     </a>
-                                    @hasanyrole('administrador|supervisor|Administrador del sistema')
+                                    @hasanyrole('administrador|Administrador del sistema')
+                                        <button wire:click="redirectVacacion({{ $emple->id }})"
+                                            class="group flex py-2 px-2 text-center items-center rounded-md bg-yellow-500 font-bold text-white cursor-pointer hover:bg-ywllow-700 hover:animate-pulse">
+                                            <i class="fa fa-plane" aria-hidden="true"></i>
+                                            <span
+                                                class="group-hover:opacity-100 transition-opacity bg-gray-800 px-1 text-sm text-gray-100 rounded-md absolute  translate-y-full opacity-0 m-4 mx-auto z-50">
+                                                Vacaciones
+                                            </span>
+                                        </button>
                                         <button wire:click="$emit('deleteContrato',{{ $emple->id }})"
                                             class="group flex py-2 px-2 text-center items-center rounded-md bg-red-500 font-bold text-white cursor-pointer hover:bg-red-700 hover:animate-pulse">
                                             <i class="fas fa-times-circle"></i>
@@ -251,16 +259,15 @@
     @push('styles')
         <style>
             .vacaciones-cell {
-                background-color: rgb(165, 173, 55);
-                color: white;
+                background-color: rgb(235, 243, 122);
+                color: rgb(0, 0, 0);
                 border: 1px solid rgb(156, 154, 45);
-                text-align: center;
             }
-            .encabezado{
-                background-color: rgb(255, 255, 255); 
+
+            .encabezado {
+                background-color: rgb(255, 255, 255);
             }
         </style>
-
     @endpush
 
 </div>

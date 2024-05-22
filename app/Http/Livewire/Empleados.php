@@ -64,11 +64,16 @@ class Empleados extends Component
         return redirect()->route('contratoTrabajo', ['id' => $id]);
     }
 
-    //Para que me rediriga a la vista editar-taller
     public function redirectContrato($idEmpleado)
     {
         return Redirect::to("Empleado/{$idEmpleado}");
     }
+
+    public function redirectVacacion($contratoId)
+    {
+        return redirect()->route('AsignarVacacion', ['contratoId' => $contratoId]);
+    }
+
 
     public function eliminarContrato($contratoId)
     {

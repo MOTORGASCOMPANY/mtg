@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\User;
 use App\Models\ContratoTrabajo;
 use App\Models\Vacacion;
+use App\Models\VacacionAsignada;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use App\Traits\pdfTrait;
@@ -65,6 +66,16 @@ class ContratosTrabajos extends Component
             'dias_tomados' => 0,
             'dias_restantes' => $diasVacaciones,
         ]);
+
+        /* Crear registro de vacacion_asignada
+        VacacionAsignada::create([
+            'idContrato' => $nuevoMemorando->id,
+            'tipo' => $diasVacaciones,
+            'razon' => 0,
+            'd_tomados' => $diasVacaciones,
+            'f_inicio' => $diasVacaciones,
+            'observacion' => $diasVacaciones,
+        ]);*/
 
 
         $this->contrato = $nuevoMemorando;

@@ -28,7 +28,7 @@
 
                     <div class="mb-6 px-8 py-2">
                         <div class="flex items-center justify-between bg-gray-400 py-4 px-6 rounded-t-lg">
-                            <span class="text-lg font-semibold text-white dark:text-gray-400">Datos del Memorando</span>
+                            <span class="text-lg font-semibold text-white dark:text-gray-400">Datos del Empleado</span>
                         </div>
                         <div class="mb-6 px-8 py-2">
 

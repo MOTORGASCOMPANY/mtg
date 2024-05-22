@@ -17,7 +17,7 @@ class Vacacion extends Model
         'dias_restantes',
     ];
 
-    public function contratoTrabajo()
+    public function contrato()
     {
         return $this->belongsTo(ContratoTrabajo::class, 'idContrato');
     }

@@ -1,4 +1,4 @@
-<div class="container mx-auto py-12">
+<div class="container mx-auto py-12 mt-4">
     <div class="flex flex-row  justify-between items-center">
         <h2 class="mt-8 font-bold text-lg text-indigo-600"> Documentos del Empleado {{ $empleado->empleado->name }}</h2>
         @hasanyrole('administrador|supervisor|Administrador del sistema')

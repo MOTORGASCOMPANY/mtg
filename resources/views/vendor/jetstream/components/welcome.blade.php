@@ -127,7 +127,7 @@
 
     </div>
 
-    {{-- COMUNICADO --}}
+    {{-- COMUNICADO 
     @hasanyrole('Administrador del sistema|Administrador taller|inspector|supervisor|administrador')
         <div class="mt-16 fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog"
             aria-modal="true">
@@ -150,7 +150,7 @@
                     <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative">
                         <h3 class="text-lg font-medium text-center text-gray-600 mb-4" id="modal-title">Comunicado</h3>
                         <p class="text-sm text-gray-500 mb-4" style="text-align: justify;">
-                            Se esta encontrando placas con "/" otros con "-" a la hora de realizar las certificaciones y eso es incorrecto.                            
+                            Se estan encontrando placas con "/" otros con "-" a la hora de realizar las certificaciones y eso es incorrecto.                            
                         </p>
                         <p>Forma Incorrepta:
                             <img class="pl-16" src="images/images/incorrepto.PNG">
@@ -170,7 +170,15 @@
                         </p>
                             
                         
-                        {{--
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endhasanyrole
+    --}}
+
+    {{--
                            <p class="text-sm text-gray-500 mb-4" style="text-align: justify;">
                             Queremos expresarte nuestro más sincero agradecimiento por tu dedicación y compromiso en cada
                             tarea que realizas como parte de nuestro equipo de trabajo. Tu labor es fundamental para
@@ -185,12 +193,7 @@
                             ¡¡¡ Gracias por confiar en nosotros y por ser parte de nuestra familia !!!
                             Con aprecio y gratitud,
                            </p>
-                        --}}
-                    </div>
-                </div>
-            </div>
-        </div>
-    @endhasanyrole
+    --}}
 
 
 

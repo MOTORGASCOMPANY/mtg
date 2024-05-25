@@ -93,7 +93,8 @@ class ActualizarPreciosGasol extends Component
                     case 'Conversión a GNV':
                     case 'Revisión anual GNV':
                     case 'Desmonte de Cilindro':
-                        ServiciosImportados::whereIn('id', $certificacionIds)->whereHas('tipoServicio', function ($query) use ($tipoServicio) {
+                        ServiciosImportados::whereIn('id', $certificacionIds)
+                            ->whereHas('tipoServicio', function ($query) use ($tipoServicio) {
                                     $query->where('descripcion', $tipoServicio);
                                 })
                             ->update(['precio' => $nuevoPrecio]);

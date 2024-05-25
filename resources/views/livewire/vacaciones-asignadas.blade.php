@@ -1,29 +1,112 @@
-<div class="container mx-auto mt-8">
-    <div class="block justify-center mt-2 pt-8 max-h-max pb-8">
-        <h1 class="text-center text-xl my-2 font-bold text-indigo-600">ASIGNAR VACACIONES</h1>
+<div>
+    <button data-tooltip-target="tooltip-dark" type="button" wire:click="$set('addDocument',true)"
+        class="group flex py-4 px-4 text-center rounded-md bg-blue-300 font-bold text-white cursor-pointer hover:bg-blue-400 hover:animate-pulse">
+        <i class="fa-solid fa-cart-plus"></i>
+        <span
+            class="group-hover:opacity-100 transition-opacity bg-gray-800 px-1 text-sm text-gray-100 rounded-md absolute left-1/2-translate-x-1/2 translate-y-full opacity-0 m-4 mx-auto z-100">
+            Agregar Vacación
+        </span>
+    </button>
 
-        {{--
-        <div class="max-w-5xl mx-auto bg-white rounded-lg shadow-md my-4">
-            <div class="bg-indigo-200 rounded-lg py-4 grid grid-cols-1 gap-8 justify-center">
-                <div class="flex items-center">
-                    <div class="ml-60 text-center">
-                        <x-jet-label value="Seleccione Usuario:" for="usuario" />
-                    </div>
-                    <div class="ml-2">
-                        <select wire:model="selectedUser"
+    <x-jet-dialog-modal wire:model="addDocument">
+        <x-slot name="title">
+            <h1 class="text-xl font-bold">Asignar Vacaciones</h1>
+        </x-slot>
+        <x-slot name="content">
+            <div>
+                <div class="grid grid-cols-2 gap-4 py-1">
+                    <div>
+                        <x-jet-label value="Vacaciones Disponibles:" />
+                        <select wire:model="idVacacion"
                             class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full">
                             <option value="">Seleccione</option>
-                            @foreach ($usuarios as $usuario)
-                                <option value="{{ $usuario->empleado->id }}">{{ $usuario->empleado->name }}</option>
+                            @foreach ($vacaciones as $vacacion)
+                                <option value="{{ $vacacion->id }}">
+                                    {{--$vacacion->contrato->cargo--}}Días restantes:
+                                    {{ $vacacion->dias_restantes }}
+                                </option>
                             @endforeach
                         </select>
+                        <x-jet-input-error for="idVacacion" />
                     </div>
-                    <x-jet-input-error for="selectedUser" />
+                    <div>
+                        <x-jet-label value="Razón:" />
+                        <x-jet-input type="text"
+                            class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full"
+                            wire:model="razon" />
+                        <x-jet-input-error for="razon" />
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-4 py-2">
+                    <div>
+                        <x-jet-label value="Tipo:" />
+                        <x-jet-input type="text"
+                            class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full " wire:model="tipo"
+                            list="items" />
+                        <datalist id="items">
+                            <option value="VACACION">VACACION</option>
+                            <option value="PERMISO">PERMISO</option>
+                            <option value="FALTA">FALTA</option>
+                        </datalist>
+                        <x-jet-input-error for="tipo" />
+                    </div>
+                    <div>
+                        <x-jet-label value="Días Tomados:" />
+                        <x-jet-input type="number"
+                            class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full"
+                            wire:model="d_tomados" />
+                        <x-jet-input-error for="d_tomados" />
+                    </div>
+                    <div>
+                        <x-jet-label value="Fecha de Inicio:" />
+                        <x-jet-input type="date"
+                            class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full"
+                            wire:model="f_inicio" />
+                        <x-jet-input-error for="f_inicio" />
+                    </div>                    
+                </div>
+
+                <div>
+                    <x-jet-label value="Observación:" />
+                    <x-textarea class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full" wire:model="observacion" style="height: 100px;" />
+                    <x-jet-input-error for="observacion" />
                 </div>
             </div>
-        </div>
-        --}}
+        </x-slot>
 
+        <x-slot name="footer">
+            <x-jet-secondary-button wire:click="$set('addDocument',false)" class="mx-2">
+                Cancelar
+            </x-jet-secondary-button>
+            <x-jet-button loading:attribute="disabled" wire:click="asignarVacacion" wire:target="asignarVacacion">
+                Guardar
+            </x-jet-button>
+        </x-slot>
+
+    </x-jet-dialog-modal>
+
+    {{--
+    @push('scripts')
+        <script>
+            Livewire.on('redirectEditarVacacion', contratoId => {
+                Swal.fire({
+                    title: '¡EXCELENTE TRABAJO!',
+                    text: 'La vacación se asignó correctamente',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = `/EditarVacacion/${contratoId}`;
+                    }
+                });
+            });
+        </script>
+    @endpush
+    --}}
+
+    {{--
+    <div class="block justify-center mt-2 pt-8 max-h-max pb-8">
+        <h1 class="text-center text-xl my-2 font-bold text-indigo-600">ASIGNAR VACACIONES</h1>
         
             <div class="max-w-5xl mx-auto bg-white rounded-lg shadow-md my-4">
                 <div class="mb-6 px-8 py-2">
@@ -109,5 +192,7 @@
                     </div>
                 </div>
             </div>
+
     </div>
+    --}}
 </div>

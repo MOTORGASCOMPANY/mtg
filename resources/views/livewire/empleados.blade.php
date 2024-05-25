@@ -40,8 +40,8 @@
                 <thead class="bg-slate-600 border-b font-bold text-white">
 
                     <tr>
-                        <th scope="col" class=" bg-gray-100" colspan="6"></th>
-                        <th scope="col" class="text-sm font-medium font-semibold text-black vacaciones-cell"
+                        <th scope="col" class=" bg-gray-100" colspan="7"></th>
+                        <th scope="col" class="text-sm font-medium font-semibold text-white"
                             colspan="3">
                             <div class="flex justify-center items-center">
                                 <span>Vacaciones</span>
@@ -78,22 +78,25 @@
                             Domicilio
                         </th>
                         <th scope="col" class="text-sm font-medium font-semibold text-white px-4 py-3 text-left">
-                            Fecha
+                            Fecha Inicio
+                        </th>
+                        <th scope="col" class="text-sm font-medium font-semibold text-white px-4 py-3 text-left">
+                            Fecha Fin
                         </th>
                         <th scope="col" class="text-sm font-medium font-semibold text-white px-4 py-3 text-left">
                             Area
                         </th>
-                        <th scope="col" class="text-sm font-medium font-semibold text-black  py-3 vacaciones-cell">
+                        <th scope="col" class="text-sm font-medium font-semibold text-white  py-3">
                             <div class="flex justify-center items-center flex-col">
                                 <span>Ganados</span>
                             </div>
                         </th>
-                        <th scope="col" class="text-sm font-medium font-semibold text-black py-3 vacaciones-cell">
+                        <th scope="col" class="text-sm font-medium font-semibold text-white py-3">
                             <div class="flex justify-center items-center flex-col">
                                 <span>Tomados</span>
                             </div>
                         </th>
-                        <th scope="col" class="text-sm font-medium font-semibold text-black py-3 vacaciones-cell">
+                        <th scope="col" class="text-sm font-medium font-semibold text-white py-3">
                             <div class="flex justify-center items-center flex-col">
                                 <span>Restantes</span>
                             </div>
@@ -139,37 +142,44 @@
                                     </p>
                                 </div>
                             </td>
-                            <td class="pl-2">
+                            <td>
                                 <div class="flex items-center">
                                     <p class="text-sm leading-none text-gray-600 ml-2">
-                                        {{ \Carbon\Carbon::parse($emple->created_at)->format('d-m-Y') }}
+                                        {{ \Carbon\Carbon::parse($emple->fechaInicio)->format('d-m-Y') }}
                                     </p>
                                 </div>
                             </td>
-                            <td class="pl-2">
+                            <td>
+                                <div class="flex items-center">
+                                    <p class="text-sm leading-none text-gray-600 ml-2">
+                                        {{ \Carbon\Carbon::parse($emple->fechaExpiracion)->format('d-m-Y') }}
+                                    </p>
+                                </div>
+                            </td>
+                            <td>
                                 <div class="flex items-center">
                                     <p class="text-sm leading-none text-gray-600 ml-2">
                                         {{ $emple->cargo }}
                                     </p>
                                 </div>
                             </td>
-                            <td class="vacaciones-cell">
+                            <td>
                                 <div class="flex justify-center items-center">
-                                    <p class="text-sm leading-none text-white-600">
+                                    <p class="text-sm leading-none text-gray-600 ml-2">
                                         {{ $emple->vacaciones->dias_ganados ?? 'N.A' }}
                                     </p>
                                 </div>
                             </td>
-                            <td class="vacaciones-cell">
+                            <td>
                                 <div class="flex justify-center items-center">
-                                    <p class="text-sm leading-none text-white-600">
+                                    <p class="text-sm leading-none text-gray-600 ml-2">
                                         {{ $emple->vacaciones->dias_tomados ?? 'N.A' }}
                                     </p>
                                 </div>
                             </td>
-                            <td class="vacaciones-cell">
+                            <td>
                                 <div class="flex justify-center items-center">
-                                    <p class="text-sm leading-none text-white-600">
+                                    <p class="text-sm leading-none text-gray-600 ml-2">
                                         {{ $emple->vacaciones->dias_restantes ?? 'N.A' }}
                                     </p>
                                 </div>
@@ -192,15 +202,15 @@
                                             Datos/Doc
                                         </span>
                                     </a>
-                                    @hasanyrole('administrador|Administrador del sistema')
-                                        <button wire:click="redirectVacacion({{ $emple->id }})"
-                                            class="group flex py-2 px-2 text-center items-center rounded-md bg-yellow-500 font-bold text-white cursor-pointer hover:bg-ywllow-700 hover:animate-pulse">
-                                            <i class="fa fa-plane" aria-hidden="true"></i>
-                                            <span
-                                                class="group-hover:opacity-100 transition-opacity bg-gray-800 px-1 text-sm text-gray-100 rounded-md absolute  translate-y-full opacity-0 m-4 mx-auto z-50">
-                                                Vacaciones
-                                            </span>
-                                        </button>
+                                    <button wire:click="redirectVacacion({{ $emple->id }})"
+                                        class="group flex py-2 px-2 text-center items-center rounded-md bg-yellow-500 font-bold text-white cursor-pointer hover:bg-ywllow-700 hover:animate-pulse">
+                                        <i class="fa fa-plane" aria-hidden="true"></i>
+                                        <span
+                                            class="group-hover:opacity-100 transition-opacity bg-gray-800 px-1 text-sm text-gray-100 rounded-md absolute  translate-y-full opacity-0 m-4 mx-auto z-50">
+                                            Vacaciones
+                                        </span>
+                                    </button>
+                                    @hasanyrole('administrador|Administrador del sistema')                                        
                                         <button wire:click="$emit('deleteContrato',{{ $emple->id }})"
                                             class="group flex py-2 px-2 text-center items-center rounded-md bg-red-500 font-bold text-white cursor-pointer hover:bg-red-700 hover:animate-pulse">
                                             <i class="fas fa-times-circle"></i>

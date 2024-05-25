@@ -12,6 +12,7 @@ class VacacionesAsignadas extends Component
 {
     public $usuarios, $vacaciones, $idVacacion, $tipo, $razon, $d_tomados, $f_inicio, $observacion;
     public $contratoId;
+    public $addDocument = false;
 
     public function mount($contratoId)
     {
@@ -52,9 +53,11 @@ class VacacionesAsignadas extends Component
         $vacacion->dias_restantes = $vacacion->dias_ganados - $vacacion->dias_tomados;
         $vacacion->save();
 
-        $this->reset(['idVacacion', 'tipo', 'razon', 'd_tomados', 'f_inicio', 'observacion']);
+        $this->reset(['idVacacion', 'tipo', 'razon', 'd_tomados', 'f_inicio', 'observacion']);              
+        $this->addDocument = false;
         $this->emit("minAlert", ["titulo" => "¡EXCELENTE TRABAJO!", "mensaje" => "La vacación se asignó correctamente", "icono" => "success"]);
-        return redirect()->route('Empleados');
+        $this->emit('refreshVacacionesAsignadas');
+        return redirect()->route('EditarVacacion', ['contratoId' => $this->contratoId]);
 
         /*
          DB::beginTransaction();

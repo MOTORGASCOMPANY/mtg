@@ -51,15 +51,26 @@ class ReporteCalcularExport implements FromCollection, WithHeadings, WithMapping
     public function headings(): array
     {
         return [
-            'Placa',
-            'Taller',
-            'Inspector',
-            'Servicio',
-            'Hoja',
+            /*'Placa',
+            'Taller', 
+            'Inspector', 
+            'Servicio', 
+            'Hoja',  
             'Precio',
-            'Fecha',
+            'Fecha', 
             'Estado',
-            'Pagado',
+            'Pagado',*/
+
+            'FECHA',
+            'N° CERTIFICADO',
+            'TALLER',
+            'INSPECTOR',
+            'PLACA',
+            'SERVICIO',
+            'FAC O BOLT',
+            'OBSERVACIONES',
+            'MONTO',
+
         ];
     }
 
@@ -97,58 +108,66 @@ class ReporteCalcularExport implements FromCollection, WithHeadings, WithMapping
         switch ($data['tipo_modelo']) {
             case 'App\Models\Certificacion':
                 return [
-                    $secondPart, //$data['placa'] ?? 'EN TRAMITE'
+                    $fecha ?? 'S.F',
+                    $data['num_hoja'] ?? 'N.E',                    
                     $data['taller'] ?? 'N.A',
                     $data['inspector'] ?? 'N.A',
-                    $data['servicio'] ?? 'N.A',
-                    $data['num_hoja'] ?? 'N.E',
+                    $secondPart, //$data['placa'] ?? 'EN TRAMITE'
+                    $data['servicio'] ?? 'N.A',                                     
+                    //$data['estado'] ?? 'S.E',
+                    //$data['pagado'],
+                    '',
+                    '',
                     $precio ?? 'S.P',
-                    $fecha ?? 'S.F',
-                    $data['estado'] ?? 'S.E',
-                    $data['pagado'],
                     'certificacion',
                 ];
                 break;
             case 'App\Models\CertificacionPendiente':
                 return [
-                    $data['placa'] ?? 'EN TRAMITE',
+                    $fecha ?? 'S.F',
+                    $data['num_hoja'] ?? 'N.E',                    
                     $data['taller'] ?? 'N.A',
                     $data['inspector'] ?? 'N.A',
+                    $data['placa'] ?? 'EN TRAMITE',
                     $data['servicio'] ?? 'N.A',
-                    $data['num_hoja'] ?? 'N.E',
+                    //$data['estado'] ?? 'S.E',
+                    //$data['pagado'],
+                    '',
+                    '',
                     $precio ?? 'S.P',
-                    $fecha ?? 'S.F',
-                    $data['estado'] ?? 'S.E',
-                    $data['pagado'],
                     'certificacion pendiente',
                 ];
                 break;
             case 'App\Models\ServiciosImportados':
                 return [
-                    $data['placa'] ?? 'EN TRAMITE',
+                    $fecha ?? 'S.F',
+                    $data['num_hoja'] ?? 'N.E',
                     $data['taller'] ?? 'N.A',
                     $data['inspector'] ?? 'N.A',
-                    $data['servicio'] ?? 'N.A',
-                    $data['num_hoja'] ?? 'N.E',
+                    $data['placa'] ?? 'EN TRAMITE',
+                    $data['servicio'] ?? 'N.A',  
+                    //$data['estado'] ?? 'S.E',
+                    //$data['pagado'],
+                    '',
+                    '',
                     $precio ?? 'S.P',
-                    $fecha ?? 'S.F',
-                    $data['estado'] ?? 'S.E',
-                    $data['pagado'],
                     'discrepancia'
                 ];
                 break;
 
             default:
                 return [
-                    $data['placa'] ?? 'EN TRAMITE',
+                    $fecha ?? 'S.F',
+                    $data['num_hoja'] ?? 'N.E',                    
                     $data['taller'] ?? 'N.A',
                     $data['inspector'] ?? 'N.A',
+                    $data['placa'] ?? 'EN TRAMITE',
                     $data['servicio'] ?? 'N.A',
-                    $data['num_hoja'] ?? 'N.E',
+                    //$data['estado'] ?? 'S.E',
+                    //$data['pagado'],
+                    '',
+                    '',
                     $precio ?? 'S.P',
-                    $fecha ?? 'S.F',
-                    $data['estado'] ?? 'S.E',
-                    $data['pagado'],
                     'certificacion',
                 ];
                 break;
@@ -194,7 +213,7 @@ class ReporteCalcularExport implements FromCollection, WithHeadings, WithMapping
         }
 
         // Aplicar estilos a los encabezados
-        $sheet->getStyle('A1:I1')->applyFromArray([
+        $sheet->getStyle('A1:J1')->applyFromArray([
             'font' => [
                 'bold' => true,
             ],

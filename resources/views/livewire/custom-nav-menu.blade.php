@@ -572,6 +572,12 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                                 Reporte MTC Detallado
                                             </x-jet-responsive-nav-link>
                                         @endcan
+                                        @can('reportes.reporteGasol')
+                                            <x-jet-responsive-nav-link class="text-sm truncate"
+                                                href="{{ route('reportes.reporteGasol') }}" :active="request()->routeIs('reportes.reporteGasol')">
+                                                Reporte Gasol Detallado
+                                            </x-jet-responsive-nav-link>
+                                        @endcan
                                         @can('reportes.reporteActualizarPrecio')
                                             <x-jet-responsive-nav-link class="text-sm truncate"
                                                 href="{{ route('reportes.reporteActualizarPrecio') }}" :active="request()->routeIs('reportes.reporteActualizarPrecio')">

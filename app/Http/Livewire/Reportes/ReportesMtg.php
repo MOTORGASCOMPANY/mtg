@@ -133,8 +133,8 @@ class ReportesMtg extends Component
                 })
                 ->IdTipoServicios($this->servicio)
                 ->rangoFecha($this->fechaInicio, $this->fechaFin)
-                ->where('estado', 1)
-                ->whereNull('idCertificacion')
+                //->where('estado', 1)
+                //->whereNull('idCertificacion')
                 ->get();
         } else {
             //TODO CERTIFICACIONES PARA OFICINA:
@@ -157,8 +157,8 @@ class ReportesMtg extends Component
                 })
                 ->IdTipoServicios($this->servicio)
                 ->rangoFecha($this->fechaInicio, $this->fechaFin)
-                ->where('estado', 1)
-                ->whereNull('idCertificacion')
+                //->where('estado', 1)   //Analizar esto - se comento porque algunas cer-pendientes se realizan en la misma semana y no muestra ni activacion ni revision
+                //->whereNull('idCertificacion') //Analizar esto - se comento porque algunas cer-pendientes se realizan en la misma semana y no muestra ni activacion ni revision
                 ->get();
         }
 

@@ -23,7 +23,8 @@ class ContratosTrabajos extends Component
 
     public function mount()
     {
-        $this->inspectores = User::role(['inspector'])->orderBy('name')->get();
+        //$this->inspectores = User::role(['inspector'])->orderBy('name')->get();
+        $this->inspectores = User::orderBy('name')->get();
     }
 
     public function render()
@@ -43,7 +44,7 @@ class ContratosTrabajos extends Component
             'pago' => 'required',
         ]);
 
-        $nuevoMemorando =  ContratoTrabajo::create([
+        $nuevoContrato =  ContratoTrabajo::create([
             'idUser' => $this->idUser,
             'dniEmpleado' => $this->dniEmpleado,
             'domicilioEmpleado' => $this->domicilioEmpleado,
@@ -61,7 +62,7 @@ class ContratosTrabajos extends Component
 
         // Crear registro de vacaciones
         Vacacion::create([
-            'idContrato' => $nuevoMemorando->id,
+            'idContrato' => $nuevoContrato->id,
             'dias_ganados' => $diasVacaciones,
             'dias_tomados' => 0,
             'dias_restantes' => $diasVacaciones,
@@ -69,7 +70,7 @@ class ContratosTrabajos extends Component
 
         /* Crear registro de vacacion_asignada
         VacacionAsignada::create([
-            'idContrato' => $nuevoMemorando->id,
+            'idContrato' => $nuevoContrato->id,
             'tipo' => $diasVacaciones,
             'razon' => 0,
             'd_tomados' => $diasVacaciones,
@@ -78,7 +79,7 @@ class ContratosTrabajos extends Component
         ]);*/
 
 
-        $this->contrato = $nuevoMemorando;
+        $this->contrato = $nuevoContrato;
         $this->reset(['idUser', 'dniEmpleado', 'domicilioEmpleado', 'fechaInicio', 'fechaExpiracion', 'cargo', 'cargo']);
         $this->emit("minAlert", ["titulo" => "¡EXCELENTE TRABAJO!", "mensaje" => "El contrato se realizo correctamente", "icono" => "success"]);
         //return redirect('ContratoTrabajo');

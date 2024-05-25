@@ -217,7 +217,7 @@
                                                         <td
                                                             class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
                                                             <div class="flex items-center justify-center">
-
+                                                                {{--
                                                                 @switch($data['estado'])
                                                                     @case(1)
                                                                         <i class="far fa-check-circle fa-lg"
@@ -237,6 +237,31 @@
                                                                     @default
                                                                         NA
                                                                 @endswitch
+                                                                --}}
+                                                                @if ($data['servicio'] == 'Activación de chip (Anual)')
+                                                                    <i class="far fa-check-circle fa-lg"
+                                                                        style="color: forestgreen;"></i>
+                                                                @else
+                                                                    @switch($data['estado'])
+                                                                        @case(1)
+                                                                            <i class="far fa-check-circle fa-lg"
+                                                                                style="color: forestgreen;"></i>
+                                                                        @break
+
+                                                                        @case(2)
+                                                                            <i class="far fa-times-circle fa-lg"
+                                                                                style="color: red;"></i>
+                                                                        @break
+
+                                                                        @case(3)
+                                                                            <i
+                                                                                class="fa-regular fa-circle-pause fa-lg text-amber-400"></i>
+                                                                        @break
+
+                                                                        @default
+                                                                            NA
+                                                                    @endswitch
+                                                                @endif
                                                             </div>
                                                         </td>
                                                         <td

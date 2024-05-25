@@ -21,4 +21,9 @@ class Vacacion extends Model
     {
         return $this->belongsTo(ContratoTrabajo::class, 'idContrato');
     }
+
+    public function vacacionAsignadas()
+    {
+        return $this->hasMany(VacacionAsignada::class, 'idVacacion');
+    }
 }

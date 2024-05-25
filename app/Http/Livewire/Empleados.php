@@ -71,13 +71,29 @@ class Empleados extends Component
 
     public function redirectVacacion($contratoId)
     {
-        return redirect()->route('AsignarVacacion', ['contratoId' => $contratoId]);
+        return Redirect::to("Vacacion/{$contratoId}");
     }
-
 
     public function eliminarContrato($contratoId)
     {
-        ContratoTrabajo::destroy($contratoId);
+        $contrato = ContratoTrabajo::findOrFail($contratoId);
+        if (!$contrato) {
+            return; //Contrato no encontrado
+        }    
+        //Eliminar vacaciones_asignadas relacionadas
+        if ($contrato->vacaciones) {
+            foreach ($contrato->vacaciones->vacacionAsignadas as $vacacionAsignada) {
+                if ($vacacionAsignada) {
+                    $vacacionAsignada->delete();
+                }
+            }    
+            //Eliminar la vacaciones
+            if ($contrato->vacaciones) {
+                $contrato->vacaciones->delete();
+            }
+        }    
+        //Eliminar contrato_trabajo
+        $contrato->delete();
     }
 
     public function agregar()

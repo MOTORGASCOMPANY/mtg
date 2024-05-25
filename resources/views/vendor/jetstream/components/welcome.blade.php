@@ -127,8 +127,8 @@
 
     </div>
 
-    {{-- COMUNICADO 
-    @hasanyrole('Administrador del sistema|Administrador taller|inspector|supervisor|administrador')
+    {{-- COMUNICADO --}}
+    @hasanyrole('Administrador taller|inspector|supervisor|administrador')
         <div class="mt-16 fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog"
             aria-modal="true">
             <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -150,7 +150,7 @@
                     <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative">
                         <h3 class="text-lg font-medium text-center text-gray-600 mb-4" id="modal-title">Comunicado</h3>
                         <p class="text-sm text-gray-500 mb-4" style="text-align: justify;">
-                            Se estan encontrando placas con "/" otros con "-" a la hora de realizar las certificaciones y eso es incorrecto.                            
+                            Para su conocimiento, al momento de ingresar un nuevo servicio y digitar la placa NO DEBE TENER ESPACIOS, NI GUIONES .                        
                         </p>
                         <p>Forma Incorrepta:
                             <img class="pl-16" src="images/images/incorrepto.PNG">
@@ -160,7 +160,7 @@
                         </p>
 
                         <p class="mt-8 text-sm text-gray-500 mb-4" style="text-align: justify;">
-                            Cuando el servicio es "Chip por deterioro" la forma correcta de colocar los propietarios es con "-" y la placa sin espacios todo junto.                           
+                            Por otro lado cuando el nuevo servicio es "Chip por deterioro" la forma correcta de colocar los propietarios es con (-) y la placa sin espacios todo junto.                           
                         </p>
                         <p>Forma Incorrepta:
                             <img src="images/images/incorrepto2.PNG">
@@ -176,7 +176,7 @@
             </div>
         </div>
     @endhasanyrole
-    --}}
+    
 
     {{--
                            <p class="text-sm text-gray-500 mb-4" style="text-align: justify;">

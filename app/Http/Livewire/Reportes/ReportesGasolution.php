@@ -80,6 +80,9 @@ class ReportesGasolution extends Component
         $certificaciones = Certificacion::idTalleres($this->taller)
             ->IdInspectores($this->ins)
             ->IdTipoServicio($this->servicio)
+            ->whereHas('Inspector', function ($query) {
+                $query->whereNotIn('id', [37, 117, 201]);
+            })
             ->rangoFecha($this->fechaInicio, $this->fechaFin)
             ->where('pagado', 0)
             ->whereIn('estado', [3, 1])
@@ -89,6 +92,9 @@ class ReportesGasolution extends Component
         $cerPendiente = CertificacionPendiente::idTalleres($this->taller)
             ->IdInspectores($this->ins)
             ->IdTipoServicios($this->servicio)
+            ->whereHas('Inspector', function ($query) {
+                $query->whereNotIn('id', [37, 117, 201]);
+            })
             ->rangoFecha($this->fechaInicio, $this->fechaFin)
             ->where('estado', 1)
             ->whereNull('idCertificacion')

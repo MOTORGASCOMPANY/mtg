@@ -84,9 +84,9 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
 
                 <x-slot name="content">
                     <!-- Account Management -->
-                    
+
                     <div class="block px-4 py-2 text-xs text-gray-400">
-                        {{ __('Tienes ' .Auth()->user()->unreadNotifications->count() .' notificaciones') }}
+                        {{ __('Tienes ' . Auth()->user()->unreadNotifications->count() . ' notificaciones') }}
                     </div>
                     @foreach (Auth()->user()->unreadNotifications as $notification)
                         {{-- Notificacion para Solicitud de Material --}}
@@ -106,7 +106,7 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                             </x-jet-dropdown-link>
                             <div class="border-t border-gray-100"></div>
                         @endif
-                        {{--  Notificacion para Solicitud de Eliminacion--}}
+                        {{--  Notificacion para Solicitud de Eliminacion --}}
                         @if ($notification->type == 'App\Notifications\SolicitudEliminacion')
                             <x-jet-dropdown-link href="{{ route('leerEliminar', [$notification->id]) }}">
                                 <p class="text-xs "> Nueva solicitud de Eliminación <strong
@@ -118,19 +118,20 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                         @if ($notification->type == 'App\Notifications\MemorandoSolicitud')
                             <x-jet-dropdown-link href="{{ route('leerMemorando', [$notification->id]) }}">
                                 <p class="text-xs "> Nuevo Memorando <strong
-                                        class="text-indigo-500">{{$notification->data['idMemorando'] }}</strong></p> {{-- var_export --}}
+                                        class="text-indigo-500">{{ $notification->data['idMemorando'] }}</strong></p>
+                                {{-- var_export --}}
                             </x-jet-dropdown-link>
                             <div class="border-t border-gray-100"></div>
                         @endif
                     @endforeach
-                        {{-- Boton para ver todas las Notificaciones --}}
+                    {{-- Boton para ver todas las Notificaciones --}}
                     @hasrole('Administrador del sistema|administrador')
-                    <div class="mt-2 flex justify-center">
-                        <a href="{{ route('Notificaciones') }}"
-                            class="p-2 bg-indigo-500 rounded-xl text-white text-sm  hover:bg-indigo-700">
-                            Tds. Notificaciones
-                        </a>
-                    </div>
+                        <div class="mt-2 flex justify-center">
+                            <a href="{{ route('Notificaciones') }}"
+                                class="p-2 bg-indigo-500 rounded-xl text-white text-sm  hover:bg-indigo-700">
+                                Tds. Notificaciones
+                            </a>
+                        </div>
                     @endhasrole
                 </x-slot>
             </x-jet-dropdown>
@@ -264,8 +265,8 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                         @endcan
                                         @can('ListadoChips')
                                             <li class="transition-colors duration-150">
-                                                <x-jet-responsive-nav-link class="text-sm"
-                                                    href="{{ route('ListadoChips') }}" :active="request()->routeIs('ListadoChips')">
+                                                <x-jet-responsive-nav-link class="text-sm" href="{{ route('ListadoChips') }}"
+                                                    :active="request()->routeIs('ListadoChips')">
                                                     Listado de Chips
                                                 </x-jet-responsive-nav-link>
                                             </li>
@@ -500,7 +501,7 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                     x-on:click="Open = !Open">
                                     <span class="inline-flex items-center space-x-6  text-sm  text-white ">
                                         <i class="fa-solid fa-chart-column"></i>
-                                        <span class="select-none">Reportes GNV</span>
+                                        <span class="select-none">Reportes de Cumplimiento</span>
                                     </span>
                                     <i class="fa-solid fa-caret-down ml-1  text-white w-4 h-4" x-show="!Open"></i>
 
@@ -515,7 +516,7 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                         x-transition:leave-end="opacity-0 max-h-0"
                                         class="mt-2 divide-y-2 divide-gray-600 overflow-hidden text-sm font-medium bg-gray-600 text-white shadow-inner"
                                         aria-label="submenu">
-                                        
+
                                         @can('reportes.reporteGeneralGnv')
                                             <x-jet-responsive-nav-link class="text-sm"
                                                 href="{{ route('reportes.reporteGeneralGnv') }}" :active="request()->routeIs('reportes.reporteGeneralGnv')">
@@ -546,7 +547,38 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                                 href="{{ route('reportes.reporteDocumentosTaller') }}" :active="request()->routeIs('reportes.reporteDocumentosTaller')">
                                                 Reporte Documentos a vencer
                                             </x-jet-responsive-nav-link>
-                                        @endcan                                        
+                                        @endcan
+
+                                    </ul>
+
+                                </div>
+                            </li>
+                        @endcan
+
+                        {{--           OPCIONES PARA REPORTES CERTIFICACIONES    --}}
+                        @can('opciones.reportesCertificaciones')
+                            <li class="text-gray-50 py-3 pl-3 pr-4 hover:bg-gray-600 focus:bg-gray-600 rounded"
+                                x-data="{ Open: false }">
+                                <div class="inline-flex  items-center justify-between w-full  transition-colors duration-150 text-gray-500  cursor-pointer"
+                                    x-on:click="Open = !Open">
+                                    <span class="inline-flex items-center space-x-6  text-sm  text-white ">
+                                        <i class="fa-solid fa-chart-column"></i>
+                                        <span class="select-none">Reportes de Certificaciones</span>
+                                    </span>
+                                    <i class="fa-solid fa-caret-down ml-1  text-white w-4 h-4" x-show="!Open"></i>
+
+                                    <i class="fa-solid fa-caret-up ml-1  text-white w-4 h-4" x-show="Open"></i>
+                                </div>
+                                <div x-show.transition="Open" style="display:none;">
+                                    <ul x-transition:enter="transition-all ease-in-out duration-300"
+                                        x-transition:enter-start="opacity-25 max-h-0"
+                                        x-transition:enter-end="opacity-100 max-h-xl"
+                                        x-transition:leave="transition-all ease-in-out duration-300"
+                                        x-transition:leave-start="opacity-100 max-h-xl"
+                                        x-transition:leave-end="opacity-0 max-h-0"
+                                        class="mt-2 divide-y-2 divide-gray-600 overflow-hidden text-sm font-medium bg-gray-600 text-white shadow-inner"
+                                        aria-label="submenu">
+
                                         @can('reportes.reporteCalcularGasol')
                                             <x-jet-responsive-nav-link class="text-sm truncate"
                                                 href="{{ route('reportes.reporteCalcularGasol') }}" :active="request()->routeIs('reportes.reporteCalcularGasol')">
@@ -565,7 +597,7 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                                 Reporte MTC Semanal
                                             </x-jet-responsive-nav-link>
                                         @endcan
-                                        
+
                                         @can('reportes.reporteMTG')
                                             <x-jet-responsive-nav-link class="text-sm truncate"
                                                 href="{{ route('reportes.reporteMTG') }}" :active="request()->routeIs('reportes.reporteMTG')">
@@ -598,7 +630,7 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                         @endcan
 
 
-                        {{--                     OPCIONES PARA IMPORTACION DE SERVICIOS                  --}}
+                        {{--           OPCIONES PARA IMPORTACION DE SERVICIOS                  --}}
                         @can('opciones.cargaDatos')
                             <li class="text-gray-50 py-3 pl-3 pr-4 hover:bg-gray-600 focus:bg-gray-600 rounded"
                                 x-data="{ Open: false }">
@@ -642,55 +674,9 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                 </div>
                             </li>
                         @endcan
+                        
 
-                        {{--                     OPCIONES PARA USUARIOS Y ROLES                  --}}
-                        @can('opciones.usuarios')
-                            <li class="text-gray-50 py-3 pl-3 pr-4 hover:bg-gray-600 focus:bg-gray-600 rounded"
-                                x-data="{ Open: false }">
-                                <div class="inline-flex  items-center justify-between w-full  transition-colors duration-150 text-gray-500  cursor-pointer"
-                                    x-on:click="Open = !Open">
-                                    <span class="inline-flex items-center space-x-6  text-sm  text-white ">
-                                        <i class="fa-solid fa-user-shield"></i>
-                                        <span class="select-none">Usuarios y roles</span>
-                                    </span>
-                                    <i class="fa-solid fa-caret-down ml-1  text-white w-4 h-4" x-show="!Open"></i>
-
-                                    <i class="fa-solid fa-caret-up ml-1  text-white w-4 h-4" x-show="Open"></i>
-                                </div>
-                                <div x-show.transition="Open" style="display:none;">
-                                    <ul x-transition:enter="transition-all ease-in-out duration-300"
-                                        x-transition:enter-start="opacity-25 max-h-0"
-                                        x-transition:enter-end="opacity-100 max-h-xl"
-                                        x-transition:leave="transition-all ease-in-out duration-300"
-                                        x-transition:leave-start="opacity-100 max-h-xl"
-                                        x-transition:leave-end="opacity-0 max-h-0"
-                                        class="mt-2 divide-y-2 divide-gray-600 overflow-hidden text-sm font-medium bg-gray-600 text-white shadow-inner"
-                                        aria-label="submenu">
-                                        @can('usuarios')
-                                            <x-jet-responsive-nav-link class="text-sm" href="{{ route('usuarios') }}"
-                                                :active="request()->routeIs('usuarios')">
-                                                Usuarios
-                                            </x-jet-responsive-nav-link>
-                                        @endcan
-                                        @can('usuarios.roles')
-                                            <x-jet-responsive-nav-link class="text-sm" href="{{ route('usuarios.roles') }}"
-                                                :active="request()->routeIs('usuarios.roles')">
-                                                Roles
-                                            </x-jet-responsive-nav-link>
-                                        @endcan
-                                        @can('usuarios.permisos')
-                                            <x-jet-responsive-nav-link class="text-sm"
-                                                href="{{ route('usuarios.permisos') }}" :active="request()->routeIs('usuarios.permisos')">
-                                                Permisos
-                                            </x-jet-responsive-nav-link>
-                                        @endcan
-                                    </ul>
-
-                                </div>
-                            </li>
-                        @endcan
-
-                        {{--                     OPCIONES PARA SOPORTE DE TABLAS                --}}
+                        {{--            OPCIONES PARA SOPORTE DE TABLAS                --}}
                         @can('opciones.usuarios')
                             <li class="text-gray-50 py-3 pl-3 pr-4 hover:bg-gray-600 focus:bg-gray-600 rounded"
                                 x-data="{ Open: false }">
@@ -758,7 +744,7 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                             </li>
                         @endcan
 
-                        {{--                     OPCIONES PARA NOSOTROS MOTORGAS              --}}
+                        {{--            OPCIONES PARA NOSOTROS MOTORGAS              --}}
                         @can('opciones.nosotros')
                             <li class="text-gray-50 py-3 pl-3 pr-4 hover:bg-gray-600 focus:bg-gray-600 rounded"
                                 x-data="{ Open: false }">
@@ -772,7 +758,7 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
 
                                     <i class="fa-solid fa-caret-up ml-1  text-white w-4 h-4" x-show="Open"></i>
                                 </div>
-                                
+
                                 <div x-show.transition="Open" style="display:none;">
                                     <ul x-transition:enter="transition-all ease-in-out duration-300"
                                         x-transition:enter-start="opacity-25 max-h-0"
@@ -782,8 +768,8 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                         x-transition:leave-end="opacity-0 max-h-0"
                                         class="mt-2 divide-y-2 divide-gray-600 overflow-hidden text-sm font-medium bg-gray-600 text-white shadow-inner"
                                         aria-label="submenu">
-                                        <x-jet-responsive-nav-link class="text-sm"
-                                            href="{{ route('ManualFunciones') }}" :active="request()->routeIs('ManualFunciones')">
+                                        <x-jet-responsive-nav-link class="text-sm" href="{{ route('ManualFunciones') }}"
+                                            :active="request()->routeIs('ManualFunciones')">
                                             Manual de Funciones
                                         </x-jet-responsive-nav-link>
 
@@ -798,8 +784,7 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                         x-transition:leave-end="opacity-0 max-h-0"
                                         class="mt-0.5 divide-y-2 divide-gray-600 overflow-hidden text-sm font-medium bg-gray-600 text-white shadow-inner"
                                         aria-label="submenu">
-                                        <x-jet-responsive-nav-link class="text-sm"
-                                            href="Organigrama" :active="request()->routeIs('Organigrama')">
+                                        <x-jet-responsive-nav-link class="text-sm" href="Organigrama" :active="request()->routeIs('Organigrama')">
                                             Organigrama
                                         </x-jet-responsive-nav-link>
 
@@ -814,8 +799,8 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                         x-transition:leave-end="opacity-0 max-h-0"
                                         class="mt-0.5 divide-y-2 divide-gray-600 overflow-hidden text-sm font-medium bg-gray-600 text-white shadow-inner"
                                         aria-label="submenu">
-                                        <x-jet-responsive-nav-link class="text-sm"
-                                            href="{{ route('Empleados') }}" :active="request()->routeIs('Empleados')">
+                                        <x-jet-responsive-nav-link class="text-sm" href="{{ route('Empleados') }}"
+                                            :active="request()->routeIs('Empleados')">
                                             Contrato
                                         </x-jet-responsive-nav-link>
 
@@ -850,14 +835,61 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                         x-transition:leave-end="opacity-0 max-h-0"
                                         class="mt-0.5 divide-y-2 divide-gray-600 overflow-hidden text-sm font-medium bg-gray-600 text-white shadow-inner"
                                         aria-label="submenu">
-                                        <x-jet-responsive-nav-link class="text-sm"
-                                            href="{{ route('ListaMemorando') }}" :active="request()->routeIs('ListaMemorando')">
+                                        <x-jet-responsive-nav-link class="text-sm" href="{{ route('ListaMemorando') }}"
+                                            :active="request()->routeIs('ListaMemorando')">
                                             Memorandums
                                         </x-jet-responsive-nav-link>
 
                                     </ul>
                                 </div>
 
+                            </li>
+                        @endcan
+
+                        {{--            OPCIONES PARA USUARIOS Y ROLES                  --}}
+                        @can('opciones.usuarios')
+                            <li class="text-gray-50 py-3 pl-3 pr-4 hover:bg-gray-600 focus:bg-gray-600 rounded"
+                                x-data="{ Open: false }">
+                                <div class="inline-flex  items-center justify-between w-full  transition-colors duration-150 text-gray-500  cursor-pointer"
+                                    x-on:click="Open = !Open">
+                                    <span class="inline-flex items-center space-x-6  text-sm  text-white ">
+                                        <i class="fa-solid fa-user-shield"></i>
+                                        <span class="select-none">Usuarios y roles</span>
+                                    </span>
+                                    <i class="fa-solid fa-caret-down ml-1  text-white w-4 h-4" x-show="!Open"></i>
+
+                                    <i class="fa-solid fa-caret-up ml-1  text-white w-4 h-4" x-show="Open"></i>
+                                </div>
+                                <div x-show.transition="Open" style="display:none;">
+                                    <ul x-transition:enter="transition-all ease-in-out duration-300"
+                                        x-transition:enter-start="opacity-25 max-h-0"
+                                        x-transition:enter-end="opacity-100 max-h-xl"
+                                        x-transition:leave="transition-all ease-in-out duration-300"
+                                        x-transition:leave-start="opacity-100 max-h-xl"
+                                        x-transition:leave-end="opacity-0 max-h-0"
+                                        class="mt-2 divide-y-2 divide-gray-600 overflow-hidden text-sm font-medium bg-gray-600 text-white shadow-inner"
+                                        aria-label="submenu">
+                                        @can('usuarios')
+                                            <x-jet-responsive-nav-link class="text-sm" href="{{ route('usuarios') }}"
+                                                :active="request()->routeIs('usuarios')">
+                                                Usuarios
+                                            </x-jet-responsive-nav-link>
+                                        @endcan
+                                        @can('usuarios.roles')
+                                            <x-jet-responsive-nav-link class="text-sm" href="{{ route('usuarios.roles') }}"
+                                                :active="request()->routeIs('usuarios.roles')">
+                                                Roles
+                                            </x-jet-responsive-nav-link>
+                                        @endcan
+                                        @can('usuarios.permisos')
+                                            <x-jet-responsive-nav-link class="text-sm"
+                                                href="{{ route('usuarios.permisos') }}" :active="request()->routeIs('usuarios.permisos')">
+                                                Permisos
+                                            </x-jet-responsive-nav-link>
+                                        @endcan
+                                    </ul>
+
+                                </div>
                             </li>
                         @endcan
 

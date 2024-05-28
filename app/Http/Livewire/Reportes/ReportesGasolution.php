@@ -6,7 +6,7 @@ use Livewire\Component;
 use App\Models\ServiciosImportados;
 use App\Models\Taller;
 use App\Models\TipoServicio;
-use App\Exports\ReporteCalcularExport;
+use App\Exports\ReporteDetalladoGasolExport;
 use App\Http\Livewire\Talleres;
 use App\Models\Certificacion;
 use App\Models\CertificacionPendiente;
@@ -71,6 +71,16 @@ class ReportesGasolution extends Component
 
         $this->grupoinspectores = $this->tabla2->groupBy('inspector');
 
+    }
+
+    public function exportarExcel()
+    {
+        //$datosCombinados = $this->tabla->concat($this->diferencias);
+        $data = $this->tabla2;
+        if ($data) {
+            $fecha = now()->format('d-m-Y');
+            return Excel::download(new ReporteDetalladoGasolExport($data), 'ReporteCalcular' . $fecha . '.xlsx');
+        }
     }
 
     public function generaData()

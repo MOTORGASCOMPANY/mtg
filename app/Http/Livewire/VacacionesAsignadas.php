@@ -20,7 +20,7 @@ class VacacionesAsignadas extends Component
         //$this->vacaciones = collect();
         $this->contratoId = $contratoId;
         $this->vacaciones = Vacacion::with('contrato')->where('idContrato', $this->contratoId)->get();
-    }   
+    }
 
     public function render()
     {
@@ -37,7 +37,14 @@ class VacacionesAsignadas extends Component
             'f_inicio' => 'required|date',
             'observacion' => 'nullable|string',
         ]);
-        // Crear o actualizar la vacación asignada
+
+        $vacacion = Vacacion::find($this->idVacacion);
+        // Validar que no se asignen más días de los disponibles
+        if ($this->d_tomados > $vacacion->dias_restantes) {
+            $this->emit("CustomAlert", ["titulo" => "ERROR", "mensaje" => "No puede asignar más días de los disponibles.", "icono" => "error"]);
+            return;
+        }
+        // Crear la vacación asignada
         VacacionAsignada::create([
             'idVacacion' => $this->idVacacion,
             'tipo' => $this->tipo,
@@ -48,12 +55,12 @@ class VacacionesAsignadas extends Component
         ]);
 
         // Actualizar registro en vacaciones
-        $vacacion = Vacacion::find($this->idVacacion);
+
         $vacacion->dias_tomados += $this->d_tomados;
         $vacacion->dias_restantes = $vacacion->dias_ganados - $vacacion->dias_tomados;
         $vacacion->save();
 
-        $this->reset(['idVacacion', 'tipo', 'razon', 'd_tomados', 'f_inicio', 'observacion']);              
+        $this->reset(['idVacacion', 'tipo', 'razon', 'd_tomados', 'f_inicio', 'observacion']);
         $this->addDocument = false;
         $this->emit("minAlert", ["titulo" => "¡EXCELENTE TRABAJO!", "mensaje" => "La vacación se asignó correctamente", "icono" => "success"]);
         $this->emit('refreshVacacionesAsignadas');

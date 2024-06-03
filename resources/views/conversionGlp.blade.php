@@ -272,7 +272,13 @@
             <tr>
                 <td style="text-align:center;">17</td>
                 <td style="text-align:center;">Carga útil(kg)</td>
-                <td style="text-align:center;">{{ $cargaUtil - 30 }}</td>
+                <td style="text-align:center;">{{--$cargaUtil - 30--}}
+                    @if ($carro->combustible === 'GNV')
+                        {{ $cargaUtil + 30  }}
+                    @else
+                        {{ $cargaUtil - 30  }}
+                    @endif
+                </td>
             </tr>
         </table>
 

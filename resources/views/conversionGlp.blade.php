@@ -87,7 +87,8 @@
         .qr-code {
             width: 15%;
             /* Ajusta el ancho según tus necesidades */
-            float: right; /* Hace que el contenedor flote a la derecha */
+            float: right;
+            /* Hace que el contenedor flote a la derecha */
             margin-left: 10px;
         }
     </style>
@@ -108,10 +109,18 @@
         <p>
             Haber efectuado la evaluación de las condiciones de seguridad respecto de la conversión del
             sistema de combustión a Gas Licuado de Petróleo - GLP. Efectuada por el
-            Taller de Conversión a GLP Autorizado: @if($tallerauto) {{ $tallerauto->nombre }} @else {{ $taller->nombre }} @endif
+            Taller de Conversión a GLP Autorizado: @if ($tallerauto)
+                {{ $tallerauto->nombre }}
+            @else
+                {{ $taller->nombre }}
+            @endif
         </p>
         <P>
-            Ubicado : @if($tallerauto) {{ $tallerauto->direccion }} @else {{ $taller->direccion }} @endif
+            Ubicado : @if ($tallerauto)
+                {{ $tallerauto->direccion }}
+            @else
+                {{ $taller->direccion }}
+            @endif
 
         </P>
 
@@ -129,7 +138,7 @@
             <tr>
                 <td style="padding: 0 5px 0 5px; text-align:center;">2</td>
                 <td>Placa de rodaje</td>
-                <td>{{ (isset($carro->placa) ? $carro->placa : 'EN TRAMITE') }}</td>
+                <td>{{ isset($carro->placa) ? $carro->placa : 'EN TRAMITE' }}</td>
                 <td style="padding: 0 5px 0 5px; text-align:center;">10</td>
                 <td>Cilindros / Cilindrada</td>
                 <td>{{ (isset($carro->cilindros) ? $carro->cilindros : 'NE') . ' / ' . (isset($carro->cilindrada) ? $carro->cilindrada : 'NE') }}
@@ -245,14 +254,20 @@
                     @elseif ($carro->combustible === 'DIESEL')
                         DUAL GLP
                     @else
-                        {{$carro->combustible}}
+                        {{ $carro->combustible }}
                     @endif
                 </td>
             </tr>
             <tr>
                 <td style="text-align:center;">15</td>
                 <td style="text-align:center;">Peso neto(kg)</td>
-                <td style="text-align:center;">{{ $carro->pesoNeto + 30 }}</td>
+                <td style="text-align:center;">{{--$carro->pesoNeto + 30--}}
+                    @if ($carro->combustible === 'GNV')
+                        {{ $carro->pesoNeto - 30 }}
+                    @else
+                        {{ $carro->pesoNeto + 30 }}
+                    @endif
+                </td>
             </tr>
             <tr>
                 <td style="text-align:center;">17</td>
@@ -321,7 +336,8 @@
             vehículo antes referido, no afecta negativamente la seguridad del mismo, el tránsito terrestre,
             el medio ambiente o incumple con las condiciones técnicas establecidas en la normativa vigente en la
             materia,
-            según consta en el expediente técnico <strong>N° {{ $numHoja . ' - ' . $fechaCert->format('Y') }}</strong>, habilitándose al
+            según consta en el expediente técnico <strong>N° {{ $numHoja . ' - ' . $fechaCert->format('Y') }}</strong>,
+            habilitándose al
             mismo tiempo para cargar Gas
             Licuado de Petróleo - GLP hasta el dia : {{ $fechaCert->format('d/m/') . ($fechaCert->format('Y') + 1) }}
         </p>

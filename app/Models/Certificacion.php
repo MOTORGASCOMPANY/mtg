@@ -650,6 +650,7 @@ class Certificacion extends Model
             "idTallerAuto" => $tallerAuto->id, //Para taller autorizado
             "externo" => $externoValue,
         ]);
+        
         if ($cert) {
             //cambia el estado de la hoja a consumido
             $hoja->update(["estado" => 4, "ubicacion" => "En poder del cliente"]);
@@ -865,7 +866,7 @@ class Certificacion extends Model
         }
     }
 
-    public static function certificarGlpPre(Taller $taller, Servicio $servicio, Material $hoja, vehiculo $vehiculo, User $inspector, $externoValue)
+    public static function certificarGlpPre(Taller $taller, Taller $tallerAuto, Servicio $servicio, Material $hoja, vehiculo $vehiculo, User $inspector, $externoValue)
     {
         //Condicion para jalar el precio de la tabla servicios o precios_inspector
         if ($externoValue == 0) {
@@ -882,7 +883,7 @@ class Certificacion extends Model
             } else {
                 $precio = 0;
             }
-        }
+        }        
 
         $cert = Certificacion::create([
             "idVehiculo" => $vehiculo->id,
@@ -892,6 +893,7 @@ class Certificacion extends Model
             "estado" => 3,
             "precio" => $precio,
             "pagado" => 0,
+            "idTallerAuto" => $tallerAuto->id, //Para taller autorizado
             "externo" => $externoValue,
         ]);
         if ($cert) {

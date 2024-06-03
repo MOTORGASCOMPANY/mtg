@@ -509,16 +509,20 @@ class Prueba extends Component
             }
         }
     }
+
     public function certificarPreconverGlp()
     {
         $taller = Taller::findOrFail($this->taller);
+        $tallerAuto = Taller::findOrFail($this->tallerAuto);
         $servicio = Servicio::findOrFail($this->servicio);
         $hoja = $this->procesaFormato($this->numSugerido, $servicio->tipoServicio->id);
+
+        
 
         if ($hoja != null) {
             if (isset($this->vehiculo)) {
                 if ($this->vehiculo->esCertificableGlp) {
-                    $certi = Certificacion::certificarGlpPre($taller, $servicio, $hoja, $this->vehiculo, Auth::user(), $this->serviexterno);
+                    $certi = Certificacion::certificarGlpPre($taller, $tallerAuto, $servicio, $hoja, $this->vehiculo, Auth::user(), $this->serviexterno);
                     if ($certi) {
                         $this->estado = "certificado";
                         $this->certificacion = $certi;

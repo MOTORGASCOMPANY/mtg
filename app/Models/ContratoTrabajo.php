@@ -18,6 +18,9 @@ class ContratoTrabajo extends Model
         'fechaExpiracion',
         'cargo',
         'pago',
+        'celularEmpleado',
+        'correoEmpleado',
+        //'renovacion_id',
     ];
 
     // Relación con el usuario empleado
@@ -30,6 +33,16 @@ class ContratoTrabajo extends Model
     {
         return $this->belongsToMany(DocumentoEmpleado::class, 'documentoempleado_user', 'idUser', 'idDocumentoEmpleado');
     }
+
+    /*public function renovacion()
+    {
+        return $this->belongsTo(ContratoTrabajo::class, 'renovacion_id');
+    }
+
+    public function renovaciones()
+    {
+        return $this->hasMany(ContratoTrabajo::class, 'renovacion_id');
+    }*/
 
     public function vacaciones()
     {

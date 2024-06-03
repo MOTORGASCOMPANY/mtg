@@ -23,8 +23,8 @@
         </div>
 
         @if ($mostrarCampos)
-            <div class="max-w-full mx-auto bg-white rounded-lg shadow-md my-4">
-                <div class="grid grid-cols-1 md:grid-cols-2">
+            <div class="max-w-5xl m-auto bg-white rounded-lg shadow-md my-4 py-4">
+                <div class="grid grid-cols-1"> {{-- md:grid-cols-2 --}}
 
                     <div class="mb-6 px-8 py-2">
                         <div class="flex items-center justify-between bg-gray-400 py-4 px-6 rounded-t-lg">
@@ -46,6 +46,22 @@
                                         class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full "
                                         wire:model="domicilioEmpleado" />
                                     <x-jet-input-error for="domicilioEmpleado" />
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4 py-2">
+                                <div>
+                                    <x-jet-label value="Celular:" />
+                                    <x-jet-input type="text"
+                                        class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full "
+                                        wire:model="celularEmpleado" />
+                                    <x-jet-input-error for="celularEmpleado" />
+                                </div>
+                                <div>
+                                    <x-jet-label value="Correo:" />
+                                    <x-jet-input type="text"
+                                        class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full "
+                                        wire:model="correoEmpleado" />
+                                    <x-jet-input-error for="correoEmpleado" />
                                 </div>
                             </div>
                             <div class="grid grid-cols-2 gap-4 py-2">
@@ -80,12 +96,25 @@
                                     <x-jet-input-error for="pago" />
                                 </div>
                             </div>
-                            <div class="mt-4">
-
+                            {{--
+                            <div class="grid grid-cols-2 gap-4 py-2">
+                                <div>
+                                    <x-jet-label value="Contrato Anterior (si aplica):" />
+                                    <select wire:model="renovacion_id"
+                                        class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full">
+                                        <option value="">Seleccione</option>
+                                        @foreach ($contratosPrevios as $contrato)
+                                            <option value="{{ $contrato->id }}">ID:{{ $contrato->id }} ({{ $contrato->fechaInicio }} al {{ $contrato->fechaExpiracion }})</option>
+                                        @endforeach
+                                    </select>
+                                    <x-jet-input-error for="renovacion_id" />
+                                </div>
                             </div>
+                            --}}
                         </div>
                     </div>
                     
+                    {{--
                     <div class="mb-6 px-8 py-2">
                         @if ($contratoPreview)
                             <div class="bg-gray-400 py-4 px-6 rounded-t-lg">
@@ -103,10 +132,11 @@
                             ])
                         @endif
                     </div>
+                    --}}
                 </div>
             </div>
 
-            <div class="max-w-full mx-auto bg-white rounded-lg shadow-md my-4 py-4">
+            <div class="max-w-5xl m-auto bg-white rounded-lg shadow-md my-4 py-4">
                 <div class="my-2 flex flex-col md:flex-row justify-evenly items-center">
                     <div>
                         <button wire:click="certificar" wire:loading.attr="disabled" wire.target="certificar"

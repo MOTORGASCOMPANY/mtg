@@ -16,10 +16,11 @@ class ContratosTrabajos extends Component
     use pdfTrait;
 
     public $inspectores;
-    public $idUser, $dniEmpleado, $domicilioEmpleado, $fechaInicio, $fechaExpiracion, $cargo, $pago;
+    public $idUser, $dniEmpleado, $domicilioEmpleado, $fechaInicio, $fechaExpiracion, $cargo, $pago, $celularEmpleado, $correoEmpleado, $renovacion_id;
     public $contrato;
     public $mostrarCampos = false;
     public $contratoPreview = null;
+    public $contratosPrevios = [];
 
     public function mount()
     {
@@ -38,56 +39,126 @@ class ContratosTrabajos extends Component
             'idUser' => 'required',
             'dniEmpleado' => 'required|digits:8',
             'domicilioEmpleado' => 'required',
-            'fechaInicio' => 'required',
-            'fechaExpiracion' => 'required',
+            'fechaInicio' => 'required|date|before:fechaExpiracion',
+            'fechaExpiracion' => 'required|date|after:fechaInicio',
             'cargo' => 'required',
-            'pago' => 'required',
+            'pago' => 'required|numeric',
+            'celularEmpleado' => 'required|digits:9',
+            'correoEmpleado' => 'required|email',
+
         ]);
 
-        $nuevoContrato =  ContratoTrabajo::create([
-            'idUser' => $this->idUser,
-            'dniEmpleado' => $this->dniEmpleado,
-            'domicilioEmpleado' => $this->domicilioEmpleado,
-            'fechaInicio' => $this->fechaInicio,
-            'fechaExpiracion' => $this->fechaExpiracion,
-            'cargo' => $this->cargo,
-            'pago' => $this->pago,
+        try {
+            $nuevoContrato =  ContratoTrabajo::create([
+                'idUser' => $this->idUser,
+                'dniEmpleado' => $this->dniEmpleado,
+                'domicilioEmpleado' => $this->domicilioEmpleado,
+                'fechaInicio' => $this->fechaInicio,
+                'fechaExpiracion' => $this->fechaExpiracion,
+                'cargo' => $this->cargo,
+                'pago' => $this->pago,
+                'celularEmpleado' => $this->celularEmpleado,
+                'correoEmpleado' => $this->correoEmpleado,
+
+            ]);
+
+            // Calcular días de vacaciones
+            $fechaInicio = new DateTime($this->fechaInicio);
+            $fechaExpiracion = new DateTime($this->fechaExpiracion);
+            $diferencia = $fechaInicio->diff($fechaExpiracion);
+            //$diasVacaciones = ($diferencia->days / 365) * 15;
+            // Conversión de la diferencia a años
+            $aniosTrabajados = $diferencia->y + ($diferencia->m / 12) + ($diferencia->d / 365); 
+            // Si el contrato es de al menos un año, calcular vacaciones; de lo contrario, 0
+            $diasVacaciones = ($aniosTrabajados >= 1) ? ($aniosTrabajados * 15) : 0;
+
+            // Crear registro de vacaciones
+            Vacacion::create([
+                'idContrato' => $nuevoContrato->id,
+                'dias_ganados' => $diasVacaciones,
+                'dias_tomados' => 0,
+                'dias_restantes' => $diasVacaciones,
+            ]);
+
+            $this->contrato = $nuevoContrato;
+            $this->reset(['idUser', 'dniEmpleado', 'domicilioEmpleado', 'fechaInicio', 'fechaExpiracion', 'cargo', 'pago', 'celularEmpleado', 'correoEmpleado']);
+            $this->emit("minAlert", ["titulo" => "¡EXCELENTE TRABAJO!", "mensaje" => "El contrato se realizó correctamente", "icono" => "success"]);
+        } catch (\Exception $e) {
+            $this->emit("minAlert", ["titulo" => "¡ERROR!", "mensaje" => "Ocurrió un error al crear el contrato.", "icono" => "error"]);
+        }
+    }
+
+
+    /*public function certificar()
+    {
+        $this->validate([
+            'idUser' => 'required',
+            'dniEmpleado' => 'required|digits:8',
+            'domicilioEmpleado' => 'required',
+            'fechaInicio' => 'required|date|before:fechaExpiracion',
+            'fechaExpiracion' => 'required|date|after:fechaInicio',
+            'cargo' => 'required',
+            'pago' => 'required|numeric',
         ]);
 
-        // Calcular días de vacaciones
-        $fechaInicio = new DateTime($this->fechaInicio);
-        $fechaExpiracion = new DateTime($this->fechaExpiracion);
-        $diferencia = $fechaInicio->diff($fechaExpiracion);
-        $diasVacaciones = $diferencia->days / 365 * 15;
+        DB::beginTransaction();
 
-        // Crear registro de vacaciones
-        Vacacion::create([
-            'idContrato' => $nuevoContrato->id,
-            'dias_ganados' => $diasVacaciones,
-            'dias_tomados' => 0,
-            'dias_restantes' => $diasVacaciones,
-        ]);
+        try {
+            $nuevoContrato = ContratoTrabajo::create([
+                'idUser' => $this->idUser,
+                'dniEmpleado' => $this->dniEmpleado,
+                'domicilioEmpleado' => $this->domicilioEmpleado,
+                'fechaInicio' => $this->fechaInicio,
+                'fechaExpiracion' => $this->fechaExpiracion,
+                'cargo' => $this->cargo,
+                'pago' => $this->pago,
+                'renovacion_id' => $this->renovacion_id,
+            ]);
 
-        /* Crear registro de vacacion_asignada
-        VacacionAsignada::create([
-            'idContrato' => $nuevoContrato->id,
-            'tipo' => $diasVacaciones,
-            'razon' => 0,
-            'd_tomados' => $diasVacaciones,
-            'f_inicio' => $diasVacaciones,
-            'observacion' => $diasVacaciones,
-        ]);*/
+            // Calcular el total de días trabajados incluyendo renovaciones
+            $totalDiasTrabajados = $this->calcularTotalDiasTrabajados($nuevoContrato);
+            $aniosTrabajados = $totalDiasTrabajados / 365;
 
+            // Calcular días de vacaciones
+            $diasVacaciones = ($aniosTrabajados >= 1) ? ($aniosTrabajados * 15) : 0;
 
-        $this->contrato = $nuevoContrato;
-        $this->reset(['idUser', 'dniEmpleado', 'domicilioEmpleado', 'fechaInicio', 'fechaExpiracion', 'cargo', 'cargo']);
-        $this->emit("minAlert", ["titulo" => "¡EXCELENTE TRABAJO!", "mensaje" => "El contrato se realizo correctamente", "icono" => "success"]);
-        //return redirect('ContratoTrabajo');
+            // Crear registro de vacaciones
+            Vacacion::create([
+                'idContrato' => $nuevoContrato->id,
+                'dias_ganados' => $diasVacaciones,
+                'dias_tomados' => 0,
+                'dias_restantes' => $diasVacaciones,
+            ]);
+
+            DB::commit();
+
+            $this->contrato = $nuevoContrato;
+            $this->reset(['idUser', 'dniEmpleado', 'domicilioEmpleado', 'fechaInicio', 'fechaExpiracion', 'cargo', 'pago', 'renovacion_id']);
+            $this->emit("minAlert", ["titulo" => "¡EXCELENTE TRABAJO!", "mensaje" => "El contrato se realizó correctamente", "icono" => "success"]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $this->emit("minAlert", ["titulo" => "¡ERROR!", "mensaje" => "Ocurrió un error al crear el contrato.", "icono" => "error"]);
+        }
+    }*/
+
+    private function calcularTotalDiasTrabajados($contrato)
+    {
+        $totalDias = 0;
+        while ($contrato) {
+            $fechaInicio = new DateTime($contrato->fechaInicio);
+            $fechaExpiracion = new DateTime($contrato->fechaExpiracion);
+            $diferencia = $fechaInicio->diff($fechaExpiracion);
+            $totalDias += $diferencia->days;
+            $contrato = $contrato->renovacion;
+        }
+        return $totalDias;
     }
 
     public function seleccionarInspector()
     {
         $this->mostrarCampos = true;
+        //$this->contratosPrevios = ContratoTrabajo::where('idUser', $this->idUser)->get();
+        //dd($this->contratosPrevios);
     }
 
     public function updated($field)

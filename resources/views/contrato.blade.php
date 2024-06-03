@@ -154,7 +154,7 @@
             <tr>
                 <td style="text-align: center;">
                     <p style="text-align: center;"></p>
-                    <img src="{{ public_path('/images/firmaIng.png') }}" width="230" height="120" />
+                    <img src="{{ public_path('/images/firmaRolando.PNG') }}" width="230" height="120" />
                     <h4>-------------------------------------------------------</h4>
                     <h4><strong>Rolando Alberto Cajo Ravello</strong> <br> Gerente General </h4>
                 </td>

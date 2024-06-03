@@ -127,7 +127,7 @@
 
     </div>
 
-    {{-- COMUNICADO --}}
+    {{-- COMUNICADO 
     @hasanyrole('Administrador taller|inspector|supervisor|administrador')
         <div class="mt-16 fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog"
             aria-modal="true">
@@ -176,6 +176,7 @@
             </div>
         </div>
     @endhasanyrole
+    --}}
     
 
     {{--

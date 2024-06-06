@@ -407,7 +407,7 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                         @endcan
 
 
-                        {{--                    OPCIONES PARA MATERIALES                    --}}
+                        {{--           OPCIONES PARA MATERIALES                    --}}
                         @can('opciones.materiales')
                             <li class="text-gray-50 py-3 pl-3 pr-4 hover:bg-gray-600 focus:bg-gray-600 rounded "
                                 x-data="{ Open: false }">
@@ -479,13 +479,7 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                                 :active="request()->routeIs('recepcion')">
                                                 {{ __('Recepción de materiales') }}
                                             </x-jet-responsive-nav-link>
-                                        @endcan
-                                        @can('ConsultarHoja')
-                                            <x-jet-responsive-nav-link class="text-sm" href="{{ route('ConsultarHoja') }}"
-                                                :active="request()->routeIs('ConsultarHoja')">
-                                                {{ __('ConsultarHoja') }}
-                                            </x-jet-responsive-nav-link>
-                                        @endcan
+                                        @endcan                                        
 
                                     </ul>
 
@@ -493,7 +487,7 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                             </li>
                         @endcan
 
-                        {{--           OPCIONES PARA REPORTES          --}}
+                        {{--           OPCIONES PARA REPORTES DE CUMPLIMIENTO   --}}
                         @can('opciones.reportesGnv')
                             <li class="text-gray-50 py-3 pl-3 pr-4 hover:bg-gray-600 focus:bg-gray-600 rounded"
                                 x-data="{ Open: false }">
@@ -620,6 +614,50 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                             <x-jet-responsive-nav-link class="text-sm truncate"
                                                 href="{{ route('reportes.reporteActualizarGasol') }}" :active="request()->routeIs('reportes.reporteActualizarGasol')">
                                                 Reporte Actualizar Gasol
+                                            </x-jet-responsive-nav-link>
+                                        @endcan
+
+                                    </ul>
+
+                                </div>
+                            </li>
+                        @endcan
+
+                        {{--           OPCIONES PARA REPORTES DE MATERIAL   --}}
+                        @can('opciones.reportesMaterial')
+                            <li class="text-gray-50 py-3 pl-3 pr-4 hover:bg-gray-600 focus:bg-gray-600 rounded"
+                                x-data="{ Open: false }">
+                                <div class="inline-flex  items-center justify-between w-full  transition-colors duration-150 text-gray-500  cursor-pointer"
+                                    x-on:click="Open = !Open">
+                                    <span class="inline-flex items-center space-x-6  text-sm  text-white ">
+                                        <i class="fa-solid fa-chart-column"></i>
+                                        <span class="select-none">Reportes de Materiales</span>
+                                    </span>
+                                    <i class="fa-solid fa-caret-down ml-1  text-white w-4 h-4" x-show="!Open"></i>
+
+                                    <i class="fa-solid fa-caret-up ml-1  text-white w-4 h-4" x-show="Open"></i>
+                                </div>
+                                <div x-show.transition="Open" style="display:none;">
+                                    <ul x-transition:enter="transition-all ease-in-out duration-300"
+                                        x-transition:enter-start="opacity-25 max-h-0"
+                                        x-transition:enter-end="opacity-100 max-h-xl"
+                                        x-transition:leave="transition-all ease-in-out duration-300"
+                                        x-transition:leave-start="opacity-100 max-h-xl"
+                                        x-transition:leave-end="opacity-0 max-h-0"
+                                        class="mt-2 divide-y-2 divide-gray-600 overflow-hidden text-sm font-medium bg-gray-600 text-white shadow-inner"
+                                        aria-label="submenu">   
+
+                                        @can('reportes.reporteSalidaMateriales')
+                                            <x-jet-responsive-nav-link class="text-sm truncate"
+                                                href="{{ route('reportes.reporteSalidaMateriales') }}" :active="request()->routeIs('reportes.reporteSalidaMateriales')">
+                                                Reporte Salida Material
+                                            </x-jet-responsive-nav-link>
+                                        @endcan
+                                        
+                                        @can('ConsultarHoja')
+                                            <x-jet-responsive-nav-link class="text-sm" href="{{ route('ConsultarHoja') }}"
+                                                :active="request()->routeIs('ConsultarHoja')">
+                                                {{ __('ConsultarHoja') }}
                                             </x-jet-responsive-nav-link>
                                         @endcan
 

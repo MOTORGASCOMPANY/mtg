@@ -41,10 +41,12 @@ class ReporteCalcularExport implements FromCollection, WithHeadings, WithMapping
     public function columnFormats(): array
     {
         return [
+            'A' =>  NumberFormat::FORMAT_DATE_DDMMYYYY,
             'C' => NumberFormat::FORMAT_NUMBER,
             'D' => NumberFormat::FORMAT_NUMBER,
             'F' => NumberFormat::FORMAT_NUMBER_00,
-            'G' =>  NumberFormat::FORMAT_DATE_DDMMYYYY,
+            'H' => NumberFormat::FORMAT_NUMBER,
+            'I' => NumberFormat::FORMAT_NUMBER_00,
         ];
     }
 
@@ -109,11 +111,11 @@ class ReporteCalcularExport implements FromCollection, WithHeadings, WithMapping
             case 'App\Models\Certificacion':
                 return [
                     $fecha ?? 'S.F',
-                    $data['num_hoja'] ?? 'N.E',                    
+                    $data['num_hoja'] ?? 'N.E',
                     $data['taller'] ?? 'N.A',
                     $data['inspector'] ?? 'N.A',
                     $secondPart, //$data['placa'] ?? 'EN TRAMITE'
-                    $data['servicio'] ?? 'N.A',                                     
+                    $data['servicio'] ?? 'N.A',
                     //$data['estado'] ?? 'S.E',
                     //$data['pagado'],
                     '',
@@ -125,7 +127,7 @@ class ReporteCalcularExport implements FromCollection, WithHeadings, WithMapping
             case 'App\Models\CertificacionPendiente':
                 return [
                     $fecha ?? 'S.F',
-                    $data['num_hoja'] ?? 'N.E',                    
+                    $data['num_hoja'] ?? 'N.E',
                     $data['taller'] ?? 'N.A',
                     $data['inspector'] ?? 'N.A',
                     $data['placa'] ?? 'EN TRAMITE',
@@ -145,7 +147,7 @@ class ReporteCalcularExport implements FromCollection, WithHeadings, WithMapping
                     $data['taller'] ?? 'N.A',
                     $data['inspector'] ?? 'N.A',
                     $data['placa'] ?? 'EN TRAMITE',
-                    $data['servicio'] ?? 'N.A',  
+                    $data['servicio'] ?? 'N.A',
                     //$data['estado'] ?? 'S.E',
                     //$data['pagado'],
                     '',
@@ -158,7 +160,7 @@ class ReporteCalcularExport implements FromCollection, WithHeadings, WithMapping
             default:
                 return [
                     $fecha ?? 'S.F',
-                    $data['num_hoja'] ?? 'N.E',                    
+                    $data['num_hoja'] ?? 'N.E',
                     $data['taller'] ?? 'N.A',
                     $data['inspector'] ?? 'N.A',
                     $data['placa'] ?? 'EN TRAMITE',
@@ -216,6 +218,25 @@ class ReporteCalcularExport implements FromCollection, WithHeadings, WithMapping
         $sheet->getStyle('A1:J1')->applyFromArray([
             'font' => [
                 'bold' => true,
+            ],
+        ]);
+
+        // Agregar la fórmula de suma en la columna I, después de la última fila de datos
+        $lastDataRow = $lastRow + 1; // La fila donde se colocará la fórmula
+        $sheet->setCellValue("I{$lastDataRow}", "=SUM(I2:I{$lastRow})");
+
+        // Aplicar formato de número a la celda de la suma
+        $sheet->getStyle("I{$lastDataRow}")->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_00);
+
+        // Aplicar estilos a la fila de la suma
+        $sheet->getStyle("I{$lastDataRow}")->applyFromArray([
+            'font' => [
+                'bold' => true,
+            ],
+            'borders' => [
+                'top' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                ],
             ],
         ]);
 

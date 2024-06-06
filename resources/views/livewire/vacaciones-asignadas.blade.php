@@ -22,7 +22,7 @@
                             <option value="">Seleccione</option>
                             @foreach ($vacaciones as $vacacion)
                                 <option value="{{ $vacacion->id }}">
-                                    {{--$vacacion->contrato->cargo--}}Días restantes:
+                                    {{-- $vacacion->contrato->cargo --}}Días restantes:
                                     {{ $vacacion->dias_restantes }}
                                 </option>
                             @endforeach
@@ -63,14 +63,28 @@
                             class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full"
                             wire:model="f_inicio" />
                         <x-jet-input-error for="f_inicio" />
-                    </div>                    
+                    </div>
                 </div>
-
                 <div>
                     <x-jet-label value="Observación:" />
-                    <x-textarea class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full" wire:model="observacion" style="height: 100px;" />
+                    <x-textarea class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full"
+                        wire:model="observacion" style="height: 100px;" />
                     <x-jet-input-error for="observacion" />
                 </div>
+                <div class="w-full ml-0 md:w-2/6 flex justify-start items-center">                                        
+                    <x-jet-label value="¿Es especial?" class="py-2 ml-2 mr-2 text-sm font-medium text-gray-900 select-none hover:cursor-pointer" />
+                    <x-jet-input type="checkbox" wire:model="especial" class="w-4 h-4 text-indigo-600 bg-white border-gray-300 rounded outline-none hover:cursor-pointer focus:ring-indigo-600  focus:ring-1 dark:bg-gray-600 dark:border-gray-500 ml-2" />                    
+                    <x-jet-input-error for="especial" />
+                </div>
+                
+                {{--
+                <div class="py-2">
+                    <x-jet-label value="¿Es especial?" />
+                    <x-jet-checkbox wire:model="especial" />
+                    <x-jet-input-error for="especial" />
+                </div>
+                --}}
+
             </div>
         </x-slot>
 
@@ -84,25 +98,6 @@
         </x-slot>
 
     </x-jet-dialog-modal>
-
-    {{--
-    @push('scripts')
-        <script>
-            Livewire.on('redirectEditarVacacion', contratoId => {
-                Swal.fire({
-                    title: '¡EXCELENTE TRABAJO!',
-                    text: 'La vacación se asignó correctamente',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = `/EditarVacacion/${contratoId}`;
-                    }
-                });
-            });
-        </script>
-    @endpush
-    --}}
 
     {{--
     <div class="block justify-center mt-2 pt-8 max-h-max pb-8">

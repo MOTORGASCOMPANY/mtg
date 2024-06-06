@@ -17,6 +17,7 @@ class VacacionAsignada extends Model
         'd_tomados',
         'f_inicio',
         'observacion',
+        'especial',
     ];
 
     public function Vacacion()

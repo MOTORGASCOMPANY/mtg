@@ -51,14 +51,14 @@
                             <div class="grid grid-cols-2 gap-4 py-2">
                                 <div>
                                     <x-jet-label value="Celular:" />
-                                    <x-jet-input type="text"
+                                    <x-jet-input type="number"
                                         class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full "
                                         wire:model="celularEmpleado" />
                                     <x-jet-input-error for="celularEmpleado" />
                                 </div>
                                 <div>
                                     <x-jet-label value="Correo:" />
-                                    <x-jet-input type="text"
+                                    <x-jet-input type="email"
                                         class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full "
                                         wire:model="correoEmpleado" />
                                     <x-jet-input-error for="correoEmpleado" />

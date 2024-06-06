@@ -60,6 +60,7 @@ use App\Http\Livewire\Reportes\ReporteDocumentosTaller;
 use App\Http\Livewire\Reportes\ReporteFotosPorInspector;
 use App\Http\Livewire\Reportes\ReporteGeneralGnv;
 use App\Http\Livewire\Reportes\ReporteMateriales;
+use App\Http\Livewire\Reportes\ReporteSalidaMateriales;
 use App\Http\Livewire\Reportes\ReporteServiciosPorInspector;
 use App\Http\Livewire\Reportes\ReportesGasolution;
 use App\Http\Livewire\Reportes\ReportesMtg;
@@ -174,8 +175,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
     Route::get('/SolicitudAnu/{anuId}/{cerId}/{userId}',VistaSolicitudAnul::class)->name('vistaSolicitudAnul');
     Route::get('/SolicitudEli/{eliId}/{cerId}/{userId}',VistaEliminacion::class)->name('vistaSolicitudEli');
     Route::get('/Memorando/{memoId}',VistaSolicitudMemorando::class)->name('vistaSolicitudMemorando');
-    Route::get('/Notificaciones',NotificacionesPendientes::class)->name('Notificaciones');
-    Route::get('/ConsultarHoja',ConsultarHoja::class)->middleware('can:ConsultarHoja')->name('ConsultarHoja');
+    Route::get('/Notificaciones',NotificacionesPendientes::class)->name('Notificaciones');    
     //Route::get('/Recepcion-de-materiales',RecepcionMateriales::class)->middleware('can:recepcion')->name('recepcion');
 
     Route::get('/Servicio',Prueba::class)->middleware('can:servicio')->name('servicio');
@@ -212,12 +212,12 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
     Route::get('/Permisos',AdminPermisos::class)->name('usuarios.permisos');
 
     //Rutas modulo de reportes de GNV
-    Route::get('/Admin-servicios-importados',AdministracionDeServiciosImportados::class)->name('reportes.adminServiciosImportados');
-    Route::get('/Reporte-general-gnv',ReporteGeneralGnv::class)->name('reportes.reporteGeneralGnv');
-    Route::get('/Reporte-de-materiales',ReporteMateriales::class)->name('reportes.reporteMateriales');
-    Route::get('/Reporte-de-servicios-por-inspector',ReporteServiciosPorInspector::class)->name('reportes.reporteServiciosPorInspector');
-    Route::get('/Reporte-de-fotos-por-inspector',ReporteFotosPorInspector::class)->name('reportes.reporteFotosPorInspector');
-    Route::get('/Reporte-de-documentos-a-vencer',ReporteDocumentosTaller::class)->name('reportes.reporteDocumentosTaller');
+    Route::get('/Admin-servicios-importados',AdministracionDeServiciosImportados::class)->name('reportes.adminServiciosImportados'); // servicios de servicios importados(gasolution)
+    Route::get('/Reporte-general-gnv',ReporteGeneralGnv::class)->name('reportes.reporteGeneralGnv'); // reporte general revisar 
+    Route::get('/Reporte-de-materiales',ReporteMateriales::class)->name('reportes.reporteMateriales'); // reporte materiales revisar
+    Route::get('/Reporte-de-servicios-por-inspector',ReporteServiciosPorInspector::class)->name('reportes.reporteServiciosPorInspector'); // reporte de inspecotres que usan sistema
+    Route::get('/Reporte-de-fotos-por-inspector',ReporteFotosPorInspector::class)->name('reportes.reporteFotosPorInspector'); // reporte de inspectores que suben fotos
+    Route::get('/Reporte-de-documentos-a-vencer',ReporteDocumentosTaller::class)->name('reportes.reporteDocumentosTaller'); // reporte de documentos vencidos de taller
     //Rutas para ver los reportes de los servicios    
     Route::get('/ReporteCalcular',ReporteCalcularGasol::class)->middleware('can:reportes.reporteCalcularGasol')->name('reportes.reporteCalcularGasol');//1 Reporte externo
     Route::get('/ReporteCalcular-taller',ReporteCalcularChip::class)->middleware('can:reportes.reporteCalcularChip')->name('reportes.reporteCalcularChip');//2 Reporte taller mejorar diseño excell
@@ -226,7 +226,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
     Route::get('/Reporte-Gasol',ReportesGasolution::class)->middleware('can:reportes.reporteGasol')->name('reportes.reporteGasol');//5 Reporte detallado Gasol
     Route::get('/Reporte-actualizar-mtg',ActualizarPrecios::class)->middleware('can:reportes.reporteActualizarPrecio')->name('reportes.reporteActualizarPrecio');//6 Reporte Actualizar MTG
     Route::get('/Reporte-actualizar-gasol',ActualizarPreciosGasol::class)->middleware('can:reportes.reporteActualizarGasol')->name('reportes.reporteActualizarGasol');//7  Reporte Actualizar GASOL
-     
+    //Ruta para ver los reportes de materiales
+    Route::get('/Reporte-salida-materiales',ReporteSalidaMateriales::class)->middleware('can:reportes.reporteSalidaMateriales')->name('reportes.reporteSalidaMateriales'); // reporte salida materiales
+    Route::get('/ConsultarHoja',ConsultarHoja::class)->middleware('can:ConsultarHoja')->name('ConsultarHoja'); //Consultar Hoja material
 
     //Prueba Fotos
     Route::get('/CargaFotos',CargaFotos::class)->name('CargaFotos');

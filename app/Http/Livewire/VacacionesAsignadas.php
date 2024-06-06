@@ -13,6 +13,7 @@ class VacacionesAsignadas extends Component
     public $usuarios, $vacaciones, $idVacacion, $tipo, $razon, $d_tomados, $f_inicio, $observacion;
     public $contratoId;
     public $addDocument = false;
+    public $especial;
 
     public function mount($contratoId)
     {
@@ -38,12 +39,13 @@ class VacacionesAsignadas extends Component
             'observacion' => 'nullable|string',
         ]);
 
-        $vacacion = Vacacion::find($this->idVacacion);
-        // Validar que no se asignen más días de los disponibles
+        /* Validar que no se asignen más días de los disponibles
+        $vacacion = Vacacion::find($this->idVacacion);        
         if ($this->d_tomados > $vacacion->dias_restantes) {
             $this->emit("CustomAlert", ["titulo" => "ERROR", "mensaje" => "No puede asignar más días de los disponibles.", "icono" => "error"]);
             return;
-        }
+        }*/
+
         // Crear la vacación asignada
         VacacionAsignada::create([
             'idVacacion' => $this->idVacacion,
@@ -52,13 +54,23 @@ class VacacionesAsignadas extends Component
             'd_tomados' => $this->d_tomados,
             'f_inicio' => $this->f_inicio,
             'observacion' => $this->observacion,
+            'especial' => $this->especial,
         ]);
 
-        // Actualizar registro en vacaciones
+        if (!$this->especial) {
+            $vacacion = Vacacion::find($this->idVacacion);
+            // Validar que no se asignen más días de los disponibles
+            if ($this->d_tomados > $vacacion->dias_restantes) {
+                $this->emit("CustomAlert", ["titulo" => "ERROR", "mensaje" => "No puede asignar más días de los disponibles.", "icono" => "error"]);
+                return;
+            }
 
+        // Actualizar registro en vacaciones
         $vacacion->dias_tomados += $this->d_tomados;
         $vacacion->dias_restantes = $vacacion->dias_ganados - $vacacion->dias_tomados;
         $vacacion->save();
+
+        }
 
         $this->reset(['idVacacion', 'tipo', 'razon', 'd_tomados', 'f_inicio', 'observacion']);
         $this->addDocument = false;

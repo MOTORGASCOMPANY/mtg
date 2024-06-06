@@ -22,6 +22,9 @@
                         Razon
                     </th>
                     <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left">
+                        Especial
+                    </th>
+                    <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left">
                         Observación
                     </th>
                     <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left">
@@ -67,12 +70,17 @@
                                     {{ $vac->f_inicio }}
                                 </p>
                             </div>
-                        </td>
+                        </td>                        
                         <td class="pl-2">
                             <div class="flex items-center">
                                 <p class="text-sm leading-none text-gray-600 ml-2">
                                     {{ $vac->razon }}
                                 </p>
+                            </div>
+                        </td>
+                        <td class="pl-12">
+                            <div class="flex items-center">
+                                <x-jet-checkbox class="h-4 w-4 text-indigo-600 rounded-lg" disabled :checked="$vac->especial" />
                             </div>
                         </td>
                         <td class="pl-2">

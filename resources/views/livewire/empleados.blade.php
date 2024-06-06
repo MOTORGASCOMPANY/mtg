@@ -41,8 +41,7 @@
 
                     <tr>
                         <th scope="col" class=" bg-gray-100" colspan="7"></th>
-                        <th scope="col" class="text-sm font-medium font-semibold text-white"
-                            colspan="3">
+                        <th scope="col" class="text-sm font-medium font-semibold text-white" colspan="3">
                             <div class="flex justify-center items-center">
                                 <span>Vacaciones</span>
                             </div>
@@ -194,6 +193,16 @@
                                             Contrato
                                         </span>
                                     </button>
+                                    @hasanyrole('administrador|Administrador del sistema')
+                                        <button wire:click="abrirModal({{ $emple->id }})"
+                                            class="group flex py-2 px-2 text-center items-center rounded-md bg-indigo-300 font-bold text-white cursor-pointer hover:bg-indigo-400 hover:animate-pulse">
+                                            <i class="fa fa-pencil"></i>
+                                            <span
+                                                class="group-hover:opacity-100 transition-opacity bg-gray-800 px-1 text-sm text-gray-100 rounded-md absolute left-1/2-translate-x-1/2 translate-y-full opacity-0 m-4 mx-auto z-50">
+                                                Editar
+                                            </span>
+                                        </button>
+                                    @endhasanyrole
                                     <a wire:click="redirectContrato({{ $emple->id }})"
                                         class="group flex py-2 px-2 text-center items-center rounded-md bg-green-300 font-bold text-white cursor-pointer hover:bg-green-400 hover:animate-pulse">
                                         <i class="fas fa-folder-plus"></i>
@@ -210,7 +219,7 @@
                                             Vacaciones
                                         </span>
                                     </button>
-                                    @hasanyrole('administrador|Administrador del sistema')                                        
+                                    @hasanyrole('administrador|Administrador del sistema')
                                         <button wire:click="$emit('deleteContrato',{{ $emple->id }})"
                                             class="group flex py-2 px-2 text-center items-center rounded-md bg-red-500 font-bold text-white cursor-pointer hover:bg-red-700 hover:animate-pulse">
                                             <i class="fas fa-times-circle"></i>
@@ -236,6 +245,89 @@
             </div>
         @endif
     </div>
+
+    {{-- EDITAR CONTRATO --}}
+    <x-jet-dialog-modal wire:model="openEdit">
+        <x-slot name="title">
+            <h1 class="text-xl font-bold">Editando contrato</h1>
+        </x-slot>
+        <x-slot name="content">
+            <div class="grid grid-cols-2 gap-4 py-2">
+                <div>
+                    <x-jet-label value="Dni:" />
+                    <x-jet-input type="text"
+                        class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full "
+                        wire:model="emp.dniEmpleado" />
+                    <x-jet-input-error for="emp.dniEmpleado" />
+                </div>
+                <div>
+                    <x-jet-label value="Domicilio:" />
+                    <x-jet-input type="text"
+                        class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full "
+                        wire:model="emp.domicilioEmpleado" />
+                    <x-jet-input-error for="emp.domicilioEmpleado" />
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 py-2">
+                <div>
+                    <x-jet-label value="Celular:" />
+                    <x-jet-input type="number"
+                        class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full "
+                        wire:model="emp.celularEmpleado" />
+                    <x-jet-input-error for="emp.celularEmpleado" />
+                </div>
+                <div>
+                    <x-jet-label value="Correo:" />
+                    <x-jet-input type="email"
+                        class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full "
+                        wire:model="emp.correoEmpleado" />
+                    <x-jet-input-error for="emp.correoEmpleado" />
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 py-2">
+                <div>
+                    <x-jet-label value="Fecha Inicio:" />
+                    <x-jet-input type="date"
+                        class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full "
+                        wire:model="emp.fechaInicio" disabled />
+                    <x-jet-input-error for="emp.fechaInicio" />
+                </div>
+                <div>
+                    <x-jet-label value="Fecha Expiración:" />
+                    <x-jet-input type="date"
+                        class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full "
+                        wire:model="emp.fechaExpiracion" />
+                    <x-jet-input-error for="emp.fechaExpiracion " />
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 py-2">
+                <div>
+                    <x-jet-label value="Cargo:" />
+                    <x-jet-input type="text"
+                        class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full "
+                        wire:model="emp.cargo" />
+                    <x-jet-input-error for="emp.cargo" />
+                </div>
+                <div>
+                    <x-jet-label value="Monto:" />
+                    <x-jet-input type="number"
+                        class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full "
+                        wire:model="emp.pago" />
+                    <x-jet-input-error for="emp.pago" />
+                </div>
+            </div>
+        </x-slot>
+
+        <x-slot name="footer">
+            <x-jet-secondary-button wire:click="$set('openEdit',false)" class="mx-2">
+                Cancelar
+            </x-jet-secondary-button>
+            <x-jet-button loading:attribute="disabled" wire:click="editarContrato" wire:target="editarContrato">
+                Actualizar
+            </x-jet-button>
+        </x-slot>
+    </x-jet-dialog-modal>
+
 
     {{-- JS --}}
     @push('js')
@@ -265,19 +357,6 @@
         </script>
     @endpush
 
-    {{-- CSS --}}
-    @push('styles')
-        <style>
-            .vacaciones-cell {
-                background-color: rgb(235, 243, 122);
-                color: rgb(0, 0, 0);
-                border: 1px solid rgb(156, 154, 45);
-            }
 
-            .encabezado {
-                background-color: rgb(255, 255, 255);
-            }
-        </style>
-    @endpush
 
 </div>

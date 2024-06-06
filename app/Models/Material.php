@@ -41,6 +41,12 @@ class Material extends Model
         return $this->belongsTo(User::class,'idUsuario');
     }
 
+    //agregue esto para filtro ingreso material
+    public function detalleIngresos()
+    {
+        return $this->hasMany(IngresoDetalle::class, 'idMaterial');
+    }
+
 
 
     public static function formatosGnvEnStock($tipo){

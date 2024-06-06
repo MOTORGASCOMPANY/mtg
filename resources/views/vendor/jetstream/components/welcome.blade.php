@@ -127,8 +127,8 @@
 
     </div>
 
-    {{-- COMUNICADO 
-    @hasanyrole('Administrador taller|inspector|supervisor|administrador')
+    {{-- COMUNICADO --}}
+    @hasanyrole('Administrador taller|inspector|supervisor|administrador|Administrador del sistema')
         <div class="mt-16 fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog"
             aria-modal="true">
             <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -147,37 +147,41 @@
                         <img src="{{ asset('images/images/logomemo.png') }}" />
                     </a>
 
-                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative">
+                    <div class="bg-white px-4 pt-5 pb- sm:p-6 sm:pb-4 relative">
                         <h3 class="text-lg font-medium text-center text-gray-600 mb-4" id="modal-title">Comunicado</h3>
                         <p class="text-sm text-gray-500 mb-4" style="text-align: justify;">
-                            Para su conocimiento, al momento de ingresar un nuevo servicio y digitar la placa NO DEBE TENER ESPACIOS, NI GUIONES .                        
+                            Estimados trabajadores el dia 07-06-2024, celebramos el Día de la Bandera, una ocasión para
+                            honrar uno de nuestros más
+                            importantes símbolos nacionales. Este día nos invita a reflexionar sobre los valores de unidad y
+                            patriotismo que representa nuestra bandera.
                         </p>
-                        <p>Forma Incorrepta:
-                            <img class="pl-16" src="images/images/incorrepto.PNG">
+                        <p class="text-sm text-gray-500 mb-4" style="text-align: justify;">
+                            En Motorgas Company, queremos invitar a todos a unirse a esta conmemoración mediante los
+                            siguientes gestos: <br>
+                            1. <strong>Portar la Bandera Nacional:</strong> Colocar la bandera en un lugar visible, en casa
+                            o en el trabajo. <br>
+                            2. <strong>Reflexión y Unidad:</strong> Tomar un momento para reflexionar sobre nuestro papel en
+                            la construcción de
+                            un mejor futuro para nuestro país. <br>
+                            3. <strong>Participación Cívica:</strong> Unirse a actividades cívicas o culturales que se
+                            realicen en nuestra
+                            comunidad o empresa.
                         </p>
-                        <p class="mt-4">Forma Correpta:
-                            <img class="pl-16" src="images/images/correcto.PNG">
+                        <p class="text-sm text-gray-500 mb-4" style="text-align: center;">
+                            Nos enorgullece contar con un equipo que refleja los valores de integridad y responsabilidad.
+                            <strong>¡Feliz Día de la Bandera!</strong>
+                        </p>
+                        <p>
+                            <img src="images/images/bandera.jpg">
                         </p>
 
-                        <p class="mt-8 text-sm text-gray-500 mb-4" style="text-align: justify;">
-                            Por otro lado cuando el nuevo servicio es "Chip por deterioro" la forma correcta de colocar los propietarios es con (-) y la placa sin espacios todo junto.                           
-                        </p>
-                        <p>Forma Incorrepta:
-                            <img src="images/images/incorrepto2.PNG">
-                        </p>
-                        <p class="mt-4">Forma Correpta:
-                            <img src="images/images/correcto2.PNG">
-                        </p>
-                            
-                        
-                        
                     </div>
                 </div>
             </div>
         </div>
     @endhasanyrole
-    --}}
-    
+
+
 
     {{--
                            <p class="text-sm text-gray-500 mb-4" style="text-align: justify;">

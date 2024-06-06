@@ -1,7 +1,7 @@
 <div>
     <div class="container mx-auto py-12">
 
-        <x-table-ingresos>
+        <x-table-ingresos :tipos="$tipos">
             @if (count($ingresos))
                 <div>
                     <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">

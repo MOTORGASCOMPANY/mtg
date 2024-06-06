@@ -744,7 +744,7 @@
     
                             <tr>                            
                                 <td style="border: 1px solid; border-collapse: collapse;">
-                                    Diseñadas para colocarlas en el exterior de la zona dinde se apoya la cuna reforzada		
+                                    Diseñadas para colocarlas en el exterior de la zona donde se apoya la cuna reforzada		
                                 </td>
                                 <td style="border: 1px solid; border-collapse: collapse;text-align: center;">
                                     C
@@ -753,7 +753,7 @@
     
                             <tr>                            
                                 <td style="border: 1px solid; border-collapse: collapse;">
-                                    Deben se ser como mínimo del espesor y ancho de las cinas de formas sustancialmente cuadrada cuando tengan mas de un agujero			
+                                    Deben ser como mínimo del espesor y ancho de las cinas de formas sustancialmente cuadrada cuando tengan mas de un agujero			
                                 </td>
                                 <td style="border: 1px solid; border-collapse: collapse;text-align: center;">
                                     C

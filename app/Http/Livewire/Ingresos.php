@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\Ingreso;
+use App\Models\TipoMaterial;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -13,11 +14,13 @@ class Ingresos extends Component
     
     public $cant,$sort,$direction,$search,$ingreso,$details;
     public $editando=false;
+    public $mat, $tipos;
 
     
     public function mount(){
         $this->sort="id";
         $this->direction="desc";
+        $this->tipos = TipoMaterial::all();
     }
 
     protected $listeners=['render','delete','deleteFile'];
@@ -27,9 +30,18 @@ class Ingresos extends Component
     public function render()
     {
         $ingresos=Ingreso::where('estado',1)
+        ->when($this->mat, function ($query) {
+            $query->whereHas('materiales.tipo', function ($query) {
+                $query->where('id', $this->mat);
+            });
+        })
         ->orderBy($this->sort,$this->direction)
         ->paginate($this->cant);
-        return view('livewire.ingresos',compact("ingresos"));
+        //return view('livewire.ingresos',compact("ingresos"));
+        return view('livewire.ingresos', [
+            'ingresos' => $ingresos,
+            'tipos' => $this->tipos,
+        ]);
     }
 
     public function order($sort)

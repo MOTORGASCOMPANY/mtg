@@ -1,3 +1,4 @@
+{{--@props(['tipos'])--}}
 <div class="bg-gray-200  p-8 rounded-xl w-full">
     <div class=" items-center pb-6 md:block sm:block">
         <div class="px-2 w-64 mb-4 md:w-full">
@@ -14,6 +15,17 @@
                     <option value="100">100</option>
                 </select>
                 <span>Entradas</span>
+            </div>
+            {{-- FILTRO PARA MATERIAL --}}
+            <div class="flex bg-gray-50 items-center p-2 rounded-md mb-4">
+                <span>Material: </span>
+                <select wire:model="mat"
+                    class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full truncate">
+                    <option value="">SELECCIONE</option>
+                    @foreach ($tipos as $tip)
+                        <option value="{{ $tip->id }}">{{ $tip->descripcion }}</option>
+                    @endforeach
+                </select>
             </div>
             <div class="flex bg-gray-50 items-center lg:w-3/6 p-2 rounded-md mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20"

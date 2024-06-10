@@ -5,6 +5,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
@@ -46,6 +47,22 @@ class Material extends Model
     {
         return $this->hasMany(IngresoDetalle::class, 'idMaterial');
     }
+
+    public function detalleSalidas()
+    {
+        return $this->hasMany(SalidaDetalle::class, 'idMaterial');
+    }
+
+    /*public function Certificacion()
+    {
+        return $this->belongsToMany(Certificacion::class, 'serviciomaterial', 'idCertificacion', 'idMaterial');
+    }  
+
+    public function getPlacaAttribute()
+    {
+        $certificacion = $this->certificaciones()->first();
+        return $certificacion ? $certificacion->idVehiculo : null;
+    }*/
 
 
 

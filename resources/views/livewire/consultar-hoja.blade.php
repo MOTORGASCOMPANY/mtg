@@ -59,11 +59,12 @@
                                                 <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
                                                     Estado
                                                 </th>
-                                                <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
-                                                    Ubicacion
-                                                </th>
+                                                
                                                 <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
                                                     N° Formato
+                                                </th>
+                                                <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
+                                                    Placa
                                                 </th>
                                                 <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
                                                     Año
@@ -72,8 +73,13 @@
                                                     Grupo
                                                 </th>
                                                 <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
+                                                    Ubicacion
+                                                </th>
+                                                {{--
+                                                <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
                                                     Material
                                                 </th>
+                                                --}}
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -121,14 +127,14 @@
                                                         @else
                                                             NE
                                                         @endif
-                                                    </td>
-                                                    <td
-                                                        class="whitespace-nowrap border-r px-6 py-4  dark:border-neutral-500">
-                                                        {{ $item->ubicacion ?? 'NE' }}
-                                                    </td>
+                                                    </td>                                                    
                                                     <td
                                                         class="whitespace-nowrap border-r px-6 py-4 dark:border-neutral-500">
                                                         {{ $item->numSerie ?? 'NE' }}
+                                                    </td>
+                                                    <td
+                                                        class="whitespace-nowrap border-r px-6 py-4 dark:border-neutral-500">
+                                                        {{ $item->placa ?? 'SP' }}
                                                     </td>
                                                     <td
                                                         class="whitespace-nowrap border-r px-6 py-4 dark:border-neutral-500">
@@ -139,9 +145,15 @@
                                                         {{ $item->grupo ?? 'NE' }}
                                                     </td>
                                                     <td
+                                                        class="whitespace-nowrap border-r px-6 py-4  dark:border-neutral-500">
+                                                        {{ $item->ubicacion ?? 'NE' }}
+                                                    </td>
+                                                    {{--
+                                                    <td
                                                         class="whitespace-nowrap border-r px-6 py-4 dark:border-neutral-500">
                                                         {{ $item->descripcionTipoMaterial ?? 'NE' }}
                                                     </td>
+                                                    --}}
                                                 </tr>
                                             @endforeach
                                         </tbody>

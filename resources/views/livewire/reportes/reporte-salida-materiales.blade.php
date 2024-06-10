@@ -30,6 +30,17 @@
                         @endforeach
                     </select>
                 </div>
+                {{-- FILTRO PARA MATERIAL --}}
+                <div class="flex bg-gray-50 items-center p-2 rounded-md mb-4">
+                    <span>Material: </span>
+                    <select wire:model="mat"
+                        class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full truncate">
+                        <option value="">SELECCIONE</option>
+                        @foreach ($tipos as $tip)
+                            <option value="{{ $tip->id }}">{{ $tip->descripcion }}</option>
+                        @endforeach
+                    </select>
+                </div>
                 {{-- FILTRO PARA FECHAS DESDE - HASTA --}}
                 <div class="flex bg-white items-center p-2 w-48 rounded-md mb-4 ">
                     <span>Desde: </span>

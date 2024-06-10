@@ -50,6 +50,11 @@ class Salida extends Model
         ->withPivot("motivo");
     }
 
+    //para filtro material en salida
+    public function materiales2(){
+        return $this->belongsToMany(Material::class, 'detallesalida','idSalida','idMaterial');
+    }
+
     public function  getPorAsignacionAttribute(){
         return $this->belongsToMany(Material::class, 'detallesalida','idSalida','idMaterial')
         ->as("detalle")

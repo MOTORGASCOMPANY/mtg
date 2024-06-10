@@ -6,6 +6,7 @@ use App\Exports\ReporteMarterialesExport;
 use App\Models\Material;
 use App\Models\Salida;
 use App\Models\Taller;
+use App\Models\TipoMaterial;
 use App\Models\TipoServicio;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -18,6 +19,7 @@ class ReporteSalidaMateriales extends Component
     public $fechaInicio, $fechaFin, $resultados, $inspectores, $inspectores2, $certis, $tipos;
     public $ins, $ins2;
     public $user;
+    public $mat;
     use WithPagination;
 
     public function mount()
@@ -28,6 +30,7 @@ class ReporteSalidaMateriales extends Component
             ->orderBy('name')
             ->get();
         $this->user = Auth::user();
+        $this->tipos = TipoMaterial::all();
     }
 
     public function render(){
@@ -42,7 +45,12 @@ class ReporteSalidaMateriales extends Component
 
     public function procesar()
     {
-        $query = Salida::query();
+        $query = Salida::query()
+        ->when($this->mat, function ($query) {
+            $query->whereHas('materiales2.tipo', function ($query) {
+                $query->where('id', $this->mat);
+            });
+        });
 
         if ($this->fechaInicio) {
             $query->where('created_at', '>=', $this->fechaInicio);
@@ -58,6 +66,8 @@ class ReporteSalidaMateriales extends Component
         if ($this->ins2) {
             $query->where('idUsuarioSalida', $this->ins2);
         }
+
+        
         $this->resultados = $query->get();
     }
 

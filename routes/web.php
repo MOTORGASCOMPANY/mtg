@@ -257,7 +257,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/Memorando', Memorandos::class)->middleware('can:Memorando')->name('Memorando');
         Route::get('/ListaMemorando', ListaMemorandos::class)->middleware('can:ListaMemorando')->name('ListaMemorando');
 
-        //Rutas para contrato trabajo - documentos empleado - vacaciones    
+        //Rutas para contrato trabajo - documentos empleado - vacaciones
+
         Route::get('/Empleados', Empleados::class)->middleware('can:Empleados')->name('Empleados'); //Lista de empleados
         Route::get('/Contratos', ContratosTrabajos::class)->name('ContratoTrabajo'); //Crear contrato trabajo
         Route::get('/Empleado/{idEmpleado}', EditarEmpleado::class)->name('editar-empleado'); //Para subir sus doc del empleado
@@ -266,15 +267,13 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/Tablas/TiposDocumentosEmpleados', TiposDocumentosEmple::class)->name('table.TiposDocumentosEmpleados'); //Tabla para tipos de doc de empleado
 
 
-        //Rutas para comunicado
+        /*Rutas para comunicado */
         Route::get('/comunicado', [WelcomeController::class, 'index'])->middleware('can:comunicado.index')->name('comunicado.index');
         Route::post('/comunicado/update', [WelcomeController::class, 'update'])->name('comunicado.update');
         Route::post('/comunicado/deactivate', [WelcomeController::class, 'deactivate'])->name('comunicado.deactivate');
         Route::post('/comunicado/uploadImage', [WelcomeController::class, 'uploadImage'])->name('comunicado.uploadImage');
         Route::post('/comunicado', [WelcomeController::class, 'store'])->name('comunicado.store');
-        Route::get('/comunicado/edit', [WelcomeController::class, 'edit'])->name('comunicado.edit');
-        
-
+        Route::get('/comunicado/edit', [WelcomeController::class, 'edit'])->name('comunicado.edit'); 
 
 
 

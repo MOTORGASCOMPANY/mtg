@@ -13,7 +13,7 @@ class WelcomeController extends Controller
     public function index()
     {
         $comunicado = session('comunicado', null);
-        return view('index', compact('comunicado'));
+        return view('comunicado', compact('comunicado'));
     }
 
     public function store(Request $request)

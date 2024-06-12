@@ -12,7 +12,6 @@
                     </div>
                 @endif
 
-                {{--  FORM PARA EMITIR COMUNICADO --}}
                 <form action="{{ $comunicado ? route('comunicado.update') : route('comunicado.store') }}" method="POST"
                     enctype="multipart/form-data">
                     @csrf
@@ -78,18 +77,6 @@
                     </div>
 
                     <div class="flex items-center justify-center">
-                        {{--
-                         <button type="submit"
-                            class="bg-indigo-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mx-2">
-                            {{ $comunicado ? 'Actualizar' : 'Crear' }}
-                         </button>
-                         @if ($comunicado)
-                            <button onclick="deactivateComunicado()"
-                                class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                                Cerrar Comunicado
-                            </button>
-                         @endif
-                        --}}
                         <x-jet-button loading:attribute="disabled" type="submit"
                             class="bg-indigo-300 hover:bg-indigo-400 border-indigo-400 mx-2">
                             {{ $comunicado ? 'Actualizar' : 'Crear' }}
@@ -103,15 +90,14 @@
                         @endif
                     </div>
                 </form>
-
-                {{--  FORM PARA SUBIR IMAGENES PUBLIC/IMAGES/IMAGES --}}
                 <form action="{{ route('comunicado.uploadImage') }}" method="POST" enctype="multipart/form-data"
                     class="mt-4">
                     @csrf
                     <div class="mb-4">
                         <x-jet-label value="Subir Imagen:" />
                         <div class="flex items-center">
-                            <input type="file" name="new_image" accept="image/*" class="shadow appearance-none rounded mr-2" required>
+                            <input type="file" name="new_image" accept="image/*"
+                                class="shadow appearance-none rounded mr-2" required>
                             <button type="submit"
                                 class="group flex py-2 px-2 text-center items-center rounded-md bg-blue-300 font-bold text-white cursor-pointer hover:bg-blue-400 hover:animate-pulse">
                                 <i class="fa-solid fa-file-circle-plus"></i>

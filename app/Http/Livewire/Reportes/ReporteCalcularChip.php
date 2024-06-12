@@ -122,8 +122,8 @@ class ReporteCalcularChip extends Component
                 })
             ->IdTipoServicios($this->servicio)
             ->rangoFecha($this->fechaInicio, $this->fechaFin)
-            ->where('estado', 1)
-            ->whereNull('idCertificacion')
+            //->where('estado', 1)
+            //->whereNull('idCertificacion')
             ->get();
 
         //unificando certificaciones     
@@ -140,6 +140,7 @@ class ReporteCalcularChip extends Component
                 "precio" => $certi->precio,
                 "pagado" => $certi->pagado,
                 "estado" => $certi->estado,
+                "externo" => $certi->externo,
                 "tipo_modelo" => $certi::class,
                 "fecha" => $certi->created_at,
 
@@ -160,6 +161,7 @@ class ReporteCalcularChip extends Component
                 "precio" => $cert_pend->precio,
                 "pagado" => $cert_pend->pagado,
                 "estado" => $cert_pend->estado,
+                "externo" => $cert_pend->externo,
                 "tipo_modelo" => $cert_pend::class,
                 "fecha" => $cert_pend->created_at,
             ];
@@ -296,6 +298,7 @@ class ReporteCalcularChip extends Component
                 "precio" => $registro->precio,
                 "pagado" => $registro->pagado,
                 "estado" => $registro->estado,
+                "externo" => Null,
                 "tipo_modelo" => $registro::class,
                 "fecha" => $registro->fecha,
             ];

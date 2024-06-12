@@ -111,8 +111,8 @@ class ActualizarPrecios extends Component
             ->Join('taller', 'certificados_pendientes.idTaller', '=', 'taller.id')
             ->Join('vehiculo', 'certificados_pendientes.idVehiculo', '=', 'vehiculo.id')
             ->Join('servicio', 'certificados_pendientes.idServicio', '=', 'servicio.id')
-            ->where('certificados_pendientes.estado', 1)
-            ->whereNull('certificados_pendientes.idCertificacion')
+            //->where('certificados_pendientes.estado', 1) //Analizar esto - se comento porque algunas cer-pendientes se realizan en la misma semana y no muestra ni activacion ni revision
+            //->whereNull('certificados_pendientes.idCertificacion') //Analizar esto - se comento porque algunas cer-pendientes se realizan en la misma semana y no muestra ni activacion ni revision
             ->where(function ($query) {
                 $this->agregarFiltros($query);
             })

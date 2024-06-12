@@ -527,19 +527,19 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                             <x-jet-responsive-nav-link class="text-sm truncate"
                                                 href="{{ route('reportes.reporteServiciosPorInspector') }}"
                                                 :active="request()->routeIs('reportes.reporteServiciosPorInspector')">
-                                                Reporte Servicios por inspector
+                                                Servicios por inspector
                                             </x-jet-responsive-nav-link>
                                         @endcan
                                         @can('reportes.reporteFotosPorInspector')
                                             <x-jet-responsive-nav-link class="text-sm truncate"
                                                 href="{{ route('reportes.reporteFotosPorInspector') }}" :active="request()->routeIs('reportes.reporteFotosPorInspector')">
-                                                Reporte Fotos
+                                                Cumplimiento de fotos
                                             </x-jet-responsive-nav-link>
                                         @endcan
                                         @can('reportes.reporteDocumentosTaller')
                                             <x-jet-responsive-nav-link class="text-sm truncate"
                                                 href="{{ route('reportes.reporteDocumentosTaller') }}" :active="request()->routeIs('reportes.reporteDocumentosTaller')">
-                                                Reporte Documentos a vencer
+                                                Documentos a vencer
                                             </x-jet-responsive-nav-link>
                                         @endcan
 
@@ -576,44 +576,44 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                         @can('reportes.reporteCalcularGasol')
                                             <x-jet-responsive-nav-link class="text-sm truncate"
                                                 href="{{ route('reportes.reporteCalcularGasol') }}" :active="request()->routeIs('reportes.reporteCalcularGasol')">
-                                                Reporte MTC Externo
+                                                Motorgas Externo
                                             </x-jet-responsive-nav-link>
                                         @endcan
                                         @can('reportes.reporteCalcularChip')
                                             <x-jet-responsive-nav-link class="text-sm truncate"
                                                 href="{{ route('reportes.reporteCalcularChip') }}" :active="request()->routeIs('reportes.reporteCalcularChip')">
-                                                Reporte MTC Taller
+                                                Motorgas Taller
                                             </x-jet-responsive-nav-link>
                                         @endcan
                                         @can('reportes.reporteCalcular')
                                             <x-jet-responsive-nav-link class="text-sm truncate"
                                                 href="{{ route('reportes.reporteCalcular') }}" :active="request()->routeIs('reportes.reporteCalcular')">
-                                                Reporte MTC Semanal
+                                                Motorgas Semanal
                                             </x-jet-responsive-nav-link>
                                         @endcan
 
                                         @can('reportes.reporteMTG')
                                             <x-jet-responsive-nav-link class="text-sm truncate"
                                                 href="{{ route('reportes.reporteMTG') }}" :active="request()->routeIs('reportes.reporteMTG')">
-                                                Reporte MTC Detallado
+                                                Motorgas Detallado
                                             </x-jet-responsive-nav-link>
                                         @endcan
                                         @can('reportes.reporteGasol')
                                             <x-jet-responsive-nav-link class="text-sm truncate"
                                                 href="{{ route('reportes.reporteGasol') }}" :active="request()->routeIs('reportes.reporteGasol')">
-                                                Reporte Gasol Detallado
+                                                Gasolutión Detallado
                                             </x-jet-responsive-nav-link>
                                         @endcan
                                         @can('reportes.reporteActualizarPrecio')
                                             <x-jet-responsive-nav-link class="text-sm truncate"
                                                 href="{{ route('reportes.reporteActualizarPrecio') }}" :active="request()->routeIs('reportes.reporteActualizarPrecio')">
-                                                Reporte Actualizar MTC
+                                                Motorgas act. precios
                                             </x-jet-responsive-nav-link>
                                         @endcan
                                         @can('reportes.reporteActualizarGasol')
                                             <x-jet-responsive-nav-link class="text-sm truncate"
                                                 href="{{ route('reportes.reporteActualizarGasol') }}" :active="request()->routeIs('reportes.reporteActualizarGasol')">
-                                                Reporte Actualizar Gasol
+                                                Gasolutión act. precios
                                             </x-jet-responsive-nav-link>
                                         @endcan
 
@@ -650,14 +650,14 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                         @can('reportes.reporteSalidaMateriales')
                                             <x-jet-responsive-nav-link class="text-sm truncate"
                                                 href="{{ route('reportes.reporteSalidaMateriales') }}" :active="request()->routeIs('reportes.reporteSalidaMateriales')">
-                                                Reporte Salida Material
+                                                Salida de Material
                                             </x-jet-responsive-nav-link>
                                         @endcan
                                         
                                         @can('ConsultarHoja')
                                             <x-jet-responsive-nav-link class="text-sm" href="{{ route('ConsultarHoja') }}"
                                                 :active="request()->routeIs('ConsultarHoja')">
-                                                {{ __('ConsultarHoja') }}
+                                                {{ __('Consultar Hoja') }}
                                             </x-jet-responsive-nav-link>
                                         @endcan
 

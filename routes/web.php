@@ -144,241 +144,251 @@ Route::get('phpmyinfo', function () {
     phpinfo();
 })->name('phpmyinfo');
 
-Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])
-->group(function () {
+Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])
+    ->group(function () {
 
-    Route::get('/Expedientes',Expedientes::class)->middleware('can:expedientes')->name('expedientes');
-    //Route::get('/Servicio',Servicio::class)->middleware('can:servicio')->name('servicio');
-    Route::get('/Talleres',Talleres::class)->middleware('can:talleres')->name('talleres');
-    Route::get('/Ingresos',Ingresos::class)->middleware('can:ingresos')->name('ingresos');
-    Route::get('/Salidas',Salidas::class)->middleware('can:salidas')->name('salidas');
-    Route::get('/Inventario',Inventario::class)->middleware('can:inventario')->name('inventario');
-    Route::get('/Asignacion-de-materiales',AsignacionMateriales::class)->middleware('can:asignacion')->name('asignacion');
+        Route::get('/Expedientes', Expedientes::class)->middleware('can:expedientes')->name('expedientes');
+        //Route::get('/Servicio',Servicio::class)->middleware('can:servicio')->name('servicio');
+        Route::get('/Talleres', Talleres::class)->middleware('can:talleres')->name('talleres');
+        Route::get('/Ingresos', Ingresos::class)->middleware('can:ingresos')->name('ingresos');
+        Route::get('/Salidas', Salidas::class)->middleware('can:salidas')->name('salidas');
+        Route::get('/Inventario', Inventario::class)->middleware('can:inventario')->name('inventario');
+        Route::get('/Asignacion-de-materiales', AsignacionMateriales::class)->middleware('can:asignacion')->name('asignacion');
 
-    Route::get('/Prestamo-de-materiales',PrestamoMateriales::class)->middleware('can:materiales.prestamo')->name('materiales.prestamo');
-
-
-    Route::get('/Recepcion-de-materiales',RecepcionMateriales::class)->middleware('can:recepcion')->name('recepcion');
-    Route::get('/Solicitud-de-materiales',Solicitud::class)->middleware('can:solicitud')->name('solicitud');
-    Route::get('/Crear-solicitud',CreateSolicitud::class)->middleware('can:nuevaSolicitud')->name('nuevaSolicitud');
-    Route::get('/RevisionExpedientes',RevisionExpedientes::class)->middleware('can:revisionExpedientes')->name('revisionExpedientes');
-    Route::get('/dashboard', function (){return view('dashboard');})->name('dashboard');
-    Route::get('/Listado-Certificaciones',ListaCertificaciones::class)->middleware('can:certificaciones')->name('certificaciones');
-    Route::get('/ListadoChips',ListadoChips::class)->name('ListadoChips'); //->middleware('can:ListadoChips')
-    Route::get('/Administracion-de-certificaciones',AdministracionCertificaciones::class)->middleware('can:admin.certificaciones')->name('admin.certificaciones');
-
-    Route::get('/certificados-pendientes',ListaCertificacionesPendientes::class)->middleware('can:certificaciones.pendientes')->name('certificaciones.pendientes');
-    Route::get('/certificados-desmontes',ListaDesmontes::class)->middleware('can:certificaciones.desmontes')->name('certificaciones.desmontes');
+        Route::get('/Prestamo-de-materiales', PrestamoMateriales::class)->middleware('can:materiales.prestamo')->name('materiales.prestamo');
 
 
-    Route::get('/Solicitud/{soliId}',VistaSolicitud::class)->name('vistaSolicitud');
-    Route::get('/SolicitudAnu/{anuId}/{cerId}/{userId}',VistaSolicitudAnul::class)->name('vistaSolicitudAnul');
-    Route::get('/SolicitudEli/{eliId}/{cerId}/{userId}',VistaEliminacion::class)->name('vistaSolicitudEli');
-    Route::get('/Memorando/{memoId}',VistaSolicitudMemorando::class)->name('vistaSolicitudMemorando');
-    Route::get('/Notificaciones',NotificacionesPendientes::class)->name('Notificaciones');    
-    //Route::get('/Recepcion-de-materiales',RecepcionMateriales::class)->middleware('can:recepcion')->name('recepcion');
+        Route::get('/Recepcion-de-materiales', RecepcionMateriales::class)->middleware('can:recepcion')->name('recepcion');
+        Route::get('/Solicitud-de-materiales', Solicitud::class)->middleware('can:solicitud')->name('solicitud');
+        Route::get('/Crear-solicitud', CreateSolicitud::class)->middleware('can:nuevaSolicitud')->name('nuevaSolicitud');
+        Route::get('/RevisionExpedientes', RevisionExpedientes::class)->middleware('can:revisionExpedientes')->name('revisionExpedientes');
+        Route::get('/dashboard', function () {
+            return view('dashboard');
+        })->name('dashboard');
+        Route::get('/Listado-Certificaciones', ListaCertificaciones::class)->middleware('can:certificaciones')->name('certificaciones');
+        Route::get('/ListadoChips', ListadoChips::class)->name('ListadoChips'); //->middleware('can:ListadoChips')
+        Route::get('/Administracion-de-certificaciones', AdministracionCertificaciones::class)->middleware('can:admin.certificaciones')->name('admin.certificaciones');
 
-    Route::get('/Servicio',Prueba::class)->middleware('can:servicio')->name('servicio');
-    //para servicio modificacion
-    Route::get('/ServicioModi',ServicioModi::class)->middleware('can:ServicioModi')->name('ServicioModi');
-
-    //PRECIOS PARA INSPECTOR
-    Route::get('/PreciosInspector',PreciospoInspector::class)->middleware('can:PreciosInspector')->name('PreciosInspector');
-
-
-    Route::get('/Solucion',Arreglando::class)->name('solucion');
-    Route::get('/TalleresRevision',TallerRevision::class)->name('talleres.revision');
-    Route::get('/Taller/edit/{idTaller}',EditarTaller::class)->name('editar-taller');
-    Route::post('/Solucion/upload-images',[uploadController::class,'uploadImagesExpediente'])->name('expediente.upload-images');
-    Route::get('/Taller/Documents/{id}/download',[DocumentosController::class,'downloadDocumentoTaller'])->name('download_doctaller');
-
-    Route::get('/Inventario-revision',RevisionInventario::class)->middleware('can:inventario.revision')->name('inventario.revision');
-
-    Route::get('/finalizarPreConversion/{idCertificacion}',FinalizarPreConversion::class)->name('finalizarPreconver');
-
-    Route::get('/mailable', function () {
-        $user = App\Models\User::find(47);
-        return new App\Mail\CustomMail($user);
-    });
-
-    //Rutas para importacion de Servicios
-    Route::get('/Importar-anuales',ImportarAnuales::class)->middleware('can:importar.anuales')->name('importar.anuales');
-    Route::get('/Importar-conversiones',ImportarConversiones::class)->name('importar.conversiones');
-    Route::get('/Importar-desmontes',ImportarDesmontes::class)->name('importar.desmontes');
-
-    //Rutas modulo de Usuarios y Roles
-    Route::get('/Usuarios',Usuarios::class)->name('usuarios');
-    Route::get('/Roles',AdminRoles::class)->name('usuarios.roles');
-    Route::get('/Permisos',AdminPermisos::class)->name('usuarios.permisos');
-
-    //Rutas modulo de reportes de GNV
-    Route::get('/Admin-servicios-importados',AdministracionDeServiciosImportados::class)->name('reportes.adminServiciosImportados'); // servicios de servicios importados(gasolution)
-    Route::get('/Reporte-general-gnv',ReporteGeneralGnv::class)->name('reportes.reporteGeneralGnv'); // reporte general revisar 
-    Route::get('/Reporte-de-materiales',ReporteMateriales::class)->name('reportes.reporteMateriales'); // reporte materiales revisar
-    Route::get('/Reporte-de-servicios-por-inspector',ReporteServiciosPorInspector::class)->name('reportes.reporteServiciosPorInspector'); // reporte de inspecotres que usan sistema
-    Route::get('/Reporte-de-fotos-por-inspector',ReporteFotosPorInspector::class)->name('reportes.reporteFotosPorInspector'); // reporte de inspectores que suben fotos
-    Route::get('/Reporte-de-documentos-a-vencer',ReporteDocumentosTaller::class)->name('reportes.reporteDocumentosTaller'); // reporte de documentos vencidos de taller
-    //Rutas para ver los reportes de los servicios    
-    Route::get('/ReporteCalcular',ReporteCalcularGasol::class)->middleware('can:reportes.reporteCalcularGasol')->name('reportes.reporteCalcularGasol');//1 Reporte externo
-    Route::get('/ReporteCalcular-taller',ReporteCalcularChip::class)->middleware('can:reportes.reporteCalcularChip')->name('reportes.reporteCalcularChip');//2 Reporte taller mejorar diseño excell
-    Route::get('/Reporte-semanal',ReporteCalcular::class)->middleware('can:reportes.reporteCalcular')->name('reportes.reporteCalcular');//3 Reporte Semanal
-    Route::get('/Reporte-MTG',ReportesMtg::class)->middleware('can:reportes.reporteMTG')->name('reportes.reporteMTG');//4 Reporte detallado MTG mejorar descarga excell
-    Route::get('/Reporte-Gasol',ReportesGasolution::class)->middleware('can:reportes.reporteGasol')->name('reportes.reporteGasol');//5 Reporte detallado Gasol
-    Route::get('/Reporte-actualizar-mtg',ActualizarPrecios::class)->middleware('can:reportes.reporteActualizarPrecio')->name('reportes.reporteActualizarPrecio');//6 Reporte Actualizar MTG
-    Route::get('/Reporte-actualizar-gasol',ActualizarPreciosGasol::class)->middleware('can:reportes.reporteActualizarGasol')->name('reportes.reporteActualizarGasol');//7  Reporte Actualizar GASOL
-    //Ruta para ver los reportes de materiales
-    Route::get('/Reporte-salida-materiales',ReporteSalidaMateriales::class)->middleware('can:reportes.reporteSalidaMateriales')->name('reportes.reporteSalidaMateriales'); // reporte salida materiales
-    Route::get('/ConsultarHoja',ConsultarHoja::class)->middleware('can:ConsultarHoja')->name('ConsultarHoja'); //Consultar Hoja material
-
-    //Prueba Fotos
-    Route::get('/CargaFotos',CargaFotos::class)->name('CargaFotos');
-    Route::get('/CargaImagenes',CargaImagenes::class)->name('CargaImagenes');
-    Route::get('/cambiar',Cambiar::class)->name('cambiar');
-
-    //Ruta para adminsitracion de tablas
-    Route::get('/Tablas/TiposDeServicios',Tiposservicios::class)->name('table.tiposServicio');
-    Route::get('/documentosTaller',PruebaDocumentosTaller::class)->name('documentosTaller');
-
-    //Ruta para los logos
-    Route::get('/Logona',Logona::class)->name('Logona');
-
-    //Ruta para Manual de Funciones
-    Route::get('/ManualFunciones',ManualFunciones::class)->middleware('can:ManualFunciones')->name('ManualFunciones');
-    Route::get('/ManualFunciones/{id}/download',[DocumentosController::class,'downloadManual'])->name('download_docManual');
-    Route::get('/Tablas/TiposManual',TiposManual::class)->name('table.TiposManual');
-
-    //Ruta para Organigrama
-    Route::get('/Organigrama',Organigramas::class)->name('Organigrama');
-    Route::get('/Organigrama/{id}/download',[DocumentosController::class,'downloadOrganigrama'])->name('download_docOrganigrama');
-
-    //Ruta para Memorandos
-    Route::get('/Memorando',Memorandos::class)->middleware('can:Memorando')->name('Memorando');
-    Route::get('/ListaMemorando',ListaMemorandos::class)->middleware('can:ListaMemorando')->name('ListaMemorando');
-
-    //Rutas para contrato trabajo - documentos empleado - vacaciones
-    
-    Route::get('/Empleados',Empleados::class)->middleware('can:Empleados')->name('Empleados'); //Lista de empleados
-    Route::get('/Contratos',ContratosTrabajos::class)->name('ContratoTrabajo'); //Crear contrato trabajo
-    Route::get('/Empleado/{idEmpleado}',EditarEmpleado::class)->name('editar-empleado'); //Para subir sus doc del empleado
-    Route::get('/Vacacion/{contratoId}',EditarVacacion::class)->name('EditarVacacion'); //Para asignar sus vacaciones del empleado
-    Route::get('/Empleado/{idEmpleado}/download',[DocumentosController::class,'downloadEmpleado'])->name('download_docEmpleado'); //Para descargar doc de empleado 
-    Route::get('/Tablas/TiposDocumentosEmpleados',TiposDocumentosEmple::class)->name('table.TiposDocumentosEmpleados'); //Tabla para tipos de doc de empleado
-
-    //Rutas para comunicado
-    Route::get('/comunicado', [WelcomeController::class, 'welcome'])->name('welcome');
-    //Route::post('/comunicado/guardar', [ComunicadoController::class, 'guardar']);
+        Route::get('/certificados-pendientes', ListaCertificacionesPendientes::class)->middleware('can:certificaciones.pendientes')->name('certificaciones.pendientes');
+        Route::get('/certificados-desmontes', ListaDesmontes::class)->middleware('can:certificaciones.desmontes')->name('certificaciones.desmontes');
 
 
+        Route::get('/Solicitud/{soliId}', VistaSolicitud::class)->name('vistaSolicitud');
+        Route::get('/SolicitudAnu/{anuId}/{cerId}/{userId}', VistaSolicitudAnul::class)->name('vistaSolicitudAnul');
+        Route::get('/SolicitudEli/{eliId}/{cerId}/{userId}', VistaEliminacion::class)->name('vistaSolicitudEli');
+        Route::get('/Memorando/{memoId}', VistaSolicitudMemorando::class)->name('vistaSolicitudMemorando');
+        Route::get('/Notificaciones', NotificacionesPendientes::class)->name('Notificaciones');
+        //Route::get('/Recepcion-de-materiales',RecepcionMateriales::class)->middleware('can:recepcion')->name('recepcion');
 
-    //RUTAS PARA STREAM Y DESCARGA DE PDFS
-    Route::controller(PdfController::class)->group(function () {
+        Route::get('/Servicio', Prueba::class)->middleware('can:servicio')->name('servicio');
+        //para servicio modificacion
+        Route::get('/ServicioModi', ServicioModi::class)->middleware('can:ServicioModi')->name('ServicioModi');
 
-        //Rutas para ver certificado anual GNV
-        Route::get('/certificado-anual/{id}', 'generaPdfAnualGnv')->name("certificadoAnualGnv");
-        Route::get('/duplicado-anual/{id}', 'generaDuplicadoAnualGnv')->name("duplicadoAnualGnv");
-        Route::get('/duplicado-anual-ex/{id}', 'generaDuplicadoExternoAnualGnv')->name("duplicadoExternoAnualGnv");
+        //PRECIOS PARA INSPECTOR
+        Route::get('/PreciosInspector', PreciospoInspector::class)->middleware('can:PreciosInspector')->name('PreciosInspector');
 
-        //Rutas para descargar certificado anual GNV
-        Route::get('/certificado-anual/{id}/descargar', 'descargarPdfAnualGnv')->name("descargarCertificadoAnualGnv");
-        Route::get('/duplicado-anual/{id}/descargar', 'descargarDuplicadoAnualGnv')->name("descargarDuplicadoAnualGnv");
-        Route::get('/duplicado-anual-ex/{id}/descargar', 'descargarDuplicadoExternoAnualGnv')->name("descargarDuplicadoExternoAnualGnv");
 
-        //Rutas para ver certificado inicial GNV
-        Route::get('/certificado-inicial/{id}', 'generaPdfInicialGnv')->name("certificadoInicialGnv");
-        Route::get('/duplicado-inicial/{id}', 'generaDuplicadoInicialGnv')->name("duplicadoInicialGnv");
-        Route::get('/duplicado-inicial-ex/{id}', 'generaDuplicadoExternoInicialGnv')->name("duplicadoExternoInicialGnv");
+        Route::get('/Solucion', Arreglando::class)->name('solucion');
+        Route::get('/TalleresRevision', TallerRevision::class)->name('talleres.revision');
+        Route::get('/Taller/edit/{idTaller}', EditarTaller::class)->name('editar-taller');
+        Route::post('/Solucion/upload-images', [uploadController::class, 'uploadImagesExpediente'])->name('expediente.upload-images');
+        Route::get('/Taller/Documents/{id}/download', [DocumentosController::class, 'downloadDocumentoTaller'])->name('download_doctaller');
 
-        //Rutas para descargar certificado inicial GNV
-        Route::get('/certificado-inicial/{id}/descargar', 'descargarPdfInicialGnv')->name("descargarCertificadoInicialGnv");
-        Route::get('/duplicado-inicial/{id}/descargar', 'descargarDuplicadoInicialGnv')->name("descargarDuplicadoInicialGnv");
-        Route::get('/duplicado-inicial-ex/{id}/descargar', 'descargarDuplicadoExternoInicialGnv')->name("descargarDuplicadoExternoInicialGnv");
+        Route::get('/Inventario-revision', RevisionInventario::class)->middleware('can:inventario.revision')->name('inventario.revision');
 
-        //Rutas para descargar certificado preconversion GNV
-        Route::get('/preConver/{id}', 'generaPdfPreGnv')->name("generaPreGnvPdf");
-        Route::get('/preConver/{id}/descargar', 'generaDescargaPreGnv')->name("descargarPreGnvPdf");
+        Route::get('/finalizarPreConversion/{idCertificacion}', FinalizarPreConversion::class)->name('finalizarPreconver');
 
-        //Rutas para ver  y descargar pdf memorando
-        Route::get('/memorando/{id}', 'generaPdfMemorando')->name("certificadoMemo");
-        Route::get('/memorando/{id}/descargar', 'descargaPdfMemorando')->name("descargarCertiMemo");
+        Route::get('/mailable', function () {
+            $user = App\Models\User::find(47);
+            return new App\Mail\CustomMail($user);
+        });
 
-        //Rutas para ver y descargar pdf contrato
-        Route::get('/contrato/{id}', 'generaPdfContrato')->name("contratoTrabajo");
-        Route::get('/contrato/{id}/descargar', 'descargaPdfContrato')->name("descargarContratoTrabajo");
+        //Rutas para importacion de Servicios
+        Route::get('/Importar-anuales', ImportarAnuales::class)->middleware('can:importar.anuales')->name('importar.anuales');
+        Route::get('/Importar-conversiones', ImportarConversiones::class)->name('importar.conversiones');
+        Route::get('/Importar-desmontes', ImportarDesmontes::class)->name('importar.desmontes');
+
+        //Rutas modulo de Usuarios y Roles
+        Route::get('/Usuarios', Usuarios::class)->name('usuarios');
+        Route::get('/Roles', AdminRoles::class)->name('usuarios.roles');
+        Route::get('/Permisos', AdminPermisos::class)->name('usuarios.permisos');
+
+        //Rutas modulo de reportes de GNV
+        Route::get('/Admin-servicios-importados', AdministracionDeServiciosImportados::class)->name('reportes.adminServiciosImportados'); // servicios de servicios importados(gasolution)
+        Route::get('/Reporte-general-gnv', ReporteGeneralGnv::class)->name('reportes.reporteGeneralGnv'); // reporte general revisar 
+        Route::get('/Reporte-de-materiales', ReporteMateriales::class)->name('reportes.reporteMateriales'); // reporte materiales revisar
+        Route::get('/Reporte-de-servicios-por-inspector', ReporteServiciosPorInspector::class)->name('reportes.reporteServiciosPorInspector'); // reporte de inspecotres que usan sistema
+        Route::get('/Reporte-de-fotos-por-inspector', ReporteFotosPorInspector::class)->name('reportes.reporteFotosPorInspector'); // reporte de inspectores que suben fotos
+        Route::get('/Reporte-de-documentos-a-vencer', ReporteDocumentosTaller::class)->name('reportes.reporteDocumentosTaller'); // reporte de documentos vencidos de taller
+        //Rutas para ver los reportes de los servicios    
+        Route::get('/ReporteCalcular', ReporteCalcularGasol::class)->middleware('can:reportes.reporteCalcularGasol')->name('reportes.reporteCalcularGasol'); //1 Reporte externo
+        Route::get('/ReporteCalcular-taller', ReporteCalcularChip::class)->middleware('can:reportes.reporteCalcularChip')->name('reportes.reporteCalcularChip'); //2 Reporte taller mejorar diseño excell
+        Route::get('/Reporte-semanal', ReporteCalcular::class)->middleware('can:reportes.reporteCalcular')->name('reportes.reporteCalcular'); //3 Reporte Semanal
+        Route::get('/Reporte-MTG', ReportesMtg::class)->middleware('can:reportes.reporteMTG')->name('reportes.reporteMTG'); //4 Reporte detallado MTG mejorar descarga excell
+        Route::get('/Reporte-Gasol', ReportesGasolution::class)->middleware('can:reportes.reporteGasol')->name('reportes.reporteGasol'); //5 Reporte detallado Gasol
+        Route::get('/Reporte-actualizar-mtg', ActualizarPrecios::class)->middleware('can:reportes.reporteActualizarPrecio')->name('reportes.reporteActualizarPrecio'); //6 Reporte Actualizar MTG
+        Route::get('/Reporte-actualizar-gasol', ActualizarPreciosGasol::class)->middleware('can:reportes.reporteActualizarGasol')->name('reportes.reporteActualizarGasol'); //7  Reporte Actualizar GASOL
+        //Ruta para ver los reportes de materiales
+        Route::get('/Reporte-salida-materiales', ReporteSalidaMateriales::class)->middleware('can:reportes.reporteSalidaMateriales')->name('reportes.reporteSalidaMateriales'); // reporte salida materiales
+        Route::get('/ConsultarHoja', ConsultarHoja::class)->middleware('can:ConsultarHoja')->name('ConsultarHoja'); //Consultar Hoja material
+
+        //Prueba Fotos
+        Route::get('/CargaFotos', CargaFotos::class)->name('CargaFotos');
+        Route::get('/CargaImagenes', CargaImagenes::class)->name('CargaImagenes');
+        Route::get('/cambiar', Cambiar::class)->name('cambiar');
+
+        //Ruta para adminsitracion de tablas
+        Route::get('/Tablas/TiposDeServicios', Tiposservicios::class)->name('table.tiposServicio');
+        Route::get('/documentosTaller', PruebaDocumentosTaller::class)->name('documentosTaller');
+
+        //Ruta para los logos
+        Route::get('/Logona', Logona::class)->name('Logona');
+
+        //Ruta para Manual de Funciones
+        Route::get('/ManualFunciones', ManualFunciones::class)->middleware('can:ManualFunciones')->name('ManualFunciones');
+        Route::get('/ManualFunciones/{id}/download', [DocumentosController::class, 'downloadManual'])->name('download_docManual');
+        Route::get('/Tablas/TiposManual', TiposManual::class)->name('table.TiposManual');
+
+        //Ruta para Organigrama
+        Route::get('/Organigrama', Organigramas::class)->name('Organigrama');
+        Route::get('/Organigrama/{id}/download', [DocumentosController::class, 'downloadOrganigrama'])->name('download_docOrganigrama');
+
+        //Ruta para Memorandos
+        Route::get('/Memorando', Memorandos::class)->middleware('can:Memorando')->name('Memorando');
+        Route::get('/ListaMemorando', ListaMemorandos::class)->middleware('can:ListaMemorando')->name('ListaMemorando');
+
+        //Rutas para contrato trabajo - documentos empleado - vacaciones    
+        Route::get('/Empleados', Empleados::class)->middleware('can:Empleados')->name('Empleados'); //Lista de empleados
+        Route::get('/Contratos', ContratosTrabajos::class)->name('ContratoTrabajo'); //Crear contrato trabajo
+        Route::get('/Empleado/{idEmpleado}', EditarEmpleado::class)->name('editar-empleado'); //Para subir sus doc del empleado
+        Route::get('/Vacacion/{contratoId}', EditarVacacion::class)->name('EditarVacacion'); //Para asignar sus vacaciones del empleado
+        Route::get('/Empleado/{idEmpleado}/download', [DocumentosController::class, 'downloadEmpleado'])->name('download_docEmpleado'); //Para descargar doc de empleado 
+        Route::get('/Tablas/TiposDocumentosEmpleados', TiposDocumentosEmple::class)->name('table.TiposDocumentosEmpleados'); //Tabla para tipos de doc de empleado
+
+
+        //Rutas para comunicado
+        Route::get('/comunicado', [WelcomeController::class, 'index'])->middleware('can:comunicado.index')->name('comunicado.index');
+        Route::post('/comunicado/update', [WelcomeController::class, 'update'])->name('comunicado.update');
+        Route::post('/comunicado/deactivate', [WelcomeController::class, 'deactivate'])->name('comunicado.deactivate');
+        Route::post('/comunicado/uploadImage', [WelcomeController::class, 'uploadImage'])->name('comunicado.uploadImage');
+        Route::post('/comunicado', [WelcomeController::class, 'store'])->name('comunicado.store');
+        Route::get('/comunicado/edit', [WelcomeController::class, 'edit'])->name('comunicado.edit');
+        
 
 
 
-        //Rutas para descargar y ver documentos complementarios de GNV
-        Route::get('/fichaTecnicaGnv/{idCert}', 'generarFichaTecnica')->name("fichaTecnicaGnv");
-        Route::get('/fichaTecnicaGnv/{idCert}/download', 'descargarFichaTecnica')->name("descargarFichaTecnicaGnv");
-        Route::get('/preConversionGnv/{idCert}', 'generarPreConversionGnv')->name("preConversionGnv");
-        Route::get('/checkListArriba/{idCert}', 'generarCheckListArribaGnv')->name("checkListArribaGnv");
-        Route::get('/checkListAbajo/{idCert}', 'generarCheckListAbajoGnv')->name("checkListAbajoGnv");
 
 
-        //Rutas para descargar certificado preconversion GLP
-        Route::get('/preConverGlp/{id}','generaPdfPreGlp')->name("generaPreGlpPdf");
-        Route::get('/preConverGlp/{id}/descargar', 'generaDescargaPreGlp')->name("descargarPreGlpPdf");
+        //RUTAS PARA STREAM Y DESCARGA DE PDFS
+        Route::controller(PdfController::class)->group(function () {
 
-        //Rutas para ver certificado anual GLP
-        Route::get('/certificado-anual-glp/{id}', 'generaPdfAnualGlp')->name("certificadoAnualGlp");
+            //Rutas para ver certificado anual GNV
+            Route::get('/certificado-anual/{id}', 'generaPdfAnualGnv')->name("certificadoAnualGnv");
+            Route::get('/duplicado-anual/{id}', 'generaDuplicadoAnualGnv')->name("duplicadoAnualGnv");
+            Route::get('/duplicado-anual-ex/{id}', 'generaDuplicadoExternoAnualGnv')->name("duplicadoExternoAnualGnv");
 
-        //Rutas para ver certificado inicial GLP
-        Route::get('/certificado-inicial-glp/{id}', 'generaPdfInicialGlp')->name("certificadoInicialGlp");
+            //Rutas para descargar certificado anual GNV
+            Route::get('/certificado-anual/{id}/descargar', 'descargarPdfAnualGnv')->name("descargarCertificadoAnualGnv");
+            Route::get('/duplicado-anual/{id}/descargar', 'descargarDuplicadoAnualGnv')->name("descargarDuplicadoAnualGnv");
+            Route::get('/duplicado-anual-ex/{id}/descargar', 'descargarDuplicadoExternoAnualGnv')->name("descargarDuplicadoExternoAnualGnv");
 
-        //Rutas para descargar certificado anual GLP
-        Route::get('/certificado-anual-glp/{id}/descargar', 'descargaPdfAnualGlp')->name("descargarCertificadoAnualGlp");
+            //Rutas para ver certificado inicial GNV
+            Route::get('/certificado-inicial/{id}', 'generaPdfInicialGnv')->name("certificadoInicialGnv");
+            Route::get('/duplicado-inicial/{id}', 'generaDuplicadoInicialGnv')->name("duplicadoInicialGnv");
+            Route::get('/duplicado-inicial-ex/{id}', 'generaDuplicadoExternoInicialGnv')->name("duplicadoExternoInicialGnv");
 
-        //Rutas para descargar certificado inicial GLP
-        Route::get('/certificado-inicial-glp/{id}/descargar', 'generaPdfInicialGlp')->name("descargarCertificadoInicialGlp");
+            //Rutas para descargar certificado inicial GNV
+            Route::get('/certificado-inicial/{id}/descargar', 'descargarPdfInicialGnv')->name("descargarCertificadoInicialGnv");
+            Route::get('/duplicado-inicial/{id}/descargar', 'descargarDuplicadoInicialGnv')->name("descargarDuplicadoInicialGnv");
+            Route::get('/duplicado-inicial-ex/{id}/descargar', 'descargarDuplicadoExternoInicialGnv')->name("descargarDuplicadoExternoInicialGnv");
 
-        //Rutas para descargar y ver documentos complementarios de GNV
-        Route::get('/fichaTecnicaGlp/{idCert}','generarFichaTecnicaGlp')->name("fichaTecnicaGlp");
-        Route::get('/fichaTecnicaGlp/{idCert}/descargar','descargarFichaTecnicaGlp')->name("descargarFichaTecnicaGlp");
-        Route::get('/checkListArribaGlp/{idCert}', 'generarCheckListArribaGlp')->name("checkListArribaGlp");
-        Route::get('/checkListAbajoGlp/{idCert}', 'generarCheckListAbajoGlp')->name("checkListAbajoGlp");
+            //Rutas para descargar certificado preconversion GNV
+            Route::get('/preConver/{id}', 'generaPdfPreGnv')->name("generaPreGnvPdf");
+            Route::get('/preConver/{id}/descargar', 'generaDescargaPreGnv')->name("descargarPreGnvPdf");
 
-        //Ruta para ver certificado modificacion
-        Route::get('/certificado-modificacion/{id}', 'generaPdfModificacion')->name("certificadoModificacion");
-        //Ruta para descargar certificado modificacion
-        Route::get('/certificado-modificacion/{id}/descargar', 'descargaPdfModificacion')->name("descargarCertificadoModificacion");
+            //Rutas para ver  y descargar pdf memorando
+            Route::get('/memorando/{id}', 'generaPdfMemorando')->name("certificadoMemo");
+            Route::get('/memorando/{id}/descargar', 'descargaPdfMemorando')->name("descargarCertiMemo");
 
-        //Rutas para generar cargo de materiales
-        Route::get('/cargo/{id}','generaCargo')->name('generaCargo');
+            //Rutas para ver y descargar pdf contrato
+            Route::get('/contrato/{id}', 'generaPdfContrato')->name("contratoTrabajo");
+            Route::get('/contrato/{id}/descargar', 'descargaPdfContrato')->name("descargarContratoTrabajo");
 
-        Route::get('/boletoAnalizadorDeGases/{id}', 'generaBoletoDeAnalizador')->name("analizadorGnv");
-    });
+
+
+            //Rutas para descargar y ver documentos complementarios de GNV
+            Route::get('/fichaTecnicaGnv/{idCert}', 'generarFichaTecnica')->name("fichaTecnicaGnv");
+            Route::get('/fichaTecnicaGnv/{idCert}/download', 'descargarFichaTecnica')->name("descargarFichaTecnicaGnv");
+            Route::get('/preConversionGnv/{idCert}', 'generarPreConversionGnv')->name("preConversionGnv");
+            Route::get('/checkListArriba/{idCert}', 'generarCheckListArribaGnv')->name("checkListArribaGnv");
+            Route::get('/checkListAbajo/{idCert}', 'generarCheckListAbajoGnv')->name("checkListAbajoGnv");
+
+
+            //Rutas para descargar certificado preconversion GLP
+            Route::get('/preConverGlp/{id}', 'generaPdfPreGlp')->name("generaPreGlpPdf");
+            Route::get('/preConverGlp/{id}/descargar', 'generaDescargaPreGlp')->name("descargarPreGlpPdf");
+
+            //Rutas para ver certificado anual GLP
+            Route::get('/certificado-anual-glp/{id}', 'generaPdfAnualGlp')->name("certificadoAnualGlp");
+
+            //Rutas para ver certificado inicial GLP
+            Route::get('/certificado-inicial-glp/{id}', 'generaPdfInicialGlp')->name("certificadoInicialGlp");
+
+            //Rutas para descargar certificado anual GLP
+            Route::get('/certificado-anual-glp/{id}/descargar', 'descargaPdfAnualGlp')->name("descargarCertificadoAnualGlp");
+
+            //Rutas para descargar certificado inicial GLP
+            Route::get('/certificado-inicial-glp/{id}/descargar', 'generaPdfInicialGlp')->name("descargarCertificadoInicialGlp");
+
+            //Rutas para descargar y ver documentos complementarios de GNV
+            Route::get('/fichaTecnicaGlp/{idCert}', 'generarFichaTecnicaGlp')->name("fichaTecnicaGlp");
+            Route::get('/fichaTecnicaGlp/{idCert}/descargar', 'descargarFichaTecnicaGlp')->name("descargarFichaTecnicaGlp");
+            Route::get('/checkListArribaGlp/{idCert}', 'generarCheckListArribaGlp')->name("checkListArribaGlp");
+            Route::get('/checkListAbajoGlp/{idCert}', 'generarCheckListAbajoGlp')->name("checkListAbajoGlp");
+
+            //Ruta para ver certificado modificacion
+            Route::get('/certificado-modificacion/{id}', 'generaPdfModificacion')->name("certificadoModificacion");
+            //Ruta para descargar certificado modificacion
+            Route::get('/certificado-modificacion/{id}/descargar', 'descargaPdfModificacion')->name("descargarCertificadoModificacion");
+
+            //Rutas para generar cargo de materiales
+            Route::get('/cargo/{id}', 'generaCargo')->name('generaCargo');
+
+            Route::get('/boletoAnalizadorDeGases/{id}', 'generaBoletoDeAnalizador')->name("analizadorGnv");
+        });
 
 
 
         //Rutas para los notificaciones
-    Route::get("expediente-fotos/{id}/download","App\Http\Controllers\ZipController@descargaFotosExpediente")->name("descargaFotosExp");
-    Route::get("Notification/{idNoti}/{idSoli}","App\Http\Controllers\NotificationController@marcarUnaNotificación")->name("leerNotificacion");
-    Route::get("Notification/{idNoti}anular","App\Http\Controllers\AnulacionController@marcarAnulacion")->name("leerAnular");
-    Route::get("Notification/{idNoti}eliminar","App\Http\Controllers\EliminacionController@marcarEliminacion")->name("leerEliminar");
-    Route::get("Notification/{idNoti}memorando","App\Http\Controllers\MemorandoController@marcarMemorando")->name("leerMemorando");
-    //Route::get('/leer-memorando/{notification}', [MemorandoController::class, 'marcarMemorando'])->name('leerMemorando');
+        Route::get("expediente-fotos/{id}/download", "App\Http\Controllers\ZipController@descargaFotosExpediente")->name("descargaFotosExp");
+        Route::get("Notification/{idNoti}/{idSoli}", "App\Http\Controllers\NotificationController@marcarUnaNotificación")->name("leerNotificacion");
+        Route::get("Notification/{idNoti}anular", "App\Http\Controllers\AnulacionController@marcarAnulacion")->name("leerAnular");
+        Route::get("Notification/{idNoti}eliminar", "App\Http\Controllers\EliminacionController@marcarEliminacion")->name("leerEliminar");
+        Route::get("Notification/{idNoti}memorando", "App\Http\Controllers\MemorandoController@marcarMemorando")->name("leerMemorando");
+        //Route::get('/leer-memorando/{notification}', [MemorandoController::class, 'marcarMemorando'])->name('leerMemorando');
 
 
-    Route::get('download/{path}', function($path) { return Illuminate\Support\Facades\Storage::download($path);})->where('path','.*');
-    Route::get('/CargoPdf/{id}', function ($id) {
-        $am= new AsignacionMateriales();
-        return  $am->enviar($id);
-    })->name('cargoPdf');
-    Route::get('/Certificado/{id}', function ($id) {
-        $ser= new Servicio();
-        return  $ser->generaPdfAnualGnv($id);
-    })->name('certificado');
-    Route::get('/Certificado/{id}/download', function ($id) {
-        $ser= new Servicio();
-        return  $ser->descargaPdfAnualGnv($id);
-    })->name('descargarCertificado');
-    Route::get('/CertificadoInicial/{id}', function ($id) {
-        $ser= new Servicio();
-        return  $ser->generaPdfInicialGnv($id);
-    })->name('certificadoInicial');
-    Route::get('/CertificadoInicial/{id}/download', function ($id) {
-        $ser= new Servicio();
-        return  $ser->descargaPdfInicialGnv($id);
-    })->name('descargarInicial');
-
-});
+        Route::get('download/{path}', function ($path) {
+            return Illuminate\Support\Facades\Storage::download($path);
+        })->where('path', '.*');
+        Route::get('/CargoPdf/{id}', function ($id) {
+            $am = new AsignacionMateriales();
+            return  $am->enviar($id);
+        })->name('cargoPdf');
+        Route::get('/Certificado/{id}', function ($id) {
+            $ser = new Servicio();
+            return  $ser->generaPdfAnualGnv($id);
+        })->name('certificado');
+        Route::get('/Certificado/{id}/download', function ($id) {
+            $ser = new Servicio();
+            return  $ser->descargaPdfAnualGnv($id);
+        })->name('descargarCertificado');
+        Route::get('/CertificadoInicial/{id}', function ($id) {
+            $ser = new Servicio();
+            return  $ser->generaPdfInicialGnv($id);
+        })->name('certificadoInicial');
+        Route::get('/CertificadoInicial/{id}/download', function ($id) {
+            $ser = new Servicio();
+            return  $ser->descargaPdfInicialGnv($id);
+        })->name('descargarInicial');
+    });

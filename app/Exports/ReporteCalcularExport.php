@@ -106,6 +106,9 @@ class ReporteCalcularExport implements FromCollection, WithHeadings, WithMapping
             $secondPart = $data['placa'] ?? 'EN TRAMITE';
         }
 
+        // Determinar el valor de 'externo'
+        $externo = isset($data['externo']) ? ($data['externo'] == 1 ? 'Externo' : null) : null;
+
 
         switch ($data['tipo_modelo']) {
             case 'App\Models\Certificacion':
@@ -116,10 +119,8 @@ class ReporteCalcularExport implements FromCollection, WithHeadings, WithMapping
                     $data['inspector'] ?? 'N.A',
                     $secondPart, //$data['placa'] ?? 'EN TRAMITE'
                     $data['servicio'] ?? 'N.A',
-                    //$data['estado'] ?? 'S.E',
-                    //$data['pagado'],
                     '',
-                    '',
+                    $externo ?? null,
                     $precio ?? 'S.P',
                     'certificacion',
                 ];
@@ -132,10 +133,8 @@ class ReporteCalcularExport implements FromCollection, WithHeadings, WithMapping
                     $data['inspector'] ?? 'N.A',
                     $data['placa'] ?? 'EN TRAMITE',
                     $data['servicio'] ?? 'N.A',
-                    //$data['estado'] ?? 'S.E',
-                    //$data['pagado'],
                     '',
-                    '',
+                    $externo ?? null,
                     $precio ?? 'S.P',
                     'certificacion pendiente',
                 ];
@@ -148,8 +147,6 @@ class ReporteCalcularExport implements FromCollection, WithHeadings, WithMapping
                     $data['inspector'] ?? 'N.A',
                     $data['placa'] ?? 'EN TRAMITE',
                     $data['servicio'] ?? 'N.A',
-                    //$data['estado'] ?? 'S.E',
-                    //$data['pagado'],
                     '',
                     '',
                     $precio ?? 'S.P',
@@ -165,8 +162,6 @@ class ReporteCalcularExport implements FromCollection, WithHeadings, WithMapping
                     $data['inspector'] ?? 'N.A',
                     $data['placa'] ?? 'EN TRAMITE',
                     $data['servicio'] ?? 'N.A',
-                    //$data['estado'] ?? 'S.E',
-                    //$data['pagado'],
                     '',
                     '',
                     $precio ?? 'S.P',

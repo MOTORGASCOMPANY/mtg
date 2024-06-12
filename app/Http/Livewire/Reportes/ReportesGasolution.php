@@ -106,8 +106,8 @@ class ReportesGasolution extends Component
                 $query->whereNotIn('id', [37, 117, 201]);
             })
             ->rangoFecha($this->fechaInicio, $this->fechaFin)
-            ->where('estado', 1)
-            ->whereNull('idCertificacion')
+            //->where('estado', 1)
+            //->whereNull('idCertificacion')
             ->get();
 
 
@@ -188,7 +188,7 @@ class ReportesGasolution extends Component
         return $disc;
     }
 
-    public function encontrarDiferenciaPorPlaca($lista1, $lista2)
+    /*public function encontrarDiferenciaPorPlaca($lista1, $lista2)
     {
         //$diferencias = [];
         $diferencias = collect();
@@ -208,6 +208,46 @@ class ReportesGasolution extends Component
                 if ($placa1 === $placa2 && $inspector1 === $inspector2 && $servicio1 === $servicio2) {  
                     $encontrado = true;
                     break;
+                }
+            }
+
+            if (!$encontrado) {
+                $diferencias[] = $elemento1;
+            }
+        }
+
+        return $diferencias;
+    }*/
+
+    public function encontrarDiferenciaPorPlaca($lista1, $lista2)
+    {
+        //$diferencias = [];
+        $diferencias = collect();
+
+        foreach ($lista1 as $elemento1) {
+            $placa1 = $elemento1['placa'];
+            $inspector1 = $elemento1['inspector'];
+            $servicio1 = $elemento1['servicio'];
+            $encontrado = false;
+
+
+
+            foreach ($lista2 as $elemento2) {
+                $placa2 = $elemento2['placa'];
+                $inspector2 = $elemento2['inspector'];
+                $servicio2 = $elemento2['servicio'];
+
+                if ($placa1 === $placa2 && $inspector1 === $inspector2) {
+                    if (
+                        ($elemento2['tipo_modelo'] == 'App\Models\CertificacionPendiente' && $servicio1 == 'Revisión anual GNV') ||
+                        ($servicio2 == 'Conversión a GNV + Chip' && $servicio1 == 'Conversión a GNV')
+                    ) {
+                        $encontrado = true;
+                        break;
+                    } else if ($servicio1 === $servicio2) {
+                        $encontrado = true;
+                        break;
+                    }
                 }
             }
 

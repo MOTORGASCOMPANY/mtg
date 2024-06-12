@@ -176,6 +176,7 @@ class ReportesMtg extends Component
                 "precio" => $certi->precio,
                 "pagado" => $certi->pagado,
                 "estado" => $certi->estado,
+                "externo" => $certi->externo,
                 "tipo_modelo" => $certi::class,
                 "fecha" => $certi->created_at,
 
@@ -196,6 +197,7 @@ class ReportesMtg extends Component
                 "precio" => $cert_pend->precio,
                 "pagado" => $cert_pend->pagado,
                 "estado" => $cert_pend->estado,
+                "externo" => $cert_pend->externo,
                 "tipo_modelo" => $cert_pend::class,
                 "fecha" => $cert_pend->created_at,
             ];
@@ -363,6 +365,7 @@ class ReportesMtg extends Component
                 "precio" => $registro->precio,
                 "pagado" => $registro->pagado,
                 "estado" => $registro->estado,
+                "externo" => Null,
                 "tipo_modelo" => $registro::class,
                 "fecha" => $registro->fecha,
             ];

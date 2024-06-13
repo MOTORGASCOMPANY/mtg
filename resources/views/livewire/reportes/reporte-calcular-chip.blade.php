@@ -258,7 +258,7 @@
 
                                                         </td>
                                                         <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
-                                                            {{ isset($data['externo']) ? ($data['externo'] == 1 ? 'Externo' : null) : 'N.A' }}
+                                                            {{ isset($data['externo']) ? ($data['externo'] == 1 ? 'Externo' : null) : null }}
                                                         </td>
                                                         <td
                                                             class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">

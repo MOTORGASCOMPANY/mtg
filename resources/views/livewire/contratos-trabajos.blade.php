@@ -96,8 +96,17 @@
                                     <x-jet-input-error for="pago" />
                                 </div>
                             </div>
-                            {{--
                             <div class="grid grid-cols-2 gap-4 py-2">
+                                <div>
+                                    <x-jet-label value="Cumpleaños:" />
+                                    <x-jet-input type="date"
+                                        class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full "
+                                        wire:model="cumpleañosEmpleado" />
+                                    <x-jet-input-error for="cumpleañosEmpleado" />
+                                </div>
+                            </div>
+                            {{--
+                             <div class="grid grid-cols-2 gap-4 py-2">
                                 <div>
                                     <x-jet-label value="Contrato Anterior (si aplica):" />
                                     <select wire:model="renovacion_id"
@@ -109,13 +118,13 @@
                                     </select>
                                     <x-jet-input-error for="renovacion_id" />
                                 </div>
-                            </div>
+                             </div>
                             --}}
                         </div>
                     </div>
                     
                     {{--
-                    <div class="mb-6 px-8 py-2">
+                     <div class="mb-6 px-8 py-2">
                         @if ($contratoPreview)
                             <div class="bg-gray-400 py-4 px-6 rounded-t-lg">
                                 <span class="text-lg font-semibold text-white dark:text-gray-400">Vista Previa del
@@ -131,7 +140,7 @@
                                 'pago' => $contratoPreview['pago'],
                             ])
                         @endif
-                    </div>
+                     </div>
                     --}}
                 </div>
             </div>

@@ -162,9 +162,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/Solicitud-de-materiales', Solicitud::class)->middleware('can:solicitud')->name('solicitud');
         Route::get('/Crear-solicitud', CreateSolicitud::class)->middleware('can:nuevaSolicitud')->name('nuevaSolicitud');
         Route::get('/RevisionExpedientes', RevisionExpedientes::class)->middleware('can:revisionExpedientes')->name('revisionExpedientes');
-        Route::get('/dashboard', function () {
+        /*Route::get('/dashboard', function () {
             return view('dashboard');
-        })->name('dashboard');
+        })->name('dashboard');*/
         Route::get('/Listado-Certificaciones', ListaCertificaciones::class)->middleware('can:certificaciones')->name('certificaciones');
         Route::get('/ListadoChips', ListadoChips::class)->name('ListadoChips'); //->middleware('can:ListadoChips')
         Route::get('/Administracion-de-certificaciones', AdministracionCertificaciones::class)->middleware('can:admin.certificaciones')->name('admin.certificaciones');
@@ -258,7 +258,6 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/ListaMemorando', ListaMemorandos::class)->middleware('can:ListaMemorando')->name('ListaMemorando');
 
         //Rutas para contrato trabajo - documentos empleado - vacaciones
-
         Route::get('/Empleados', Empleados::class)->middleware('can:Empleados')->name('Empleados'); //Lista de empleados
         Route::get('/Contratos', ContratosTrabajos::class)->name('ContratoTrabajo'); //Crear contrato trabajo
         Route::get('/Empleado/{idEmpleado}', EditarEmpleado::class)->name('editar-empleado'); //Para subir sus doc del empleado
@@ -266,17 +265,13 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/Empleado/{idEmpleado}/download', [DocumentosController::class, 'downloadEmpleado'])->name('download_docEmpleado'); //Para descargar doc de empleado 
         Route::get('/Tablas/TiposDocumentosEmpleados', TiposDocumentosEmple::class)->name('table.TiposDocumentosEmpleados'); //Tabla para tipos de doc de empleado
 
-
-        /*Rutas para comunicado */
-        Route::get('/comunicado', [WelcomeController::class, 'index'])->middleware('can:comunicado.index')->name('comunicado.index');
-        Route::post('/comunicado/update', [WelcomeController::class, 'update'])->name('comunicado.update');
-        Route::post('/comunicado/deactivate', [WelcomeController::class, 'deactivate'])->name('comunicado.deactivate');
-        Route::post('/comunicado/uploadImage', [WelcomeController::class, 'uploadImage'])->name('comunicado.uploadImage');
-        Route::post('/comunicado', [WelcomeController::class, 'store'])->name('comunicado.store');
-        Route::get('/comunicado/edit', [WelcomeController::class, 'edit'])->name('comunicado.edit'); 
-
-
-
+        // Rutas para emitir comunicado 
+        Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', [WelcomeController::class, 'index'])->name('dashboard');
+        Route::get('/comunicado', [WelcomeController::class, 'showComunicadoForm'])->middleware('can:comunicado.createOrUpdateForm')->name('comunicado.createOrUpdateForm');
+        Route::post('/comunicado/store', [WelcomeController::class, 'store'])->name('comunicado.store');
+        Route::put('/comunicado/update/{comunicado}', [WelcomeController::class, 'update'])->name('comunicado.update');
+        Route::post('/comunicado/deactivate/{comunicado}', [WelcomeController::class, 'deactivate'])->name('comunicado.deactivate');
+        Route::post('/comunicado/upload-image', [WelcomeController::class, 'uploadImage'])->name('comunicado.uploadImage');
 
         //RUTAS PARA STREAM Y DESCARGA DE PDFS
         Route::controller(PdfController::class)->group(function () {
@@ -355,8 +350,6 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
 
             Route::get('/boletoAnalizadorDeGases/{id}', 'generaBoletoDeAnalizador')->name("analizadorGnv");
         });
-
-
 
         //Rutas para los notificaciones
         Route::get("expediente-fotos/{id}/download", "App\Http\Controllers\ZipController@descargaFotosExpediente")->name("descargaFotosExp");

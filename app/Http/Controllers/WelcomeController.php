@@ -4,75 +4,62 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Comunicados;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
+use App\Models\ContratoTrabajo;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class WelcomeController extends Controller
 {
     public function index()
     {
-        $comunicado = session('comunicado', null);
+        $comunicado = Comunicados::where('activo', true)->first();
+        return view('dashboard', compact('comunicado'));
+    }
+
+    public function showComunicadoForm()
+    {
+        $comunicado = Comunicados::where('activo', true)->first();
         return view('comunicado', compact('comunicado'));
     }
 
     public function store(Request $request)
     {
-        /*$request->validate([
+        $data = $request->validate([
             'titulo' => 'required|string|max:255',
             'contenido' => 'required|string',
             'imagen' => 'nullable|string',
-        ]);*/
+        ]);
 
-        session(['comunicado' => [
-            'titulo' => $request->titulo,
-            'contenido' => $request->contenido,
-            'imagen' => $request->imagen,
-            'user_id' => Auth::id(),
-            'activo' => true,
-        ]]);
+        $data['activo'] = true;
+        Comunicados::create($data);
 
         return redirect()->route('dashboard')->with('success', 'Comunicado creado exitosamente.');
-    }     
+    }
 
-    public function update(Request $request)
+    public function update(Request $request, Comunicados $comunicado)
     {
-        /*$request->validate([
+        $data = $request->validate([
             'titulo' => 'required|string|max:255',
             'contenido' => 'required|string',
             'imagen' => 'nullable|string',
-        ]);*/
+        ]);
 
-        session(['comunicado' => [
-            'titulo' => $request->titulo,
-            'contenido' => $request->contenido,
-            'imagen' => $request->imagen,
-            'user_id' => Auth::id(),
-            'activo' => true,
-        ]]);
+        $comunicado->update($data);
 
         return redirect()->route('dashboard')->with('success', 'Comunicado actualizado exitosamente.');
     }
 
-    public function edit()
+    public function deactivate(Comunicados $comunicado)
     {
-        $comunicado = session('comunicado', null);
-        return view('edit', compact('comunicado'));
-    }
-
-    // Método para desactivar el comunicado
-    public function deactivate()
-    {
-        if (session()->has('comunicado')) {
-            $comunicado = session('comunicado');
-            $comunicado['activo'] = false;
-            session(['comunicado' => $comunicado]);
-        }
+        $comunicado->update(['activo' => false]);
 
         return redirect()->route('dashboard')->with('success', 'Comunicado desactivado exitosamente.');
     }
 
-    //Metodo para cargar imagenes 
     public function uploadImage(Request $request)
     {
         $request->validate([
@@ -83,6 +70,6 @@ class WelcomeController extends Controller
         $imageName = time() . '.' . $image->getClientOriginalExtension();
         $image->move(public_path('images/images'), $imageName);
 
-        return redirect()->route('comunicado.index');
+        return redirect()->route('comunicado.createOrUpdateForm');
     }
 }

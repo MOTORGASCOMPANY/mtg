@@ -40,7 +40,7 @@
                 <thead class="bg-slate-600 border-b font-bold text-white">
 
                     <tr>
-                        <th scope="col" class=" bg-gray-100" colspan="7"></th>
+                        <th scope="col" class=" bg-gray-100" colspan="8"></th>
                         <th scope="col" class="text-sm font-medium font-semibold text-white" colspan="3">
                             <div class="flex justify-center items-center">
                                 <span>Vacaciones</span>
@@ -84,6 +84,9 @@
                         </th>
                         <th scope="col" class="text-sm font-medium font-semibold text-white px-4 py-3 text-left">
                             Area
+                        </th>
+                        <th scope="col" class="text-sm font-medium font-semibold text-white px-4 py-3 text-left">
+                            Cumpleaños
                         </th>
                         <th scope="col" class="text-sm font-medium font-semibold text-white  py-3">
                             <div class="flex justify-center items-center flex-col">
@@ -159,6 +162,13 @@
                                 <div class="flex items-center">
                                     <p class="text-sm leading-none text-gray-600 ml-2">
                                         {{ $emple->cargo }}
+                                    </p>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="flex items-center">
+                                    <p class="text-sm leading-none text-gray-600 ml-2">
+                                        {{ $emple->cumpleañosEmpleado ?? null }}
                                     </p>
                                 </div>
                             </td>

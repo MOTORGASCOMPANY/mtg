@@ -1,14 +1,49 @@
+@php
+    use App\Models\ContratoTrabajo;
+    use Carbon\Carbon;
+    use Illuminate\Support\Facades\DB;
+
+    // Obtener los cumpleaños que se aproximan en una semana
+    $hoy = Carbon::now();
+    $enUnaSemana = Carbon::now()->addWeek();
+
+    $cumpleañosProximos = ContratoTrabajo::whereBetween(DB::raw('DATE_FORMAT(cumpleañosEmpleado, "%m-%d")'), [
+        $hoy->format('m-d'),
+        $enUnaSemana->format('m-d'),
+    ])->get();
+@endphp
+
 <div>
     <div class="p-6 sm:px-20 bg-white border-b border-gray-200">
         <div class="mt-8 text-2xl">
+            
             Hola, {{ Auth::user()->name }} 👋
             <span> </span>
 
             @if (Auth()->user()->unreadNotifications->count() > 0)
-                <div class="block py-4 text-base text-gray-500">
+                <div class="block py-2 text-base text-gray-500">
                     {{ __('Tienes ' . Auth()->user()->unreadNotifications->count() . ' notificaciones sin abrir 🔔') }}
                 </div>
             @endif
+            
+            {{-- Aquí mostramos los cumpleaños que se aproximan en un rango de 1 semana --}}
+            @hasanyrole('administrador|Administrador del sistema')
+                @if ($cumpleañosProximos->isNotEmpty())
+                    <div class="block py-2 text-base text-gray-500">
+                        <h3>Cumpleaños Próximos:</h3>
+                        <ul>
+                            @foreach ($cumpleañosProximos as $empleado)
+                                <li class="mt-2">
+                                    🎂 {{ $empleado->empleado->name }}
+                                    📅 {{ \Carbon\Carbon::parse($empleado->cumpleañosEmpleado)->format('d/m/Y') }}
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @else
+                @endif
+            @endhasanyrole
+
         </div>
     </div>
 
@@ -182,59 +217,6 @@
         </div>
     @endhasanyrole
     --}}
-
-
-
-    {{-- COMUNICADO CON CONTROLLER --}}
-    @hasanyrole('Administrador taller|inspector|supervisor|administrador|Administrador del sistema')
-        @if (session('comunicado')  && session('comunicado')['activo'])
-            <div id="comunicadoModal" class="mt-16 fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title"
-                role="dialog" aria-modal="true">
-                <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                    <!-- FONDO OSCURO MODAL -->
-                    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
-                    <div class="inline-block align-middle bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-                        <button class="absolute top-0 right-0 mt-4 mr-4 focus:outline-none" onclick="closeModal()">
-                            <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M6 18L18 6M6 6l12 12"></path>
-                            </svg>
-                        </button>
-                        <a class="py-2 h-1/2">
-                            <img src="{{ asset('images/images/logomemo.png') }}" />
-                        </a>
-                        <div class="bg-white px-6 pt-5 pb-6 sm:p-6 sm:pb-4 relative">
-                            <div class="text-center">
-                                <h3 class="text-lg font-medium text-gray-900">{{ session('comunicado')['titulo'] ?? null }}</h3>                                
-                                <p class="mt-2 text-sm text-gray-500 mb-4" style="text-align: justify;"><!--  padding: 0 1rem; -->
-                                    {!! nl2br(session('comunicado')['contenido'] ?? null) !!}
-                                </p>
-                                @if(session('comunicado')['imagen'] ?? null)
-                                    <img src="{{ asset(session('comunicado')['imagen']) }}" alt="Imagen del comunicado" class="mt-4 mx-auto">                                
-                                @endif
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @endif
-    @endhasanyrole 
-
-
-
-    <script>
-        function openModal() {
-            document.body.classList.add('overflow-hidden');
-            document.getElementById('comunicadoModal').classList.remove('hidden');
-        }
-
-        function closeModal() {
-            document.body.classList.remove('overflow-hidden');
-            document.getElementById('comunicadoModal').classList.add('hidden');
-        }
-    </script>
 
 </div>
 

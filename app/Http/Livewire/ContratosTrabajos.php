@@ -16,7 +16,7 @@ class ContratosTrabajos extends Component
     use pdfTrait;
 
     public $inspectores;
-    public $idUser, $dniEmpleado, $domicilioEmpleado, $fechaInicio, $fechaExpiracion, $cargo, $pago, $celularEmpleado, $correoEmpleado, $cumpleañosEmpleado ,$renovacion_id;
+    public $idUser, $dniEmpleado, $domicilioEmpleado, $fechaInicio, $fechaExpiracion, $cargo, $pago, $celularEmpleado, $correoEmpleado, $cumpleaosEmpleado ,$renovacion_id;
     public $contrato;
     public $mostrarCampos = false;
     public $contratoPreview = null;
@@ -59,7 +59,7 @@ class ContratosTrabajos extends Component
                 'pago' => $this->pago,
                 'celularEmpleado' => $this->celularEmpleado,
                 'correoEmpleado' => $this->correoEmpleado,
-                'cumpleañosEmpleado' => $this->cumpleañosEmpleado,
+                'cumpleaosEmpleado' => $this->cumpleaosEmpleado,
 
             ]);
 
@@ -82,7 +82,7 @@ class ContratosTrabajos extends Component
             ]);
 
             $this->contrato = $nuevoContrato;
-            $this->reset(['idUser', 'dniEmpleado', 'domicilioEmpleado', 'fechaInicio', 'fechaExpiracion', 'cargo', 'pago', 'celularEmpleado', 'correoEmpleado', 'cumpleañosEmpleado']);
+            $this->reset(['idUser', 'dniEmpleado', 'domicilioEmpleado', 'fechaInicio', 'fechaExpiracion', 'cargo', 'pago', 'celularEmpleado', 'correoEmpleado', 'cumpleaosEmpleado']);
             $this->emit("minAlert", ["titulo" => "¡EXCELENTE TRABAJO!", "mensaje" => "El contrato se realizó correctamente", "icono" => "success"]);
         } catch (\Exception $e) {
             $this->emit("minAlert", ["titulo" => "¡ERROR!", "mensaje" => "Ocurrió un error al crear el contrato.", "icono" => "error"]);

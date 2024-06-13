@@ -20,7 +20,7 @@ class ContratoTrabajo extends Model
         'pago',
         'celularEmpleado',
         'correoEmpleado',
-        'cumpleañosEmpleado',
+        'cumpleaosEmpleado',
         //'renovacion_id',
     ];
 

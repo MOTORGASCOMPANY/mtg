@@ -28,6 +28,7 @@ class Empleados extends Component
         'emp.pago' => 'required|numeric',
         'emp.celularEmpleado' => 'required|digits:9',
         'emp.correoEmpleado' => 'required|email',
+        'emp.cumpleaosEmpleado' => 'required|date',
     ];
 
     public function mount()
@@ -90,6 +91,7 @@ class Empleados extends Component
             'emp.pago' => 'required|numeric',
             'emp.celularEmpleado' => 'required|digits:9',
             'emp.correoEmpleado' => 'required|email',
+            'emp.cumpleaosEmpleado' => 'required|date',
         ];
 
         $this->validate($rules);

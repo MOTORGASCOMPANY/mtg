@@ -1,4 +1,17 @@
+@php
+    use App\Models\ContratoTrabajo;
+    use Carbon\Carbon;
+    use Illuminate\Support\Facades\DB;
 
+    // Obtener los cumpleaños que se aproximan en una semana
+    $hoy = Carbon::now();
+    $enUnaSemana = Carbon::now()->addWeek();
+
+    $cumpleañosProximos = ContratoTrabajo::whereBetween(DB::raw('DATE_FORMAT(cumpleaosEmpleado, "%m-%d")'), [
+        $hoy->format('m-d'),
+        $enUnaSemana->format('m-d'),
+    ])->get();
+@endphp
 
 <div>
     <div class="p-6 sm:px-20 bg-white border-b border-gray-200">
@@ -13,7 +26,7 @@
                 </div>
             @endif
             
-            {{-- Aquí mostramos los cumpleaños que se aproximan en un rango de 1 semana 
+            {{-- Aquí mostramos los cumpleaños que se aproximan en un rango de 1 semana --}}
             @hasanyrole('administrador|Administrador del sistema')
                 @if ($cumpleañosProximos->isNotEmpty())
                     <div class="block py-2 text-base text-gray-500">
@@ -21,15 +34,15 @@
                         <ul>
                             @foreach ($cumpleañosProximos as $empleado)
                                 <li class="mt-2">
-                                    🎂 {{ $empleado->empleado->name }}
-                                    📅 {{ \Carbon\Carbon::parse($empleado->cumpleañosEmpleado)->format('d/m/Y') }}
+                                    🎂 {{ $empleado->empleado->name ?? null }}
+                                    📅 {{ \Carbon\Carbon::parse($empleado->cumpleañosEmpleado)->format('d/m/Y') ?? null }}
                                 </li>
                             @endforeach
                         </ul>
                     </div>
                 @else
                 @endif
-            @endhasanyrole--}}
+            @endhasanyrole
 
         </div>
     </div>

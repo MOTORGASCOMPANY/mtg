@@ -101,8 +101,8 @@
                                     <x-jet-label value="Cumpleaños:" />
                                     <x-jet-input type="date"
                                         class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full "
-                                        wire:model="cumpleañosEmpleado" />
-                                    <x-jet-input-error for="cumpleañosEmpleado" />
+                                        wire:model="cumpleaosEmpleado" />
+                                    <x-jet-input-error for="cumpleaosEmpleado" />
                                 </div>
                             </div>
                             {{--

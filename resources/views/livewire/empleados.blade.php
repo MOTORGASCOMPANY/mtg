@@ -168,7 +168,7 @@
                             <td>
                                 <div class="flex items-center">
                                     <p class="text-sm leading-none text-gray-600 ml-2">
-                                        {{ $emple->cumpleañosEmpleado ?? null }}
+                                        {{ $emple->cumpleaosEmpleado ?? null }}
                                     </p>
                                 </div>
                             </td>
@@ -324,6 +324,15 @@
                         class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full "
                         wire:model="emp.pago" />
                     <x-jet-input-error for="emp.pago" />
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 py-2">
+                <div>
+                    <x-jet-label value="Cumpleaños:" />
+                    <x-jet-input type="date"
+                        class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full "
+                        wire:model="emp.cumpleaosEmpleado" />
+                    <x-jet-input-error for="emp.cumpleaosEmpleado" />
                 </div>
             </div>
         </x-slot>

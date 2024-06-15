@@ -53,6 +53,7 @@ use App\Http\Livewire\PrestamoMateriales;
 use App\Http\Livewire\Prueba;
 use App\Http\Livewire\PruebaExcel;
 use App\Http\Livewire\Reportes\AdministracionDeServiciosImportados;
+use App\Http\Livewire\Reportes\Rentabilidad;
 use App\Http\Livewire\Reportes\ReporteCalcular;
 use App\Http\Livewire\Reportes\ReporteCalcularChip;
 use App\Http\Livewire\Reportes\ReporteCalcularGasol;
@@ -231,6 +232,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         //Ruta para ver los reportes de materiales
         Route::get('/Reporte-salida-materiales', ReporteSalidaMateriales::class)->middleware('can:reportes.reporteSalidaMateriales')->name('reportes.reporteSalidaMateriales'); // reporte salida materiales
         Route::get('/ConsultarHoja', ConsultarHoja::class)->middleware('can:ConsultarHoja')->name('ConsultarHoja'); //Consultar Hoja material
+
+        //Ruta para rentabilidad taller
+        Route::get('/Rentabilidad', Rentabilidad::class)->name('Rentabilidad');
 
         //Prueba Fotos
         Route::get('/CargaFotos', CargaFotos::class)->name('CargaFotos');

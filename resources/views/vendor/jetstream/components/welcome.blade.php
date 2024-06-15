@@ -35,7 +35,7 @@
                             @foreach ($cumpleañosProximos as $empleado)
                                 <li class="mt-2">
                                     🎂 {{ $empleado->empleado->name ?? null }}
-                                    📅 {{ \Carbon\Carbon::parse($empleado->cumpleañosEmpleado)->format('d/m/Y') ?? null }}
+                                    📅 {{ \Carbon\Carbon::parse($empleado->cumpleaosEmpleado)->translatedFormat('d') }} de {{ \Carbon\Carbon::parse($empleado->cumpleaosEmpleado)->translatedFormat('F') }} del {{ \Carbon\Carbon::now()->year }}
                                 </li>
                             @endforeach
                         </ul>

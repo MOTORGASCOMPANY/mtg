@@ -98,7 +98,7 @@
                             </div>
                             <div class="grid grid-cols-2 gap-4 py-2">
                                 <div>
-                                    <x-jet-label value="Cumpleaños:" />
+                                    <x-jet-label value="Fecha nacimiento:" />
                                     <x-jet-input type="date"
                                         class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full "
                                         wire:model="cumpleaosEmpleado" />

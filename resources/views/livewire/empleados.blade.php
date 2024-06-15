@@ -77,16 +77,16 @@
                             Domicilio
                         </th>
                         <th scope="col" class="text-sm font-medium font-semibold text-white px-4 py-3 text-left">
-                            Fecha Inicio
+                            F. Inicio
                         </th>
                         <th scope="col" class="text-sm font-medium font-semibold text-white px-4 py-3 text-left">
-                            Fecha Fin
+                            F. Fin
                         </th>
                         <th scope="col" class="text-sm font-medium font-semibold text-white px-4 py-3 text-left">
                             Area
                         </th>
                         <th scope="col" class="text-sm font-medium font-semibold text-white px-4 py-3 text-left">
-                            Cumpleaños
+                            F. Nacimiento
                         </th>
                         <th scope="col" class="text-sm font-medium font-semibold text-white  py-3">
                             <div class="flex justify-center items-center flex-col">
@@ -167,7 +167,7 @@
                             </td>
                             <td>
                                 <div class="flex items-center">
-                                    <p class="text-sm leading-none text-gray-600 ml-2">
+                                    <p class="pl-4 text-sm leading-none text-gray-600 ml-2">
                                         {{ $emple->cumpleaosEmpleado ?? null }}
                                     </p>
                                 </div>
@@ -328,7 +328,7 @@
             </div>
             <div class="grid grid-cols-2 gap-4 py-2">
                 <div>
-                    <x-jet-label value="Cumpleaños:" />
+                    <x-jet-label value="Fecha de Nacimiento:" />
                     <x-jet-input type="date"
                         class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full "
                         wire:model="emp.cumpleaosEmpleado" />

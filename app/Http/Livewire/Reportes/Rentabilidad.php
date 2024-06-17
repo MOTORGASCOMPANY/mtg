@@ -2,22 +2,28 @@
 
 namespace App\Http\Livewire\Reportes;
 
+use App\Models\Certificacion;
+use App\Models\CertificacionPendiente;
+use App\Models\ServiciosImportados;
 use App\Models\Taller;
 use App\Models\TipoServicio;
 use App\Models\User;
 use Livewire\Component;
+use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class Rentabilidad extends Component
 {
-    public $talleres, $inspectores, $certis, $tipos;
-    public $taller = [];
-    public $ins = [];
-    public $servicio;
-    public $fechaInicio;
-    public $fechaFin;
-    public $mostrarResultados = false;
+    public $talleres, $inspectores, $tipos;
+    public $taller = [], $ins = [], $servicio, $fechaInicio, $fechaFin;
+    public $tabla, $diferencias, $importados, $tabla2;
+    public $grupotalleres;
+    public $ingresosPorTaller = [];
+    public $certificacionesPorTaller = [];
+    public $ingresosPorServicio = [];
+    public $ingresosMensuales = [];
+    //public $mostrarResultados = false;
 
     protected $rules = [
         "fechaInicio" => 'required|date',
@@ -34,88 +40,259 @@ class Rentabilidad extends Component
         $this->tipos = TipoServicio::all();
     }
 
-    public function generarReporte()
+    public function procesar()
     {
         $this->validate();
-        $this->mostrarResultados = true; 
+        $this->tabla = $this->generaData();
+        $this->importados = $this->cargaServiciosGasolution();
+        $this->diferencias = $this->encontrarDiferenciaPorPlaca($this->tabla, $this->importados);
+        $serviciosPermitidos = ['Conversión a GLP', 'Revisión anual GLP', 'Modificación', 'Duplicado GNV', 'Conversión a GNV + Chip', 'Chip por deterioro', 'Pre-inicial GNV', 'Pre-inicial GLP'];
+        $servisrestantes = $this->diferencias->filter(function ($item) use ($serviciosPermitidos) {
+            return in_array($item['servicio'], $serviciosPermitidos);
+        });
+        $this->tabla2 = $this->importados->merge($servisrestantes, function ($item1, $item2) {
+            $inspector1 = strtolower($item1['inspector']);
+            $inspector2 = strtolower($item2['inspector']);
+            $taller1 = strtolower($item1['taller']);
+            $taller2 = strtolower($item2['taller']);
+            $comparison = strcasecmp($inspector1 . $taller1, $inspector2 . $taller2);
+            return $comparison;
+        });
+
+        $this->generarReporte();
+    }
+
+    public function generarReporte()
+    {
+        $this->ingresosPorTaller = $this->calcularIngresosPorTaller();
+        $this->certificacionesPorTaller = $this->calcularCertificacionesPorTaller();
+        $this->ingresosPorServicio = $this->calcularIngresosPorServicio();
+        $this->ingresosMensuales = $this->calcularIngresosMensuales();
     }
 
     public function render()
     {
-        $ingresosPorTaller = [];
-        $certificacionesPorTaller = [];
-        $ingresosPorServicio = [];
-        $ingresosMensuales = [];
+        return view('livewire.reportes.rentabilidad', [
+            'ingresosPorTaller' => $this->ingresosPorTaller,
+            'certificacionesPorTaller' => $this->certificacionesPorTaller,
+            'ingresosPorServicio' => $this->ingresosPorServicio,
+            'ingresosMensuales' => $this->ingresosMensuales,
+        ]);
+    }
 
-        if ($this->mostrarResultados) {
-            $ingresosPorTallerQuery = DB::table('certificacion as c')
-                ->join('taller as t', 'c.idTaller', '=', 't.id')
-                ->select('t.id as taller_id', DB::raw('MAX(t.nombre) as nombre_taller'), DB::raw('SUM(c.precio) as ingresos_totales'))
-                ->where('c.pagado', 0);
+    // INGRESOS TOTALES POR TALLER
+    private function calcularIngresosPorTaller()
+    {
+        return $this->tabla2->groupBy('taller')->map(function ($items, $taller) {
+            return [
+                'taller' => $taller,
+                'ingresos_totales' => $items->sum('precio')
+            ];
+        })->sortByDesc('ingresos_totales')->values()->toArray();
+    }
 
-            $certificacionesPorTallerQuery = DB::table('certificacion as c')
-                ->join('taller as t', 'c.idTaller', '=', 't.id')
-                ->select('t.id as taller_id', DB::raw('MAX(t.nombre) as nombre_taller'), DB::raw('COUNT(c.id) as total_certificaciones'))
-                ->groupBy('t.id')
-                ->orderBy('total_certificaciones', 'DESC');
+    // NUMERO DE CERTIFICACIONES REALIZADAS POR TALLER
+    private function calcularCertificacionesPorTaller()
+    {
+        return $this->tabla2->groupBy('taller')->map(function ($items, $taller) {
+            return [
+                'taller' => $taller,
+                'total_certificaciones' => $items->count()
+            ];
+        })->sortByDesc('total_certificaciones')->values()->toArray();
+    }
 
-            $ingresosPorServicioQuery = DB::table('certificacion as c')
-                ->join('taller as t', 'c.idTaller', '=', 't.id')
-                ->join('servicio as s', 'c.idServicio', '=', 's.id')
-                ->join('tiposervicio as ts', 's.tipoServicio_idtipoServicio', '=', 'ts.id')
-                ->select('t.id as taller_id', DB::raw('MAX(t.nombre) as nombre_taller'), 'ts.descripcion as tipo_servicio', DB::raw('SUM(c.precio) as ingresos_totales'))
-                ->where('c.pagado', 0)
-                ->groupBy('t.id', 'ts.descripcion')
-                ->orderBy('ingresos_totales', 'DESC');
+    // INGRESOS POR TIPO DE SERVICIO POR TALLER
+    private function calcularIngresosPorServicio()
+    {
+        // Verificación inicial de los datos
+        $tabla2 = $this->tabla2->map(function ($item) {
+            return [
+                'taller' => $item['taller'],
+                'servicio' => $item['servicio'],
+                'precio' => $item['precio'],
+            ];
+        });
 
-            $ingresosMensualesQuery = DB::table('certificacion as c')
-                ->join('taller as t', 'c.idTaller', '=', 't.id')
-                ->select('t.id as taller_id', DB::raw('MAX(t.nombre) as nombre_taller'), DB::raw("DATE_FORMAT(c.created_at, '%Y-%m') as mes"), DB::raw('SUM(c.precio) as ingresos_mensuales'))
-                ->where('c.pagado', 0)
-                ->groupBy('t.id', DB::raw("DATE_FORMAT(c.created_at, '%Y-%m')"))
-                ->orderBy('t.id')
-                ->orderBy('mes');
+        // Agrupamos por taller y luego por servicio
+        $ingresosPorServicio = $tabla2->groupBy('taller')->map(function ($items, $taller) {
+            return $items->groupBy('servicio')->map(function ($items, $servicio) use ($taller) {
+                return [
+                    'taller' => $taller,
+                    'servicio' => $servicio,
+                    'ingresos_totales' => $items->sum('precio')
+                ];
+            })->values()->toArray();
+        })->flatten(1)->sortByDesc('ingresos_totales')->values()->toArray();
+        //dd($ingresosPorServicio);
 
-            // Aplicar filtros
-            if (!empty($this->taller)) {
-                $ingresosPorTallerQuery->whereIn('t.id', $this->taller);
-                $certificacionesPorTallerQuery->whereIn('t.id', $this->taller);
-                $ingresosPorServicioQuery->whereIn('t.id', $this->taller);
-                $ingresosMensualesQuery->whereIn('t.id', $this->taller);
+        return $ingresosPorServicio;
+    }
+
+    // TABLA INGRESO MENSUALES POR TALLER
+    private function calcularIngresosMensuales()
+    {
+        $tabla2 = $this->tabla2->map(function ($item) {
+            if (is_string($item['fecha'])) {
+                $item['fecha'] = \Carbon\Carbon::parse($item['fecha']);
             }
+            return [
+                'fecha' => $item['fecha'],
+                'taller' => $item['taller'],
+                'precio' => $item['precio'],
+            ];
+        });
 
-            if (!empty($this->ins)) {
-                $ingresosPorTallerQuery->whereIn('c.idInspector', $this->ins);
-                $certificacionesPorTallerQuery->whereIn('c.idInspector', $this->ins);
-                $ingresosPorServicioQuery->whereIn('c.idInspector', $this->ins);
-                $ingresosMensualesQuery->whereIn('c.idInspector', $this->ins);
-            }
+        // Agrupamos por 'taller' y 'mes' (a través de la fecha)
+        return $tabla2->groupBy(function ($item) {
+            return $item['taller'] . '-' . $item['fecha']->format('Y-m');
+        })->map(function ($items, $key) {
+            list($taller, $fecha) = explode('-', $key);
+            $mes = $items[0]['fecha']->format('Y-m'); // Obtenemos el formato 'YYYY-MM'
 
-            if ($this->servicio) {
-                $ingresosPorServicioQuery->where('s.id', $this->servicio);
-            }
+            return [
+                'taller' => $taller,
+                'mes' => $mes,
+                'ingresos_mensuales' => $items->sum('precio')
+            ];
+        })->sortBy(['taller', 'mes'])->values()->toArray();
+    }
 
-            if ($this->fechaInicio) {
-                $ingresosPorTallerQuery->where('c.created_at', '>=', $this->fechaInicio);
-                $certificacionesPorTallerQuery->where('c.created_at', '>=', $this->fechaInicio);
-                $ingresosPorServicioQuery->where('c.created_at', '>=', $this->fechaInicio);
-                $ingresosMensualesQuery->where('c.created_at', '>=', $this->fechaInicio);
-            }
+    // CARGAMOS DATA DE CERTIFICACION Y CERTIFICADOS_PENDIENTES
+    public function generaData()
+    {
+        $tabla = new Collection();
+        //TODO CERTIFICACIONES:
+        $certificaciones = Certificacion::idTalleres($this->taller)
+            ->IdInspectores($this->ins)
+            ->IdTipoServicio($this->servicio)
+            // Excluir al inspector con id = 201 
+            ->whereHas('Inspector', function ($query) {
+                $query->whereNotIn('id', [37, 117, 201]);
+                })
+            ->rangoFecha($this->fechaInicio, $this->fechaFin)
+            ->where('pagado', 0)
+            ->whereIn('estado', [3, 1])
+            ->get();
 
-            if ($this->fechaFin) {
-                $ingresosPorTallerQuery->where('c.created_at', '<=', $this->fechaFin);
-                $certificacionesPorTallerQuery->where('c.created_at', '<=', $this->fechaFin);
-                $ingresosPorServicioQuery->where('c.created_at', '<=', $this->fechaFin);
-                $ingresosMensualesQuery->where('c.created_at', '<=', $this->fechaFin);
-            }
+        //TODO CER-PENDIENTES:
+        $cerPendiente = CertificacionPendiente::idTalleres($this->taller)
+            ->IdInspectores($this->ins)
+            ->whereHas('Inspector', function ($query) {
+                $query->whereNotIn('id', [37, 117, 201]);
+                })
+            ->IdTipoServicios($this->servicio)
+            ->rangoFecha($this->fechaInicio, $this->fechaFin)
+            ->get();
 
-            // Obtener resultados
-            $ingresosPorTaller = $ingresosPorTallerQuery->groupBy('t.id')->orderBy('ingresos_totales', 'DESC')->get();
-            $certificacionesPorTaller = $certificacionesPorTallerQuery->get();
-            $ingresosPorServicio = $ingresosPorServicioQuery->get();
-            $ingresosMensuales = $ingresosMensualesQuery->get();
+        //unificando certificaciones     
+        foreach ($certificaciones as $certi) {
+            //modelo preliminar
+            $data = [
+                "id" => $certi->id,
+                "placa" => $certi->Vehiculo->placa,
+                "taller" => $certi->Taller->nombre,
+                "inspector" => $certi->Inspector->name,
+                "servicio" => $certi->Servicio->tipoServicio->descripcion,
+                "num_hoja" => $certi->NumHoja,
+                "ubi_hoja" => $certi->UbicacionHoja,
+                "precio" => $certi->precio,
+                "pagado" => $certi->pagado,
+                "estado" => $certi->estado,
+                "externo" => $certi->externo,
+                "tipo_modelo" => $certi::class,
+                "fecha" => $certi->created_at,
+
+            ];
+            $tabla->push($data);
         }
 
-        return view('livewire.reportes.rentabilidad', compact('ingresosPorTaller', 'certificacionesPorTaller', 'ingresosPorServicio', 'ingresosMensuales'));
+        foreach ($cerPendiente as $cert_pend) {
+            //modelo preliminar
+            $data = [
+                "id" => $cert_pend->id,
+                "placa" => $cert_pend->Vehiculo->placa,
+                "taller" => $cert_pend->Taller->nombre,
+                "inspector" => $cert_pend->Inspector->name,
+                "servicio" => 'Activación de chip (Anual)', // es ese tipo de servicio por defecto
+                "num_hoja" => Null,
+                "ubi_hoja" => Null,
+                "precio" => $cert_pend->precio,
+                "pagado" => $cert_pend->pagado,
+                "estado" => $cert_pend->estado,
+                "externo" => $cert_pend->externo,
+                "tipo_modelo" => $cert_pend::class,
+                "fecha" => $cert_pend->created_at,
+            ];
+            $tabla->push($data);
+        }
+        return $tabla;
+    }
+
+    // DIFERENCIAS ENTRE LISTA 1 (generaData) Y LISTA 2 (cargaServiciosGasolution)
+    public function encontrarDiferenciaPorPlaca($lista1, $lista2)
+    {
+        $diferencias = collect();
+        foreach ($lista1 as $elemento1) {
+            $placa1 = $elemento1['placa'];
+            $inspector1 = $elemento1['inspector'];
+            $servicio1 = $elemento1['servicio'];
+            $encontrado = false;
+
+            foreach ($lista2 as $elemento2) {
+                $placa2 = $elemento2['placa'];
+                $inspector2 = $elemento2['inspector'];
+                $servicio2 = $elemento2['servicio'];
+                if ($placa1 === $placa2 && $inspector1 === $inspector2) {
+                    if (
+                        ($elemento2['tipo_modelo'] == 'App\Models\CertificacionPendiente' && $servicio1 == 'Revisión anual GNV') ||
+                        ($servicio2 == 'Conversión a GNV + Chip' && $servicio1 == 'Conversión a GNV')
+                    ) {
+                        $encontrado = true;
+                        break;
+                    } else if ($servicio1 === $servicio2) {
+                        $encontrado = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!$encontrado) {
+                $diferencias[] = $elemento1;
+            }
+        }
+
+        return $diferencias;
+    }
+
+    // CARGAMOS DATA DE SERVICIOS_IMPORTADOS
+    public function cargaServiciosGasolution()
+    {
+        $disc = new Collection();
+        $dis = ServiciosImportados::Talleres($this->taller)
+            ->Inspectores($this->ins)
+            ->TipoServicio($this->servicio)
+            ->RangoFecha($this->fechaInicio, $this->fechaFin)
+            ->get();
+
+        foreach ($dis as $registro) {
+            $data = [
+                "id" => $registro->id,
+                "placa" => $registro->placa,
+                "taller" => $registro->taller,
+                "inspector" => $registro->certificador,
+                "servicio" => $registro->TipoServicio->descripcion,
+                "num_hoja" => Null,
+                "ubi_hoja" => Null,
+                "precio" => $registro->precio,
+                "pagado" => $registro->pagado,
+                "estado" => $registro->estado,
+                "externo" => Null,
+                "tipo_modelo" => $registro::class,
+                "fecha" => $registro->fecha,
+            ];
+            $disc->push($data);
+        }
+        return $disc;
     }
 }

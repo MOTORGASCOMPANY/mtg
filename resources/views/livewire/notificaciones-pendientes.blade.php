@@ -26,6 +26,9 @@
                             Fecha
                         </th>
                         <th scope="col" class="text-sm font-medium font-semibold text-gray-900 px-6 py-4 text-left">
+                            Realizado
+                        </th>
+                        <th scope="col" class="text-sm font-medium font-semibold text-gray-900 px-6 py-4 text-left">
                             Acciones
                         </th>
                     </tr>
@@ -58,13 +61,15 @@
                             </td>
                             <td class="pl-2">
                                 <div class="flex items-center">
-                                    <p
-                                        class="flex flex-shrink-0 justify-center items-center relative
+                                    {{-- 
+                                    <p class="flex flex-shrink-0 justify-center items-center relative
                                             @if ($notificacion->type === 'App\Notifications\AnulacionSolicitud') bg-green-200
                                             @elseif ($notificacion->type === 'App\Notifications\SolicitudEliminacion') bg-red-200
                                             @elseif ($notificacion->type === 'App\Notifications\CreateSolicitud') bg-yellow-200 @endif rounded-sm w-10 h-5">
                                         {{ $notificacion->nombreInspector ?? 'N/A' }}
                                     </p>
+                                    --}}
+                                    <p class="text-base  leading-none text-gray-700 mr-2">{{ $notificacion->nombreInspector ?? 'NA' }}</p>
                                 </div>
                             </td>
                             <td class="pl-2">
@@ -76,19 +81,50 @@
                             </td>
                             <td class="pl-2">
                                 <div class="flex items-center">
-                                    <p
-                                        class="flex flex-shrink-0 justify-center items-center relative
+                                    {{--
+                                    <p class="flex flex-shrink-0 justify-center items-center relative
                                             @if ($notificacion->type === 'App\Notifications\AnulacionSolicitud') bg-green-200
                                             @elseif ($notificacion->type === 'App\Notifications\SolicitudEliminacion') bg-red-200
                                             @elseif ($notificacion->type === 'App\Notifications\CreateSolicitud') bg-yellow-200 @endif rounded-sm w-10 h-5">
                                         {{ $notificacion->placa ?? 'NE' }}
                                     </p>
+                                    --}}
+                                    <p class="text-base  leading-none text-gray-700 mr-2">{{ $notificacion->placa ?? 'NE' }}</p>
                                 </div>
                             </td>
                             <td class="pl-2">
                                 <div class="flex items-center">
                                     <p class="text-base leading-none text-gray-700 mr-2">
-                                        {{ $notificacion->created_at->format('d/m/Y - H:i') }}</p>
+                                        {{ $notificacion->created_at->format('d/m/Y') }}</p>
+                                </div>
+                            </td>
+                            <td class="pl-8">
+                                <div class="flex items-center">
+                                    {{-- X TODAVIA NO ESTA REALIZADO || ✔ YA FUE REALIZADO  --}}
+                                    @if ($notificacion->type === 'App\Notifications\AnulacionSolicitud')
+                                        @switch($notificacion->estado)
+                                            @case(1)
+                                                <i class="far fa-times-circle fa-lg" style="color: red;"></i>
+                                            @break
+
+                                            @case(2)
+                                                <i class="far fa-check-circle fa-lg" style="color: forestgreen;"></i>
+                                            @break
+                                            @case(3)
+                                                <i class="far fa-times-circle fa-lg" style="color: red;"></i>
+                                            @break
+
+                                            @default
+                                        @endswitch
+                                    @elseif($notificacion->type === 'App\Notifications\SolicitudEliminacion')
+                                        @if ($notificacion->estado == 1 || $notificacion->estado == 3)
+                                            <i class="far fa-times-circle fa-lg" style="color: red;"></i>
+                                        @elseif($notificacion->estado == null)
+                                            <i class="far fa-check-circle fa-lg" style="color: forestgreen;"></i>
+                                        @endif
+                                    @elseif($notificacion->type === 'App\Notifications\CreateSolicitud')
+                                        <i class="fa-solid fa-file-circle-plus" style="color: rgb(216, 219, 46);"></i>
+                                    @endif
                                 </div>
                             </td>
                             <td>
@@ -107,8 +143,8 @@
                                         </button>
                                         <button wire:click="eliminarNotificacion('{{ $notificacion->id }}')"
                                             class="block px-4 py-2 text-sm text-indigo-700 hover:bg-indigo-300 hover:text-white">
-                                        <i class="fas fa-trash"></i> Eliminar
-                                    </button>
+                                            <i class="fas fa-trash"></i> Eliminar
+                                        </button>
 
                                     </div>
                                 </div>

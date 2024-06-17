@@ -184,7 +184,7 @@ class ListaCertificaciones extends Component
     
         // Crea una notificación
         $certificacion = Certificacion::find($certificationId);
-        $users = User::role('administrador')->get();
+        $users = User::role(['administrador'])->get();
         Notification::send($users, new SolicitudEliminacion( $solicitudAnulacion,$certificacion, Auth::user()));
         return redirect('Listado-Certificaciones');
         

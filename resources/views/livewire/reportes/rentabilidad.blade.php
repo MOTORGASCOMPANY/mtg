@@ -78,7 +78,7 @@
                         class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full truncate" />
                 </div>
 
-                <button wire:click="generarReporte()"
+                <button wire:click="procesar()"
                     class="bg-green-400 px-6 py-4 w-full md:w-auto rounded-md text-white font-semibold tracking-wide cursor-pointer mb-4">
                     <p class="truncate"> Generar reporte </p>
                 </button>
@@ -98,7 +98,7 @@
             </div>
         </div>
 
-        @if ($mostrarResultados)
+        @if ($ingresosPorTaller)
             <div>
                 {{-- TABLA INGRESOS TOTALES POR TALLER --}}
                 <div class="bg-gray-200 rounded-md w-full p-4 mt-4">
@@ -131,11 +131,11 @@
                                                 </td>
                                                 <td
                                                     class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
-                                                    {{ $ingreso->nombre_taller }}
+                                                    {{ $ingreso['taller'] }}
                                                 </td>
                                                 <td
                                                     class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
-                                                    S/{{ $ingreso->ingresos_totales }}
+                                                    S/{{ $ingreso['ingresos_totales']  }}
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -144,7 +144,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>                
 
                 {{-- TABLA NUMERO DE CERTIFICACIONES REALIZADAS POR TALLER --}}
                 <div class="bg-gray-200 rounded-md w-full p-4 mt-4">
@@ -179,11 +179,11 @@
                                                 </td>
                                                 <td
                                                     class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
-                                                    {{ $certificacion->nombre_taller }}
+                                                    {{ $certificacion['taller'] }}
                                                 </td>
                                                 <td
                                                     class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
-                                                    {{ $certificacion->total_certificaciones }}
+                                                    {{ $certificacion['total_certificaciones'] }}
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -230,15 +230,15 @@
                                                 </td>
                                                 <td
                                                     class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
-                                                    {{ $ingreso->nombre_taller }}
+                                                    {{ $ingreso['taller'] }}
                                                 </td>
                                                 <td
                                                     class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
-                                                    {{ $ingreso->tipo_servicio }}
+                                                    {{ $ingreso['servicio'] }}
                                                 </td>
                                                 <td
                                                     class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
-                                                    S/{{ $ingreso->ingresos_totales }}
+                                                    S/{{ $ingreso['ingresos_totales'] }}
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -284,15 +284,15 @@
                                                 </td>
                                                 <td
                                                     class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
-                                                    {{ $ingreso->nombre_taller }}
+                                                    {{ $ingreso['taller'] }}
                                                 </td>
                                                 <td
                                                     class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
-                                                    {{ $ingreso->mes }}
+                                                    {{ $ingreso['mes'] }}
                                                 </td>
                                                 <td
                                                     class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
-                                                    {{ $ingreso->ingresos_mensuales }}
+                                                    S/{{ $ingreso['ingresos_mensuales'] }}
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -301,7 +301,8 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> 
+
             </div>
         @else
             <p class="text-center text-gray-500"></p>

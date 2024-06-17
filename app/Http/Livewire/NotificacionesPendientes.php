@@ -30,6 +30,7 @@ class NotificacionesPendientes extends Component
             } elseif (isset($data['inspector'])) {
                 $nombreInspector = $data['inspector'];
             }
+
             // Obtener placa
             $placa = null;
             if (isset($data['idServicio'])) {
@@ -38,8 +39,9 @@ class NotificacionesPendientes extends Component
                     $placa = $certificacion->placa;
                 }
             }
-            $numero = null;
 
+            // ontener # formato
+            $numero = null;
             if (isset($data['idServicio'])) {
                 $certificacion = Certificacion::find($data['idServicio']);
 
@@ -47,10 +49,22 @@ class NotificacionesPendientes extends Component
                     $numero = $certificacion->Hoja->numSerie;
                 }
             }
+
+            //obtener estado
+            $estado = null;
+            if (isset($data['idServicio'])) {
+                $certificacion = Certificacion::find($data['idServicio']);
+                if ($certificacion) {
+                    $estado = $certificacion->estado;
+                }
+            }
+
+
             // Asignar valores al objeto de notificación
             $notification->nombreInspector = $nombreInspector;
             $notification->placa = $placa;
             $notification->numero = $numero;
+            $notification->estado = $estado;
             return $notification;
         });
     }

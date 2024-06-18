@@ -23,6 +23,7 @@ class Rentabilidad extends Component
     public $certificacionesPorTaller = [];
     public $ingresosPorServicio = [];
     public $ingresosMensuales = [];
+    public $rentabilidadPorTaller, $totalRentabilidad;
     //public $mostrarResultados = false;
 
     protected $rules = [
@@ -66,8 +67,10 @@ class Rentabilidad extends Component
     {
         $this->ingresosPorTaller = $this->calcularIngresosPorTaller();
         $this->certificacionesPorTaller = $this->calcularCertificacionesPorTaller();
-        $this->ingresosPorServicio = $this->calcularIngresosPorServicio();
-        $this->ingresosMensuales = $this->calcularIngresosMensuales();
+        //$this->ingresosPorServicio = $this->calcularIngresosPorServicio();
+        //$this->ingresosMensuales = $this->calcularIngresosMensuales();
+        $this->rentabilidadPorTaller = $this->calcularRentabilidadPorTaller();
+        $this->totalRentabilidad = $this->calcularTotalRentabilidad();  ;
     }
 
     public function render()
@@ -75,8 +78,10 @@ class Rentabilidad extends Component
         return view('livewire.reportes.rentabilidad', [
             'ingresosPorTaller' => $this->ingresosPorTaller,
             'certificacionesPorTaller' => $this->certificacionesPorTaller,
-            'ingresosPorServicio' => $this->ingresosPorServicio,
-            'ingresosMensuales' => $this->ingresosMensuales,
+            //'ingresosPorServicio' => $this->ingresosPorServicio,
+            //'ingresosMensuales' => $this->ingresosMensuales,
+            'rentabilidadPorTaller' => $this->rentabilidadPorTaller,
+            'totalRentabilidad' => $this->totalRentabilidad,
         ]);
     }
 
@@ -102,9 +107,49 @@ class Rentabilidad extends Component
         })->sortByDesc('total_certificaciones')->values()->toArray();
     }
 
-    // INGRESOS POR TIPO DE SERVICIO POR TALLER
-    private function calcularIngresosPorServicio()
+    // CALCULAR RENTABILIDAD POR TALLER
+    private function calcularRentabilidadPorTaller()
     {
+        $ingresos = $this->calcularIngresosPorTaller();
+        $certificaciones = $this->calcularCertificacionesPorTaller();
+
+        // Combinar datos
+        $rentabilidad = collect($ingresos)->map(function ($ingreso) use ($certificaciones) {
+            $taller = $ingreso['taller'];
+            $certificacion = collect($certificaciones)->firstWhere('taller', $taller);
+            $totalCertificaciones = $certificacion['total_certificaciones'] ?? 0;
+
+            $sueldoInspector = 1500;
+            $otrosCostos = $totalCertificaciones * 0.20;
+            $costosTotales = $sueldoInspector + $otrosCostos;
+            $rentabilidad = $ingreso['ingresos_totales'] - $costosTotales;
+
+            return [
+                'taller' => $taller,
+                'ingresos_totales' => $ingreso['ingresos_totales'],
+                'costos_totales' => $costosTotales,
+                'rentabilidad' => $rentabilidad
+            ];
+        })->sortByDesc('rentabilidad')->values()->toArray();
+
+        return $rentabilidad;
+    }
+
+    //TOTAL RENTABILIDAD TALLER
+    private function calcularTotalRentabilidad()
+    {
+        $rentabilidadPorTaller = $this->calcularRentabilidadPorTaller();
+        $totalRentabilidad = collect($rentabilidadPorTaller)->sum('rentabilidad');
+
+        return $totalRentabilidad;
+    }
+
+
+    /*
+
+     // INGRESOS POR TIPO DE SERVICIO POR TALLER
+     private function calcularIngresosPorServicio()
+     {
         // Verificación inicial de los datos
         $tabla2 = $this->tabla2->map(function ($item) {
             return [
@@ -120,6 +165,7 @@ class Rentabilidad extends Component
                 return [
                     'taller' => $taller,
                     'servicio' => $servicio,
+                    'cantidad' => $items->count(),
                     'ingresos_totales' => $items->sum('precio')
                 ];
             })->values()->toArray();
@@ -127,11 +173,11 @@ class Rentabilidad extends Component
         //dd($ingresosPorServicio);
 
         return $ingresosPorServicio;
-    }
+     }
 
-    // TABLA INGRESO MENSUALES POR TALLER
-    private function calcularIngresosMensuales()
-    {
+     // TABLA INGRESO MENSUALES POR TALLER
+     private function calcularIngresosMensuales()
+     {
         $tabla2 = $this->tabla2->map(function ($item) {
             if (is_string($item['fecha'])) {
                 $item['fecha'] = \Carbon\Carbon::parse($item['fecha']);
@@ -156,7 +202,9 @@ class Rentabilidad extends Component
                 'ingresos_mensuales' => $items->sum('precio')
             ];
         })->sortBy(['taller', 'mes'])->values()->toArray();
-    }
+     }
+
+    */
 
     // CARGAMOS DATA DE CERTIFICACION Y CERTIFICADOS_PENDIENTES
     public function generaData()

@@ -111,13 +111,13 @@
                                 <table class="min-w-full border text-center text-sm font-light dark:border-neutral-500">
                                     <thead class="border-b font-medium dark:border-neutral-500">
                                         <tr class="bg-indigo-200">
-                                            <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
+                                            <th scope="col" class="border-r px-6 py-2 dark:border-neutral-500">
                                                 #
                                             </th>
-                                            <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
+                                            <th scope="col" class="border-r px-6 py-2 dark:border-neutral-500">
                                                 Taller
                                             </th>
-                                            <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
+                                            <th scope="col" class="border-r px-6 py-2 dark:border-neutral-500">
                                                 Ingresos Totales
                                             </th>
                                         </tr>
@@ -135,7 +135,7 @@
                                                 </td>
                                                 <td
                                                     class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
-                                                    S/{{ $ingreso['ingresos_totales']  }}
+                                                    S/{{ $ingreso['ingresos_totales'] }}
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -144,13 +144,10 @@
                             </div>
                         </div>
                     </div>
-                </div>                
 
-                {{-- TABLA NUMERO DE CERTIFICACIONES REALIZADAS POR TALLER --}}
-                <div class="bg-gray-200 rounded-md w-full p-4 mt-4">
+                    {{-- TABLA PARA SABER CANTIDAD DE SERVICIOS REALIZADOS POR TALLER --}}
                     <div class="p-2 w-full justify-between m-auto flex items-space-around">
-                        <h2 class="text-indigo-600 text-xl font-bold mb-4">Número de Certificaciones Realizadas por
-                            Taller</h2>
+                        <h2 class="text-indigo-600 text-xl font-bold mb-4">Número de Certificaciones Realizadas por Taller</h2>
                     </div>
                     <div class="overflow-x-auto m-auto w-full">
                         <div class="inline-block min-w-full py-2 sm:px-6">
@@ -159,13 +156,13 @@
                                     class="min-w-full border text-center text-sm font-light dark:border-neutral-500">
                                     <thead class="border-b font-medium dark:border-neutral-500">
                                         <tr class="bg-indigo-200">
-                                            <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
+                                            <th scope="col" class="border-r px-6 py-2 dark:border-neutral-500">
                                                 #
                                             </th>
-                                            <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
+                                            <th scope="col" class="border-r px-6 py-2 dark:border-neutral-500">
                                                 Taller
                                             </th>
-                                            <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
+                                            <th scope="col" class="border-r px-6 py-2 dark:border-neutral-500">
                                                 Total Certificaciones
                                             </th>
                                         </tr>
@@ -192,9 +189,143 @@
                             </div>
                         </div>
                     </div>
+
+                    {{-- TABLA PARA SABER COSTOS TOTALES  POR TALLER --}}
+                    <div class="p-2 w-full justify-between m-auto flex items-space-around">
+                        <h2 class="text-indigo-600 text-xl font-bold mb-4">Costos Totales por taller</h2>
+                    </div>
+                    <div class="overflow-x-auto m-auto w-full">
+                        <div class="inline-block min-w-full py-2 sm:px-6">
+                            <div class="overflow-hidden">
+                                <table
+                                    class="min-w-full border text-center text-sm font-light dark:border-neutral-500">
+                                    <thead class="border-b font-medium dark:border-neutral-500">
+                                        <tr class="bg-indigo-200">
+                                            <th scope="col" class="border-r px-6 py-2 dark:border-neutral-500">
+                                                #
+                                            </th>
+                                            <th scope="col" class="border-r px-6 py-2 dark:border-neutral-500">
+                                                Taller
+                                            </th>
+                                            <th scope="col" class="border-r px-6 py-2 dark:border-neutral-500">
+                                                Sueldo Inspector
+                                            </th>
+                                            <th scope="col" class="border-r px-6 py-2 dark:border-neutral-500">
+                                                Otros Costos
+                                            </th>
+                                            <th scope="col" class="border-r px-6 py-2 dark:border-neutral-500">
+                                                Total
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($certificacionesPorTaller as $key => $certificacion)
+                                            <tr class="border-b dark:border-neutral-500 bg-orange-200">
+                                                <td
+                                                    class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
+                                                    {{ $key + 1 }}
+                                                </td>
+                                                <td
+                                                    class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
+                                                    {{ $certificacion['taller'] }}
+                                                </td>
+                                                <td
+                                                    class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
+                                                    1500
+                                                </td>
+                                                <td
+                                                    class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
+                                                    {{ $certificacion['total_certificaciones'] * 0.2 }}
+                                                </td>
+                                                <td
+                                                    class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
+                                                    {{ 1500 + $certificacion['total_certificaciones'] * 0.2 }}
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                {{-- TABLA INGRESOS POR TIPO DE SERVICIO POR TALLER --}}
+                {{-- TABLA PARA SABER RENTABILIDAD DEL TALLER --}}
+                <div class="bg-gray-200 rounded-md w-full p-4 mt-4">
+                    <div class="p-2 w-full justify-between m-auto flex items-space-around">
+                        <h2 class="text-indigo-600 text-xl font-bold mb-4">Rentabilidad del taller</h2>
+                    </div>
+                    <div class="overflow-x-auto m-auto w-full">
+                        <div class="inline-block min-w-full py-2 sm:px-6">
+                            <div class="overflow-hidden">
+                                <table
+                                    class="min-w-full border text-center text-sm font-light dark:border-neutral-500">
+                                    <thead class="border-b font-medium dark:border-neutral-500">
+                                        <tr class="bg-indigo-200">
+                                            <th scope="col" class="border-r px-6 py-2 dark:border-neutral-500">
+                                                #
+                                            </th>
+                                            <th scope="col" class="border-r px-6 py-2 dark:border-neutral-500">
+                                                Taller
+                                            </th>
+                                            <th scope="col" class="border-r px-6 py-2 dark:border-neutral-500">
+                                                Ingresos Totales
+                                            </th>
+                                            <th scope="col" class="border-r px-6 py-2 dark:border-neutral-500">
+                                                Costos Totales
+                                            </th>
+                                            <th scope="col" class="border-r px-6 py-2 dark:border-neutral-500">
+                                                Rentabilidad
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($rentabilidadPorTaller as $key => $rentabilidad)
+                                            <tr class="border-b dark:border-neutral-500 bg-orange-200">
+                                                <td
+                                                    class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
+                                                    {{ $key + 1 }}
+                                                </td>
+                                                <td
+                                                    class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
+                                                    {{ $rentabilidad['taller'] }}
+                                                </td>
+                                                <td
+                                                    class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
+                                                    S/{{ $rentabilidad['ingresos_totales'] }}
+                                                </td>
+                                                <td
+                                                    class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
+                                                    S/{{ $rentabilidad['costos_totales'] }}
+                                                </td>
+                                                <td
+                                                    class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
+                                                    S/{{ $rentabilidad['rentabilidad'] }}
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                        <tr class="border-b dark:border-neutral-500 bg-green-200">
+                                            <td colspan="4"
+                                                class="border-r px-6 py-3 dark:border-neutral-500 font-bold text-right">
+                                                @if ($totalRentabilidad <= 0)
+                                                    RENTABILIDAD NEGATIVA
+                                                @else
+                                                    RENTABILIDAD POSITIVA
+                                                @endif
+                                            </td>
+                                            <td class="border-r px-6 py-3 dark:border-neutral-500 font-bold">
+                                                S/{{ $totalRentabilidad }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                {{-- TABLA INGRESOS POR TIPO DE SERVICIO POR TALLER 
                 <div class="bg-gray-200 rounded-md w-full p-4 mt-4">
                     <div class="p-2 w-full justify-between m-auto flex items-space-around">
                         <h2 class="text-indigo-600 text-xl font-bold mb-4">Ingresos por Tipo de Servicio en Cada Taller
@@ -215,6 +346,9 @@
                                             </th>
                                             <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
                                                 Tipo de Servicio
+                                            </th>
+                                            <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
+                                                Cant de Servicio
                                             </th>
                                             <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
                                                 Ingresos Totales
@@ -238,6 +372,10 @@
                                                 </td>
                                                 <td
                                                     class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
+                                                    {{ $ingreso['cantidad'] }}
+                                                </td>
+                                                <td
+                                                    class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
                                                     S/{{ $ingreso['ingresos_totales'] }}
                                                 </td>
                                             </tr>
@@ -247,9 +385,9 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
-                {{-- TABLA INGRESO MENSUALES POR TALLER --}}
+                {{-- TABLA INGRESO MENSUALES POR TALLER 
                 <div class="bg-gray-200 rounded-md w-full p-4 mt-4">
                     <div class="p-2 w-full justify-between m-auto flex items-space-around">
                         <h2 class="text-indigo-600 text-xl font-bold mb-4">Ingresos mensuales por Taller</h2>
@@ -301,7 +439,7 @@
                             </div>
                         </div>
                     </div>
-                </div> 
+                </div> --}}
 
             </div>
         @else

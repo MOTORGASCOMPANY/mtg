@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Reportes;
 
+use App\Exports\ReporteRentabilidadExport;
 use App\Models\Certificacion;
 use App\Models\CertificacionPendiente;
 use App\Models\ServiciosImportados;
@@ -10,6 +11,7 @@ use App\Models\TipoServicio;
 use App\Models\User;
 use Livewire\Component;
 use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -23,12 +25,15 @@ class Rentabilidad extends Component
     public $certificacionesPorTaller = [];
     public $ingresosPorServicio = [];
     public $ingresosMensuales = [];
-    public $rentabilidadPorTaller, $totalRentabilidad;
-    //public $mostrarResultados = false;
+    public $rentabilidadPorTaller, $totalRentabilidad, $costosPorTaller;
+    public $ajustarIngresos = false, $ajustarCostos = false, $gastosAdministrativos = 0;
+
+    protected $listeners = ['exportarExcel'];
 
     protected $rules = [
         "fechaInicio" => 'required|date',
         "fechaFin" => 'required|date',
+        "taller" => 'required'
     ];
 
     public function mount()
@@ -39,6 +44,7 @@ class Rentabilidad extends Component
             ->get();
         $this->talleres = Taller::orderBy('nombre')->get();
         $this->tipos = TipoServicio::all();
+        //$this->tabla2 = collect(); // Inicializar tabla2 como una colección vacía
     }
 
     public function procesar()
@@ -59,6 +65,7 @@ class Rentabilidad extends Component
             $comparison = strcasecmp($inspector1 . $taller1, $inspector2 . $taller2);
             return $comparison;
         });
+        //$this->tabla2 = $this->importados->merge($servisrestantes);    
 
         $this->generarReporte();
     }
@@ -67,10 +74,12 @@ class Rentabilidad extends Component
     {
         $this->ingresosPorTaller = $this->calcularIngresosPorTaller();
         $this->certificacionesPorTaller = $this->calcularCertificacionesPorTaller();
-        //$this->ingresosPorServicio = $this->calcularIngresosPorServicio();
-        //$this->ingresosMensuales = $this->calcularIngresosMensuales();
-        $this->rentabilidadPorTaller = $this->calcularRentabilidadPorTaller();
-        $this->totalRentabilidad = $this->calcularTotalRentabilidad();  ;
+        $this->ingresosPorServicio = $this->calcularIngresosPorServicio();
+        $this->costosPorTaller = $this->calcularCostosPorTaller();
+        //$this->rentabilidadPorTaller = $this->calcularRentabilidadPorTaller();
+        $this->rentabilidadPorTaller = $this->calcularRentabilidadPorTaller($this->ajustarIngresos, $this->ajustarCostos);
+        //$this->totalRentabilidad = $this->calcularTotalRentabilidad();
+        $this->totalRentabilidad = $this->calcularTotalRentabilidad($this->ajustarIngresos, $this->ajustarCostos);
     }
 
     public function render()
@@ -78,8 +87,8 @@ class Rentabilidad extends Component
         return view('livewire.reportes.rentabilidad', [
             'ingresosPorTaller' => $this->ingresosPorTaller,
             'certificacionesPorTaller' => $this->certificacionesPorTaller,
-            //'ingresosPorServicio' => $this->ingresosPorServicio,
-            //'ingresosMensuales' => $this->ingresosMensuales,
+            'ingresosPorServicio' => $this->ingresosPorServicio,
+            'costosPorTaller' => $this->costosPorTaller,
             'rentabilidadPorTaller' => $this->rentabilidadPorTaller,
             'totalRentabilidad' => $this->totalRentabilidad,
         ]);
@@ -107,49 +116,9 @@ class Rentabilidad extends Component
         })->sortByDesc('total_certificaciones')->values()->toArray();
     }
 
-    // CALCULAR RENTABILIDAD POR TALLER
-    private function calcularRentabilidadPorTaller()
+    // INGRESOS POR TIPO DE SERVICIO POR TALLER
+    private function calcularIngresosPorServicio()
     {
-        $ingresos = $this->calcularIngresosPorTaller();
-        $certificaciones = $this->calcularCertificacionesPorTaller();
-
-        // Combinar datos
-        $rentabilidad = collect($ingresos)->map(function ($ingreso) use ($certificaciones) {
-            $taller = $ingreso['taller'];
-            $certificacion = collect($certificaciones)->firstWhere('taller', $taller);
-            $totalCertificaciones = $certificacion['total_certificaciones'] ?? 0;
-
-            $sueldoInspector = 1500;
-            $otrosCostos = $totalCertificaciones * 0.20;
-            $costosTotales = $sueldoInspector + $otrosCostos;
-            $rentabilidad = $ingreso['ingresos_totales'] - $costosTotales;
-
-            return [
-                'taller' => $taller,
-                'ingresos_totales' => $ingreso['ingresos_totales'],
-                'costos_totales' => $costosTotales,
-                'rentabilidad' => $rentabilidad
-            ];
-        })->sortByDesc('rentabilidad')->values()->toArray();
-
-        return $rentabilidad;
-    }
-
-    //TOTAL RENTABILIDAD TALLER
-    private function calcularTotalRentabilidad()
-    {
-        $rentabilidadPorTaller = $this->calcularRentabilidadPorTaller();
-        $totalRentabilidad = collect($rentabilidadPorTaller)->sum('rentabilidad');
-
-        return $totalRentabilidad;
-    }
-
-
-    /*
-
-     // INGRESOS POR TIPO DE SERVICIO POR TALLER
-     private function calcularIngresosPorServicio()
-     {
         // Verificación inicial de los datos
         $tabla2 = $this->tabla2->map(function ($item) {
             return [
@@ -173,38 +142,138 @@ class Rentabilidad extends Component
         //dd($ingresosPorServicio);
 
         return $ingresosPorServicio;
-     }
+    }
 
-     // TABLA INGRESO MENSUALES POR TALLER
-     private function calcularIngresosMensuales()
-     {
-        $tabla2 = $this->tabla2->map(function ($item) {
-            if (is_string($item['fecha'])) {
-                $item['fecha'] = \Carbon\Carbon::parse($item['fecha']);
-            }
-            return [
-                'fecha' => $item['fecha'],
-                'taller' => $item['taller'],
-                'precio' => $item['precio'],
-            ];
-        });
+    //COSTOS TOTALES POR TALLER
+    private function calcularCostosPorTaller()
+    {
+        return $this->tabla2->groupBy('taller')->map(function ($items, $taller) {
+            $sueldosInspector = 1500;
+            $gratificacion = 125;
 
-        // Agrupamos por 'taller' y 'mes' (a través de la fecha)
-        return $tabla2->groupBy(function ($item) {
-            return $item['taller'] . '-' . $item['fecha']->format('Y-m');
-        })->map(function ($items, $key) {
-            list($taller, $fecha) = explode('-', $key);
-            $mes = $items[0]['fecha']->format('Y-m'); // Obtenemos el formato 'YYYY-MM'
+            $hojas = $items->filter(function ($item) {
+                return $item['servicio'] !== 'Chip por deterioro';
+            })->count() * 0.50;
+
+            $chips = $items->filter(function ($item) {
+                return in_array($item['servicio'], ['Conversión a GNV + Chip', 'Chip por deterioro']);
+            })->count() * 20;
+
+            $serviciosAnualCofide = $items->filter(function ($item) {
+                return $item['servicio'] === 'Revisión anual GNV';
+            })->count() * 2.34;
+
+            $serviciosInicialCofide = $items->filter(function ($item) {
+                return $item['servicio'] === 'Conversión a GNV';
+            })->count() * 5.46;
+
+            $costosTotales = $sueldosInspector + $gratificacion + $hojas + $chips + $serviciosAnualCofide + $serviciosInicialCofide;
 
             return [
                 'taller' => $taller,
-                'mes' => $mes,
-                'ingresos_mensuales' => $items->sum('precio')
+                'sueldos_inspector' => $sueldosInspector,
+                'gratificacion' => $gratificacion,
+                'hojas' => $hojas,
+                'chips' => $chips,
+                'servicios_anual_cofide' => $serviciosAnualCofide,
+                'servicios_inicial_cofide' => $serviciosInicialCofide,
+                'costos_totales' => $costosTotales
             ];
-        })->sortBy(['taller', 'mes'])->values()->toArray();
-     }
+        })->sortByDesc('costos_totales')->values()->toArray();
+    }
 
+    // CALCULAR RENTABILIDAD POR TALLER
+    private function calcularRentabilidadPorTaller($ajustarIngresos = false, $ajustarCostos = false)
+    {
+        $ingresostotales = $this->calcularIngresosPorTaller();
+        $costostotales = $this->calcularCostosPorTaller();
+
+        $rentabilidad = collect($ingresostotales)->map(function ($ingreso) use ($costostotales, $ajustarIngresos, $ajustarCostos) {
+            $taller = $ingreso['taller'];
+            $costos = collect($costostotales)->firstWhere('taller', $taller);
+            $costosTotales = $costos['costos_totales'] ?? 0;
+
+            if ($ajustarIngresos) {
+                $ingreso['ingresos_totales'] *= 0.82; // Reducir en 18% (IGV)
+            }
+
+            if ($ajustarCostos) {
+                $costosTotales += 135 + 125; // Sumar Essalud y CTS
+            }
+
+            $gastosAdministrativos = floatval($this->gastosAdministrativos);
+            $costosTotales += $gastosAdministrativos; // Sumar Gastos Administrativos
+
+            $rentabilidad = $ingreso['ingresos_totales'] - $costosTotales;
+
+            return [
+                'taller' => $taller,
+                'ingresos_totales' => $ingreso['ingresos_totales'],
+                'costos_totales' => $costosTotales,
+                'rentabilidad' => $rentabilidad
+            ];
+        })->sortByDesc('rentabilidad')->values()->toArray();
+
+        return $rentabilidad;
+    }
+
+    /*private function calcularRentabilidadPorTaller()
+     {
+        $ingresostotales = $this->calcularIngresosPorTaller();
+        $costostotales = $this->calcularCostosPorTaller();
+        // Combinar datos de ingresos y costos
+        $rentabilidad = collect($ingresostotales)->map(function ($ingreso) use ($costostotales) {
+            $taller = $ingreso['taller'];
+            $costos = collect($costostotales)->firstWhere('taller', $taller);
+            $costosTotales = $costos['costos_totales'] ?? 0;
+
+            $rentabilidad = $ingreso['ingresos_totales'] - $costosTotales;
+
+            return [
+                'taller' => $taller,
+                'ingresos_totales' => $ingreso['ingresos_totales'],
+                'costos_totales' => $costosTotales,
+                'rentabilidad' => $rentabilidad
+            ];
+        })->sortByDesc('rentabilidad')->values()->toArray();
+
+        return $rentabilidad;
+     }
     */
+
+    //ACTUALIZAR CHECKBOX
+    public function updatedAjustarIngresos()
+    {
+        $this->generarReporte();
+    }
+
+    public function updatedAjustarCostos()
+    {
+        $this->generarReporte();
+    }
+
+    public function updatedGastosAdministrativos($value)
+    {
+        $this->gastosAdministrativos = floatval($value);
+        $this->generarReporte();
+    }
+
+    //TOTAL RENTABILIDAD TALLER
+    private function calcularTotalRentabilidad($ajustarIngresos = false, $ajustarCostos = false, $gastosAdministrativos = 0)
+    {
+        $rentabilidadPorTaller = $this->calcularRentabilidadPorTaller($ajustarIngresos, $ajustarCostos, $gastosAdministrativos);
+        $totalRentabilidad = collect($rentabilidadPorTaller)->sum('rentabilidad');
+
+        return $totalRentabilidad;
+    }
+
+    //EXPORTAR A EXCELL
+    public function exportarExcel($data)
+    {
+        //dd($data);
+        $fecha = $this->fechaInicio . 'al' . $this->fechaFin;
+        return Excel::download(new ReporteRentabilidadExport($data), 'Rentabilidad del '. $fecha . '.xlsx');
+    }
 
     // CARGAMOS DATA DE CERTIFICACION Y CERTIFICADOS_PENDIENTES
     public function generaData()
@@ -215,9 +284,9 @@ class Rentabilidad extends Component
             ->IdInspectores($this->ins)
             ->IdTipoServicio($this->servicio)
             // Excluir al inspector con id = 201 
-            ->whereHas('Inspector', function ($query) {
+            /*->whereHas('Inspector', function ($query) {
                 $query->whereNotIn('id', [37, 117, 201]);
-                })
+                })*/
             ->rangoFecha($this->fechaInicio, $this->fechaFin)
             ->where('pagado', 0)
             ->whereIn('estado', [3, 1])
@@ -226,9 +295,9 @@ class Rentabilidad extends Component
         //TODO CER-PENDIENTES:
         $cerPendiente = CertificacionPendiente::idTalleres($this->taller)
             ->IdInspectores($this->ins)
-            ->whereHas('Inspector', function ($query) {
+            /*->whereHas('Inspector', function ($query) {
                 $query->whereNotIn('id', [37, 117, 201]);
-                })
+                })*/
             ->IdTipoServicios($this->servicio)
             ->rangoFecha($this->fechaInicio, $this->fechaFin)
             ->get();

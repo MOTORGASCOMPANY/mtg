@@ -123,7 +123,7 @@ class ReportesMtg extends Component
                 })
                 ->rangoFecha($this->fechaInicio, $this->fechaFin)
                 ->where('pagado', 0)
-                ->whereIn('estado', [3, 1])
+                //->whereIn('estado', [3, 1])
                 ->get();
 
             //TODO CER-PENDIENTES PARA INSPECTOR:
@@ -146,7 +146,7 @@ class ReportesMtg extends Component
                 })
                 ->rangoFecha($this->fechaInicio, $this->fechaFin)
                 ->where('pagado', 0)
-                ->whereIn('estado', [3, 1])
+                //->whereIn('estado', [3, 1])
                 ->get();
 
             //TODO CER-PENDIENTES PARA OFICINA:

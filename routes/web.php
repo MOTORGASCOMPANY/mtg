@@ -60,6 +60,7 @@ use App\Http\Livewire\Reportes\ReporteCalcularGasol;
 use App\Http\Livewire\Reportes\ReporteDocumentosTaller;
 use App\Http\Livewire\Reportes\ReporteFotosPorInspector;
 use App\Http\Livewire\Reportes\ReporteGeneralGnv;
+use App\Http\Livewire\Reportes\ReporteInventario;
 use App\Http\Livewire\Reportes\ReporteMateriales;
 use App\Http\Livewire\Reportes\ReporteSalidaMateriales;
 use App\Http\Livewire\Reportes\ReporteServiciosPorInspector;
@@ -231,6 +232,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/Reporte-actualizar-gasol', ActualizarPreciosGasol::class)->middleware('can:reportes.reporteActualizarGasol')->name('reportes.reporteActualizarGasol'); //7  Reporte Actualizar GASOL
         //Ruta para ver los reportes de materiales
         Route::get('/Reporte-salida-materiales', ReporteSalidaMateriales::class)->middleware('can:reportes.reporteSalidaMateriales')->name('reportes.reporteSalidaMateriales'); // reporte salida materiales
+        Route::get('/Reporte-inventario', ReporteInventario::class)->middleware('can:reportes.reporteInventario')->name('reportes.reporteInventario');
         Route::get('/ConsultarHoja', ConsultarHoja::class)->middleware('can:ConsultarHoja')->name('ConsultarHoja'); //Consultar Hoja material
 
         //Ruta para rentabilidad taller

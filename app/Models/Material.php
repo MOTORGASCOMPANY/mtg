@@ -149,4 +149,18 @@ class Material extends Model
         }
     }
 
+    public function scopeEstadoInvetariado($query,$search){
+        if($search){
+           return $query->where([['estado', $search]]);
+        }
+    }
+
+    public function scopeRangoFecha(Builder $query, string $desde, string $hasta): void
+    {
+        if ($desde && $hasta) {
+            $query->whereBetween('updated_at', [$desde . ' 00:00', $hasta . ' 23:59']);
+        }
+    }
+
+    
 }

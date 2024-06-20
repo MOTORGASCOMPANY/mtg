@@ -10,7 +10,7 @@
                     </h2>
                 </div>
 
-                <div class="w-full  items-center md:flex md:flex-row md:justify-between ">
+                <div class="flex flex-wrap items-center space-x-2">
                     <div x-data="{ isOpen: false }" class="flex bg-white items-center p-2 rounded-md mb-4">
                         <span>Taller: </span>
                         <div class="relative">

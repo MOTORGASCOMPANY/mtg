@@ -26,11 +26,13 @@ class ReporteCalcularExport implements FromCollection, WithHeadings, WithMapping
     public function __construct($data)
     {
         $this->data = $data;
+        //dd($this->data);
     }
 
     public function collection()
     {
         return $this->data;
+        //return collect($this->data);
     }
 
     public function title(): string
@@ -53,16 +55,6 @@ class ReporteCalcularExport implements FromCollection, WithHeadings, WithMapping
     public function headings(): array
     {
         return [
-            /*'Placa',
-            'Taller', 
-            'Inspector', 
-            'Servicio', 
-            'Hoja',  
-            'Precio',
-            'Fecha', 
-            'Estado',
-            'Pagado',*/
-
             'FECHA',
             'N° CERTIFICADO',
             'TALLER',
@@ -106,8 +98,26 @@ class ReporteCalcularExport implements FromCollection, WithHeadings, WithMapping
             $secondPart = $data['placa'] ?? 'EN TRAMITE';
         }
 
+        // Determinar el valor de 'externo' y 'anulado'
+        $externoyanulado = null;
+        if (isset($data['externo']) && $data['externo'] == 1) {
+            $externoyanulado = 'Externo';
+        }
+        if ($data['estado'] == 2) {
+            if ($externoyanulado !== null) {
+                $externoyanulado .= ', Anulado';
+            } else {
+                $externoyanulado = 'Anulado';
+            }
+        }
+
         // Determinar el valor de 'externo'
         $externo = isset($data['externo']) ? ($data['externo'] == 1 ? 'Externo' : null) : null;
+
+        // Filtrar por tipo_modelo y estado
+        /*if ($data['tipo_modelo'] === 'App\Models\Certificacion' && $data['estado'] === 2) {
+            return [];
+        }*/
 
 
         switch ($data['tipo_modelo']) {
@@ -120,7 +130,7 @@ class ReporteCalcularExport implements FromCollection, WithHeadings, WithMapping
                     $secondPart, //$data['placa'] ?? 'EN TRAMITE'
                     $data['servicio'] ?? 'N.A',
                     '',
-                    $externo ?? null,
+                    $externoyanulado ?? null,
                     $precio ?? 'S.P',
                     'certificacion',
                 ];
@@ -218,7 +228,23 @@ class ReporteCalcularExport implements FromCollection, WithHeadings, WithMapping
 
         // Agregar la fórmula de suma en la columna I, después de la última fila de datos
         $lastDataRow = $lastRow + 1; // La fila donde se colocará la fórmula
-        $sheet->setCellValue("I{$lastDataRow}", "=SUM(I2:I{$lastRow})");
+        $sumFormula = "=SUM(I2:I{$lastRow})";
+
+        // Iterar sobre los datos para construir la fórmula que excluya las filas anuladas
+        $excludeConditions = [];
+        foreach ($this->data as $index => $item) {
+            if ($item['tipo_modelo'] === 'App\Models\Certificacion' && $item['estado'] == 2) {
+                $rowIndex = $index + 2; // Ajustar índice debido a la fila de encabezado
+                $excludeConditions[] = "I{$rowIndex}";
+            }
+        }
+
+        if (!empty($excludeConditions)) {
+            $excludeFormula = implode(",", $excludeConditions);
+            $sumFormula = "=SUM(I2:I{$lastRow}) - SUM({$excludeFormula})";
+        }
+
+        $sheet->setCellValue("I{$lastDataRow}", $sumFormula);
 
         // Aplicar formato de número a la celda de la suma
         $sheet->getStyle("I{$lastDataRow}")->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_00);

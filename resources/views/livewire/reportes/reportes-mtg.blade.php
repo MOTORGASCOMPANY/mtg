@@ -7,7 +7,7 @@
                         &nbsp;REPORTE GENERAL DETALLADO
                     </h2>
                 </div>
-                <div class="flex items-center space-x-2">
+                <div class="flex flex-wrap items-center space-x-2">
                     @hasanyrole('administrador|Administrador del sistema')
                         {{-- <div x-data="{ isOpen: false }" class="flex bg-white items-center p-2 rounded-md mb-4">
                             <span class="mr-1">Taller: </span>
@@ -307,9 +307,7 @@
                                                                 @endif
                                                             </div>
                                                         </td>
-                                                        <td
-                                                            class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
-
+                                                        <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
 
                                                             @if ($data['pagado'] == 0)
                                                                 Sin cobrar
@@ -331,7 +329,13 @@
                                                         Total: {{-- ({{ $certificacionesInspector[0]->nombre }}) --}}
                                                     </td>
                                                     <td class="border-r px-6 py-3 dark:border-neutral-500 font-bold">
-                                                        {{ number_format(collect($certificacion)->sum('precio'), 2) }}
+                                                        {{-- number_format(collect($certificacion)->sum('precio'), 2) --}}
+                                                        {{ number_format(
+                                                            collect($certificacion)->filter(function($cert) {
+                                                                return $cert['tipo_modelo'] !== 'App\Models\Certificacion' || $cert['estado'] !== 2;
+                                                            })->sum('precio'), 2
+                                                        ) }}
+                                                
                                                     </td>
                                                 </tr>
                                             </tbody>

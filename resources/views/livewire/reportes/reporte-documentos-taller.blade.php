@@ -2,7 +2,7 @@
     <div class="w-full pt-3">
         <div class="w-full pt-2  mt-2 px-4 text-center mx-auto">
             <h1 class="text-2xl text-indigo-500 font-bold italic text-center py-8"><span class="text-none">📕</span>REPORTE DE DOCUMENTOS PROXIMOS A VENCER</h1>
-            <div class="flex items-center justify-between">
+            <div class="flex flex-wrap items-center space-x-2">
                 <div class="flex items-center space-x-2">
                     <div class="flex bg-white items-center p-2 w-1/2 md:w-48 rounded-md mb-4">
                         <span>Desde: </span>

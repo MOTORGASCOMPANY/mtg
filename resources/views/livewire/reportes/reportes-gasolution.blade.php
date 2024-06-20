@@ -7,7 +7,7 @@
                     &nbsp;REPORTE GENERAL DETALLADO GASOLUTION
                 </h2>
             </div>
-            <div class="flex items-center space-x-2">
+            <div class="flex flex-wrap items-center space-x-2">
                 {{--
                     <div x-data="{ isOpen: false }" class="flex bg-white items-center p-2 rounded-md mb-4">
                         <span class="mr-1">Taller: </span>

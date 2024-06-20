@@ -647,6 +647,13 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                         class="mt-2 divide-y-2 divide-gray-600 overflow-hidden text-sm font-medium bg-gray-600 text-white shadow-inner"
                                         aria-label="submenu">   
 
+                                        @can('reportes.reporteInventario')
+                                            <x-jet-responsive-nav-link class="text-sm truncate"
+                                                href="{{ route('reportes.reporteInventario') }}" :active="request()->routeIs('reportes.reporteInventario')">
+                                                Inventario
+                                            </x-jet-responsive-nav-link>
+                                        @endcan
+
                                         @can('reportes.reporteSalidaMateriales')
                                             <x-jet-responsive-nav-link class="text-sm truncate"
                                                 href="{{ route('reportes.reporteSalidaMateriales') }}" :active="request()->routeIs('reportes.reporteSalidaMateriales')">

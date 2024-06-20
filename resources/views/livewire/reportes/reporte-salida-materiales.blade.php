@@ -7,7 +7,7 @@
                     &nbsp;REPORTE SALIDA DE MATERIALES
                 </h2>
             </div>
-            <div class="w-full  items-center md:flex md:flex-row md:justify-between ">
+            <div class="flex flex-wrap items-center space-x-2">
                 {{-- FILTRO PARA CREADO POR --}}
                 <div class="flex bg-gray-50 items-center p-2 rounded-md mb-4">
                     <span>Creado: </span>

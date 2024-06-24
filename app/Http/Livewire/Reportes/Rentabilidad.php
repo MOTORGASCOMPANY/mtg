@@ -151,8 +151,12 @@ class Rentabilidad extends Component
             $sueldosInspector = 1500;
             $gratificacion = 125;
 
-            $hojas = $items->filter(function ($item) {
+            /*$hojas = $items->filter(function ($item) {
                 return $item['servicio'] !== 'Chip por deterioro';
+            })->count() * 0.50;*/
+
+            $hojas = $items->filter(function ($item) {
+                return $item['servicio'] !== 'Chip por deterioro' && $item['servicio'] !== 'Desmonte de Cilindro';
             })->count() * 0.50;
 
             $chips = $items->filter(function ($item) {

@@ -25,11 +25,13 @@ use App\Http\Livewire\AdministracionCertificaciones;
 use App\Http\Livewire\AdminPermisos;
 use App\Http\Livewire\AdminRoles;
 use App\Http\Livewire\Arreglando;
+use App\Http\Livewire\Boletas;
 use App\Http\Livewire\Cambiar;
 use App\Http\Livewire\CargaFotos;
 use App\Http\Livewire\CargaImagenes;
 use App\Http\Livewire\ConsultarHoja;
 use App\Http\Livewire\ContratosTrabajos;
+use App\Http\Livewire\EditarBoleta;
 use App\Http\Livewire\EditarEmpleado;
 use App\Http\Livewire\EditarTaller;
 use App\Http\Livewire\EditarVacacion;
@@ -38,6 +40,7 @@ use App\Http\Livewire\FinalizarPreConversion;
 use App\Http\Livewire\ImportarAnuales;
 use App\Http\Livewire\ImportarConversiones;
 use App\Http\Livewire\ImportarDesmontes;
+use App\Http\Livewire\ListaBoletas;
 use App\Http\Livewire\ListaCertificaciones;
 use App\Http\Livewire\ListaCertificacionesPendientes;
 use App\Http\Livewire\ListaDesmontes;
@@ -236,7 +239,12 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/ConsultarHoja', ConsultarHoja::class)->middleware('can:ConsultarHoja')->name('ConsultarHoja'); //Consultar Hoja material
 
         //Ruta para rentabilidad taller
-        Route::get('/Rentabilidad', Rentabilidad::class)->name('Rentabilidad');
+        Route::get('/Rentabilidad', Rentabilidad::class)->middleware('can:Rentabilidad')->name('Rentabilidad');
+
+        //Ruta para subir boletas y vauchers
+        Route::get('/Listaboletas', ListaBoletas::class)->name('ListaBoletas');
+        Route::get('/Boletas', Boletas::class)->name('Boletas');
+        Route::get('/Boletas/{idBoleta}', EditarBoleta::class)->name('editar-boletas');
 
         //Prueba Fotos
         Route::get('/CargaFotos', CargaFotos::class)->name('CargaFotos');
@@ -313,6 +321,10 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
             //Rutas para ver y descargar pdf contrato
             Route::get('/contrato/{id}', 'generaPdfContrato')->name("contratoTrabajo");
             Route::get('/contrato/{id}/descargar', 'descargaPdfContrato')->name("descargarContratoTrabajo");
+
+
+            //Rutas para boletas y vaucher
+            Route::get('/boletas/{id}', 'generaPdfBoleta')->name("generaPdfBoleta");
 
 
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Boleta;
 use App\Models\Certificacion;
 use App\Models\ContratoTrabajo;
 use App\Models\Duplicado;
@@ -1573,5 +1574,20 @@ class PdfController extends Controller
             return $decenas[$decena] . ($unidad ? ' y ' . $unidades[$unidad] : ''); // Devolver la combinación de decena y unidad
         }
         return $unidades[$monto];
+    }
+
+    //Genera pdf boleta / vaucher
+    public function generaPdfBoleta($id)
+    {
+        $boleta = Boleta::findOrFail($id);
+        $documentos = $boleta->boletaarchivo;
+
+        $data = [
+            'documentos' => $documentos,
+        ];
+
+        $pdf = App::make('dompdf.wrapper');
+        $pdf->loadView('boletasimage', $data);
+        return $pdf->stream('boleta-'.$id.'.pdf');
     }
 }

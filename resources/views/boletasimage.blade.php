@@ -42,7 +42,8 @@
         </p>
         @foreach ($documentos as $doc)
             <div class="image-container">
-                <img src="{{ public_path('storage/docsBoletas/' . basename($doc->ruta)) }}" height="400">
+                <img src="{{ public_path('storage/docsBoletas/' . basename($doc->ruta)) }}"
+                    @if ($doc->nombre === 'comprobante') height="500" @endif>
             </div>
         @endforeach
     @else

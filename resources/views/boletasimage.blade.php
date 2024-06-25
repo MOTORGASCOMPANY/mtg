@@ -5,16 +5,27 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .content {
+            padding: 10px;
         }
 
         .image-container {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
 
         .image-container img {
             max-width: 100%;
             height: auto;
+        }
+
+        p {
+            margin: 0;
+            padding: 10px;
         }
     </style>
 </head>

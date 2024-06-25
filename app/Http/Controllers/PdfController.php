@@ -1587,7 +1587,10 @@ class PdfController extends Controller
         ];
 
         $pdf = App::make('dompdf.wrapper');
-        $pdf->loadView('boletasimage', $data);
+        $pdf->loadView('boletasimage', $data)
+        ->setPaper('a4', 'portrait') // A4 size in portrait orientation
+        ->setOption('isHtml5ParserEnabled', true)
+        ->setOption('isRemoteEnabled', true);
         return $pdf->stream('boleta-'.$id.'.pdf');
     }
 }

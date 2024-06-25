@@ -31,7 +31,7 @@
         </p>
         @foreach ($documentos as $doc)
             <div class="image-container">
-                <img src="{{ Storage::url($doc->ruta) }}">
+                <img src="{{ public_path('storage/docsBoletas/' . basename($doc->ruta)) }}">
             </div>
         @endforeach
     @else

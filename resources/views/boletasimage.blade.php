@@ -20,7 +20,7 @@
 
         .image-container img {
             max-width: 100%;
-            height: auto;
+            /*height: auto;*/
         }
 
         p {
@@ -32,7 +32,7 @@
 
 <body>
     @if ($documentos->isNotEmpty())
-        <p>
+        <p style="text-align: center;">
             Comprobantes del taller
             {{ optional($documentos->first()->boleta->taller)->nombre ?? '' }}
             desde
@@ -42,7 +42,7 @@
         </p>
         @foreach ($documentos as $doc)
             <div class="image-container">
-                <img src="{{ public_path('storage/docsBoletas/' . basename($doc->ruta)) }}">
+                <img src="{{ public_path('storage/docsBoletas/' . basename($doc->ruta)) }}" height="400">
             </div>
         @endforeach
     @else

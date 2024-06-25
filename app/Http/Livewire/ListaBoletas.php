@@ -57,9 +57,14 @@ class ListaBoletas extends Component
 
     public function eliminarBoleta($idBoleta)
     {
-        Boleta::findOrFail($idBoleta)->delete();
+        $boleta = Boleta::findOrFail($idBoleta);
+        // Eliminar archivos relacionados
+        $boleta->boletaarchivo()->delete();
+        // Eliminar la boleta
+        $boleta->delete();
         $this->emit('render');
     }
+    
     public function agregar()
     {
         return redirect()->route('Boletas');

@@ -575,7 +575,7 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                         @can('Rentabilidad')
                                             <x-jet-responsive-nav-link class="text-sm truncate"
                                                 href="{{ route('Rentabilidad') }}" :active="request()->routeIs('Rentabilidad')">
-                                                Rentabilidad
+                                                Rentabilidad Talleres
                                             </x-jet-responsive-nav-link>
                                         @endcan
 
@@ -865,11 +865,12 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                             :active="request()->routeIs('ManualFunciones')">
                                             Manual de Funciones
                                         </x-jet-responsive-nav-link>
-
-                                        <x-jet-responsive-nav-link class="text-sm"
-                                            href="{{ route('comunicado.createOrUpdateForm') }}" :active="request()->routeIs('comunicado.createOrUpdateForm')">
-                                            Emitir Comunicados
-                                        </x-jet-responsive-nav-link>
+                                        @can('comunicado.createOrUpdateForm')
+                                            <x-jet-responsive-nav-link class="text-sm truncate"
+                                                href="{{ route('comunicado.createOrUpdateForm') }}" :active="request()->routeIs('comunicado.createOrUpdateForm')">
+                                                Emitir Comunicados
+                                            </x-jet-responsive-nav-link>
+                                        @endcan
 
                                     </ul>
                                 </div>

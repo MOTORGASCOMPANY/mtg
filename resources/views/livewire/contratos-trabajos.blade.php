@@ -84,8 +84,12 @@
                                 <div>
                                     <x-jet-label value="Cargo:" />
                                     <x-jet-input type="text"
-                                        class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full "
-                                        wire:model="cargo" />
+                                        class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full " wire:model="cargo" list="items"/>
+                                        <datalist id="items">
+                                            <option value="Inspector">Inspector</option>
+                                            <option value="Administrador">Administrador</option>
+                                            <option value="Ingeniero">Ingeniero</option>
+                                        </datalist>
                                     <x-jet-input-error for="cargo" />
                                 </div>
                                 <div>

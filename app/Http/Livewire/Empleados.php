@@ -89,9 +89,9 @@ class Empleados extends Component
             'emp.fechaExpiracion' => 'required|date|after:emp.fechaInicio',
             'emp.cargo' => 'required',
             'emp.pago' => 'required|numeric',
-            'emp.celularEmpleado' => 'required|digits:9',
-            'emp.correoEmpleado' => 'required|email',
-            'emp.cumpleaosEmpleado' => 'required|date',
+            //'emp.celularEmpleado' => 'required|digits:9',
+            //'emp.correoEmpleado' => 'required|email',
+            //'emp.cumpleaosEmpleado' => 'required|date',
         ];
 
         $this->validate($rules);

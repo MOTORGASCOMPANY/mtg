@@ -2,9 +2,9 @@
     <div class="flex flex-row  justify-between items-center">
         <h2 class="mt-8 font-bold text-lg text-indigo-600"> Documentos del Empleado {{ $empleado->empleado->name }}</h2>
         <div class="flex space-x-2">
-            @hasanyrole('administrador|Administrador del sistema')
+            {{--@hasanyrole('administrador|Administrador del sistema')--}}
                 @livewire('create-documento-empleado', ['idEmpleado' => $empleado->id])
-            @endhasanyrole
+            {{--@endhasanyrole--}}
             <button data-tooltip-target="tooltip-dark" type="button" wire:click="regresar" wire:target="regresar"
                 class="group flex py-4 px-4 text-center rounded-md bg-indigo-400 font-bold text-white cursor-pointer hover:bg-indigo-500 hover:animate-pulse">
                 <i class="fa-solid fa-rotate-left"></i>

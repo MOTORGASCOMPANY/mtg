@@ -43,8 +43,8 @@ class ContratosTrabajos extends Component
             'fechaExpiracion' => 'required|date|after:fechaInicio',
             'cargo' => 'required',
             'pago' => 'required|numeric',
-            'celularEmpleado' => 'required|digits:9',
-            'correoEmpleado' => 'required|email',
+            //'celularEmpleado' => 'required|digits:9',
+            //'correoEmpleado' => 'required|email',
 
         ]);
 

@@ -8,9 +8,9 @@
                     &nbsp;REPORTE GENERAL TALLER
                 </h2>
             </div>
-            {{--<div class="flex items-center space-x-2">--}}
+            {{-- <div class="flex items-center space-x-2"> --}}
             <div class="flex flex-wrap items-center space-x-2">
-                {{--<div x-data="{ isOpen: false }" class="flex bg-white items-center p-2 rounded-md mb-4">
+                {{-- <div x-data="{ isOpen: false }" class="flex bg-white items-center p-2 rounded-md mb-4">
                     <span class="mr-1">Taller: </span>
                     <div class="relative">
                         <div x-on:click="isOpen = !isOpen" class="cursor-pointer">
@@ -54,7 +54,7 @@
                     </div>
                 </div>
 
-                {{--<div x-data="{ isOpen: false }" class="flex bg-white items-center p-2 rounded-md mb-4">
+                {{-- <div x-data="{ isOpen: false }" class="flex bg-white items-center p-2 rounded-md mb-4">
                     <span class="mr-1">Inspector: </span>
                     <div class="relative">
                         <div x-on:click="isOpen = !isOpen" class="cursor-pointer">
@@ -252,14 +252,21 @@
                                                                 {{ $data['placa'] ?? 'En tramite' }}
                                                             @endif
                                                         </td>
-                                                        <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
+                                                        <td
+                                                            class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
                                                             {{ $data['servicio'] ?? 'N.E' }}
                                                         </td>
-                                                        <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
+                                                        <td
+                                                            class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
 
                                                         </td>
-                                                        <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
-                                                            {{ isset($data['externo']) ? ($data['externo'] == 1 ? 'Externo' : null) : null }}
+                                                        <td
+                                                            class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
+                                                            {{ ($data['externo'] == 1 ? 'Externo' : null) .
+                                                                ($data['externo'] == 1 && $data['estado'] == 2 && $data['tipo_modelo'] == 'App\Models\Certificacion'
+                                                                    ? ', '
+                                                                    : null) .
+                                                                ($data['estado'] == 2 && $data['tipo_modelo'] == 'App\Models\Certificacion' ? 'Anulado' : null) }}
                                                         </td>
                                                         <td
                                                             class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
@@ -273,7 +280,13 @@
                                                         Total:
                                                     </td>
                                                     <td class="border-r px-6 py-3 dark:border-neutral-500 font-bold">
-                                                        S/{{ number_format(collect($certificacion)->sum('precio'), 2) }}
+                                                        {{-- S/{{ number_format(collect($certificacion)->sum('precio'), 2) }} --}}
+                                                        S/{{ number_format(
+                                                            collect($certificacion)->filter(function ($item) {
+                                                                    return !($item['tipo_modelo'] == 'App\Models\Certificacion' && $item['estado'] == 2);
+                                                                })->sum('precio'),
+                                                            2,
+                                                        ) }}
                                                     </td>
                                                 </tr>
                                             </tbody>

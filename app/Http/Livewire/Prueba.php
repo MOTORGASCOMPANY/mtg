@@ -49,6 +49,7 @@ class Prueba extends Component
 
     //variable para fecha
     public $fechaCertificacion;
+    public $minDate, $maxDate;
 
 
     protected $rules = ["placa" => "required|min:3|max:7"];
@@ -58,6 +59,9 @@ class Prueba extends Component
         $this->talleres = Taller::all()->sortBy('nombre');
         //$this->estado = "esperando";
         //$this->certificacion=new Certificacion();
+        $today = Carbon::today(); //para obtener la fecha de hoy
+        $this->maxDate = $today->toDateString(); //maximo dia de hoy
+        $this->minDate = $today->subDays(3)->toDateString(); //minimo 3 dias anteriores al dia de hoy
     }
 
     protected $listeners = ['cargaVehiculo' => 'carga', "refrescaVehiculo" => "refrescaVe"];
@@ -315,6 +319,21 @@ class Prueba extends Component
             return;
         }
 
+
+        // Obtener la fecha de hoy
+        $hoy = Carbon::today();
+        if (empty($this->fechaCertificacion)) {
+            $fechaCertificacion = $hoy;
+        } else {
+            $fechaCertificacion = Carbon::parse($this->fechaCertificacion);
+        }
+
+        // Validar que la fecha de certificación esté dentro de los últimos tres días
+        if ($fechaCertificacion->lt($hoy->subDays(3)) || $fechaCertificacion->gt(Carbon::today())) {
+            $this->emit("minAlert", ["titulo" => "AVISO DEL SISTEMA", "mensaje" => "La fecha de certificación debe estar dentro de los últimos tres días", "icono" => "warning"]);
+            return;
+        }
+
         $certi = Certificacion::certificarGnv($taller, $servicio, $hoja, $this->vehiculo, Auth::user(), $this->serviexterno);
 
         if ($certi) {
@@ -517,7 +536,7 @@ class Prueba extends Component
         $servicio = Servicio::findOrFail($this->servicio);
         $hoja = $this->procesaFormato($this->numSugerido, $servicio->tipoServicio->id);
 
-        
+
 
         if ($hoja != null) {
             if (isset($this->vehiculo)) {

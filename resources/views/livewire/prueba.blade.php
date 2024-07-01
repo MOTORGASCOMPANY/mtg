@@ -55,7 +55,8 @@
                             <div class="max-w-5xl m-auto bg-white rounded-lg shadow-md my-4 py-4">
                                 <div class="my-2 flex flex-col md:flex-row justify-evenly items-center">
                                     <div>
-                                        <x-jet-input type="date" class="" wire:model="fechaCertificacion" />
+                                        <input  class="form-input rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" 
+                                        type="date" wire:model="fechaCertificacion" min="{{ $minDate }}" max="{{ $maxDate }}">
                                         <x-jet-input-error for="fechaCertificacion" />
                                     </div>
                                     <div class="w-full md:w-2/6 flex justify-center items-center">                                        
@@ -196,7 +197,8 @@
                             <div class="max-w-5xl m-auto bg-white rounded-lg shadow-md my-4 py-4">
                                 <div class="my-2 flex flex-col md:flex-row justify-evenly items-center">
                                     <div>
-                                        <x-jet-input type="date" class="" wire:model="fechaCertificacion" />
+                                        <input  class="form-input rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" 
+                                        type="date" wire:model="fechaCertificacion" min="{{ $minDate }}" max="{{ $maxDate }}">
                                         <x-jet-input-error for="fechaCertificacion" />
                                     </div>
                                     <div class="w-full md:w-2/6 flex justify-center items-center">                                        
@@ -339,11 +341,21 @@
                             <div class="max-w-5xl m-auto bg-white rounded-lg shadow-md my-4 py-4">
                                 <div class="my-2 flex flex-col md:flex-row justify-evenly items-center">                                    
                                     <div>
+                                        {{--
                                         <select wire:model="tallerAuto"
                                             class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full ">
                                             <option value="">Seleccione Taller Autorizado</option>
                                             @foreach ($talleres as $taller2)
                                                 @if (in_array($taller2->id, [16, 13, 9, 42, 5, 23, 38, 30, 74, 20, 88, 89, 78, 46, 73, 27]))
+                                                    <option value="{{ $taller2->id }}">{{ $taller2->nombre }}</option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                        --}}
+                                        <select wire:model="tallerAuto" class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full">
+                                            <option value="">Seleccione Taller Autorizado</option>
+                                            @foreach ($talleres as $taller2)
+                                                @if ($taller2->autorizado_glp == 1)
                                                     <option value="{{ $taller2->id }}">{{ $taller2->nombre }}</option>
                                                 @endif
                                             @endforeach
@@ -496,11 +508,20 @@
                             <div class="max-w-5xl m-auto bg-white rounded-lg shadow-md my-4 py-4">
                                 <div class="my-2 flex flex-col md:flex-row justify-evenly items-center">                                    
                                     <div>
+                                        {{--
                                         <select wire:model="tallerAuto" 
                                             class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full ">
                                             <option value="">Seleccione Taller Autorizado</option>
                                             @foreach ($talleres as $taller2)
                                                 @if (in_array($taller2->id, [16, 13, 9, 42, 5, 23, 38, 30, 74, 20, 88, 89, 78, 46, 73, 27]))
+                                                    <option value="{{ $taller2->id }}">{{ $taller2->nombre }}</option>
+                                                @endif
+                                            @endforeach
+                                        </select>--}}
+                                        <select wire:model="tallerAuto" class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full">
+                                            <option value="">Seleccione Taller Autorizado</option>
+                                            @foreach ($talleres as $taller2)
+                                                @if ($taller2->autorizado_glp == 1)
                                                     <option value="{{ $taller2->id }}">{{ $taller2->nombre }}</option>
                                                 @endif
                                             @endforeach
@@ -1326,6 +1347,7 @@
                             <div class="max-w-5xl m-auto bg-white rounded-lg shadow-md my-4 py-4">
                                 <div class="my-2 flex flex-col md:flex-row justify-evenly items-center">                                    
                                     <div>
+                                        {{-- 
                                         <select wire:model="tallerAuto"
                                             class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full ">
                                             <option value="">Seleccione Taller Autorizado</option>
@@ -1335,6 +1357,15 @@
                                                 @endif
                                             @endforeach
                                         </select>
+                                        --}}
+                                        <select wire:model="tallerAuto" class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full">
+                                            <option value="">Seleccione Taller Autorizado</option>
+                                            @foreach ($talleres as $taller2)
+                                                @if ($taller2->autorizado_glp == 1)
+                                                    <option value="{{ $taller2->id }}">{{ $taller2->nombre }}</option>
+                                                @endif
+                                            @endforeach
+                                        </select>                                        
                                         <x-jet-input-error for="tallerAuto" />
                                     </div>
                                 </div>

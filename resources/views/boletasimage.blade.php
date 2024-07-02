@@ -15,7 +15,7 @@
 
         .image-container {
             text-align: center;
-            margin-bottom: 10px;
+            margin-bottom: 30px;
         }
 
         .image-container img {
@@ -40,6 +40,8 @@
             hasta
             {{ $documentos->first()->boleta->fechaFin ?? '' }}
         </p>
+        <br>
+        <br>
         @foreach ($documentos as $doc)
             <div class="image-container">
                 <img src="{{ public_path('storage/docsBoletas/' . basename($doc->ruta)) }}"

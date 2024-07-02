@@ -146,7 +146,8 @@
                 efectuar viajes por todas las distintas ciudades del País.
             </p>
             <p>
-                Ambas partes se ratifican en todos los extremos y firman en aceptación del presente contrato el día {{$fechaInicio}}. 
+                En caso de que el taller asignado dejará de laboral con nosotros o solicita el cambio de su persona, por falta de taller;
+                se terminará el contrato. Ambas partes se ratifican en todos los extremos y firman en aceptación del presente contrato el día {{$fechaInicio}}. 
             </p>
         </div>
 

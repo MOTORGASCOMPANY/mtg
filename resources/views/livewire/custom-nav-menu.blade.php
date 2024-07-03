@@ -254,6 +254,14 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                                 </x-jet-responsive-nav-link>
                                             </li>
                                         @endcan
+                                        @can('ServicioTaller')
+                                            <li class="transition-colors duration-150">
+                                                <x-jet-responsive-nav-link class="text-sm" href="{{ route('ServicioTaller') }}"
+                                                    :active="request()->routeIs('ServicioTaller')">
+                                                    Nuevo Ins.Taller
+                                                </x-jet-responsive-nav-link>
+                                            </li>
+                                        @endcan
                                         @can('certificaciones')
                                             <li class="transition-colors duration-150">
                                                 <x-jet-responsive-nav-link class="text-sm"
@@ -292,6 +300,14 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                                 <x-jet-responsive-nav-link class="bg-gray-400 text-sm"
                                                     href="{{ route('admin.certificaciones') }}" :active="request()->routeIs('admin.certificaciones')">
                                                     Admin. Servicios
+                                                </x-jet-responsive-nav-link>
+                                            </li>
+                                        @endcan
+                                        @can('AdministracionCerTaller')
+                                            <li class="transition-colors duration-150">
+                                                <x-jet-responsive-nav-link class="bg-gray-400 text-sm"
+                                                    href="{{ route('AdministracionCerTaller') }}" :active="request()->routeIs('AdministracionCerTaller')">
+                                                    Admin. CertsTaller
                                                 </x-jet-responsive-nav-link>
                                             </li>
                                         @endcan

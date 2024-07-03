@@ -22,6 +22,7 @@ class ServicioTaller extends Component
     public $talleres, $materiales, $taller, $material, $numSugerido, $pertenece;
     public $estado = null;
     public $certificacion = null;
+    public $serviexterno = false;
 
 
     public function mount()
@@ -102,7 +103,7 @@ class ServicioTaller extends Component
             return;
         }
 
-        $certi = CertificacionTaller::certificarTaller($taller, $material, $usuario);
+        $certi = CertificacionTaller::certificarTaller($taller, $material, $usuario,  $this->serviexterno);
         if ($certi) {
             //$this->emit("minAlert", ["titulo" => "¡EXCELENTE TRABAJO!", "mensaje" => "Tu certificado está listo.", "icono" => "success"]);
             $this->emit("minAlert", ["titulo" => "¡EXCELENTE TRABAJO!", "mensaje" => "Tu certificado N°: " . $certi->material->numSerie . " está listo.", "icono" => "success"]);

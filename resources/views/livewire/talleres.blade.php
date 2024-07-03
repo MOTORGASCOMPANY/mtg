@@ -213,6 +213,16 @@
           <x-jet-input wire:model="taller.direccion" type="text" class="w-full" />
           <x-jet-input-error for="taller.direccion" />
         </div>  
+        <div class="mb-4">
+            <x-jet-label value="Telefono:" />
+            <x-jet-input wire:model="taller.telefono" type="text" class="w-full" />
+            <x-jet-input-error for="taller.telefono" />
+          </div>     
+        <div class="mb-4">
+          <x-jet-label value="N° Autorizacion:" />
+          <x-jet-input wire:model="taller.autorizacion" type="text" class="w-full" />
+          <x-jet-input-error for="taller.autorizacion" />
+        </div> 
         
 
     <div class="grid grid-flow-row-dense grid-cols-2">

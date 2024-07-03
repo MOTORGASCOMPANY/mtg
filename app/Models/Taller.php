@@ -22,6 +22,8 @@ class Taller extends Model
     'rutaFirma',
     'autorizado_gnv',
     'autorizado_glp',
+    'telefono',
+    'autorizacion',
     ];
 
 

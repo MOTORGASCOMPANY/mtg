@@ -34,6 +34,16 @@
                 <x-jet-label value="Direccion:" />
                 <x-jet-input type="text" class="w-full" wire:model="direccion" />
                 <x-jet-input-error for="direccion" />
+            </div>
+            <div class="mb-4">
+                <x-jet-label value="Telefono:" />
+                <x-jet-input type="text" class="w-full" wire:model="telefono" />
+                <x-jet-input-error for="telefono" />
+            </div>            
+            <div class="mb-4">
+                <x-jet-label value="N° Autorizacion:" />
+                <x-jet-input type="text" class="w-full" wire:model="autorizacion" />
+                <x-jet-input-error for="autorizacion" />
             </div>           
 
             <div class="grid grid-flow-row-dense grid-cols-2">

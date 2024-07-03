@@ -21,6 +21,7 @@ use App\Http\Controllers\PdfController;
 use App\Http\Controllers\uploadController;
 use App\Http\Livewire\ActualizarPrecios;
 use App\Http\Livewire\ActualizarPreciosGasol;
+use App\Http\Livewire\AdministracionCerTaller;
 use App\Http\Livewire\AdministracionCertificaciones;
 use App\Http\Livewire\AdminPermisos;
 use App\Http\Livewire\AdminRoles;
@@ -251,7 +252,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/Boletas/{idBoleta}', EditarBoleta::class)->name('editar-boletas');
 
         //PARA SERVICIO INSPECCION DE TALLER
-        Route::get('/ServicioTaller', ServicioTaller::class)->name('ServicioTaller');
+        Route::get('/ServicioTaller', ServicioTaller::class)->middleware('can:ServicioTaller')->name('ServicioTaller');
+        Route::get('/AdministracionCerTaller', AdministracionCerTaller::class)->middleware('can:AdministracionCerTaller')->name('AdministracionCerTaller');
 
         //Prueba Fotos
         Route::get('/CargaFotos', CargaFotos::class)->name('CargaFotos');

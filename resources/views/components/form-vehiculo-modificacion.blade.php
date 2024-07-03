@@ -109,8 +109,7 @@
                 </div>
                 <div class="w-1/2">
                     <x-jet-label value="Cilindrada:" />
-                    <x-jet-input type="text" class="w-5/6" wire:model="cilindrada" type="number"
-                        inputmode="numeric" />
+                    <x-jet-input type="text" class="w-5/6" wire:model="cilindrada"  /> {{-- type="number" inputmode="numeric" --}}
                     <x-jet-input-error for="cilindrada" />
                 </div>
             </div>

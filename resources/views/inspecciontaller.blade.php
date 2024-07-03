@@ -102,11 +102,25 @@
     </header>
     <main>
         <h3>CERTIFICADO DE INSPECCIÓN DE TALLER</h3>
-        <h5 style=" text-align:left;">TIPO DE CERTIFICADO: INICIAL</h5>
+        <h5 style=" text-align:left;">TIPO DE CERTIFICADO:
+
+            @if ($certi->inicial === 1)
+                INICIAL
+            @elseif ($certi->inicial === 0)
+                ANUAL
+            @else
+            @endif
+        </h5>
         <h5>{{ 'CERTIFICADO N° SD-05-' . $certi->material->numSerie . '-' . $certi->created_at->format('Y') }}</h5>
         <h4> MOTOR GAS COMPANY S.A</h4>
         <h5 style="text-align:left;">CERTIFICA:</h5>
-        <p>Haber efectuado la inspeccion al siguiente taller:</p>
+        <p>Haber efectuado la inspeccion
+            @if ($certi->inicial === 0)
+                anual
+            @else
+            @endif
+            al siguiente taller:
+        </p>
         <table>
             <tr>
                 <td style="padding: 0 5px 0 5px; text-align:center; width: 5%;">1</td>
@@ -132,8 +146,7 @@
                     <strong>Teléfono</strong>
                 </td>
                 <td style="padding: 0 5px 0 5px; width: 75%;">
-                    {{-- $certi->taller ?? null Falta agregar telefono a la tabla  --}}
-                    918 847 352 / 933 911 624
+                    {{ $certi->taller->telefono ?? null }}
                 </td>
             </tr>
             <tr>
@@ -159,9 +172,13 @@
                 <td style="padding: 0 5px 0 5px; width: 20%;">
                     <strong>Nro. de Autorización</strong>
                 </td>
-                <td style="padding: 0 5px 0 5px; width: 75%;">
-                    {{-- $certi->taller ?? null --}}
-                    R.D N°399-2022-MTC/17.03
+                <td style="padding: 0 5px 0 5px; width: 75%;">                   
+
+                    @if ($certi->inicial === 1)
+                        NE
+                    @else
+                        {{ $certi->taller->autorizacion ?? null }}
+                    @endif
                 </td>
             </tr>
         </table>
@@ -184,11 +201,11 @@
         <p>OBSERVACIONES:</p>
         <ul>
             <li>Requisitos verificados: Directiva N°001-2005-MTC/15, Numerales 6.1.2, 6.1.3, 6.1.4 con sus
-                modificaciones en la Resolución Directoral                
+                modificaciones en la Resolución Directoral
                 @if ($certi->material->idTipoMaterial === 3)
-                N°0464-2023-MTC/17.03
+                    N°0464-2023-MTC/17.03
                 @elseif ($certi->material->idTipoMaterial === 1)
-                N°365-2021-MTC/17.03
+                    N°365-2021-MTC/17.03
                 @else
                 @endif
                 Y NTP/17.03 Y NTP 111.018.2004, capitulo 5

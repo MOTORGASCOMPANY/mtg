@@ -20,7 +20,7 @@ class CreateTaller extends Component
     public $tipos=[];
     public $precios=[];
 
-    public $departamentos,$provincias,$distritos,$logo,$firma,$representante;
+    public $departamentos,$provincias,$distritos,$logo,$firma,$representante, $telefono, $autorizacion;
 
     public $departamentoSel=Null;
     public $provinciaSel=Null;
@@ -100,6 +100,9 @@ class CreateTaller extends Component
             'rutaFirma'=>$rutaFirma,
             'idDistrito'=>$this->distritoSel,
             'representante'=>$this->representante,
+            'telefono'=>$this->telefono,
+            'autorizacion'=>$this->autorizacion,
+
         ]);
 
         foreach($this->tipos as $key=>$item){

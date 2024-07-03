@@ -17,6 +17,7 @@ class CertificacionTaller extends Model
         'idInspector',
         'idMaterial',
         'estado',
+        'inicial',
         'created_at',
         'updated_at',
     ];
@@ -60,15 +61,14 @@ class CertificacionTaller extends Model
         }
     }
 
-    public static function certificarTaller(Taller $taller, Material $hoja, User $inspector)
-    {
-        
-
+    public static function certificarTaller(Taller $taller, Material $hoja, User $inspector, $externoValue)
+    {      
         $cert = CertificacionTaller::create([
             "idTaller" => $taller->id,
             "idInspector" => $inspector->id,
             "idMaterial" => $hoja->id,
             "estado" => 1,
+            "inicial" => $externoValue,
         ]);
         if ($cert) {
             //cambia el estado de la hoja a consumido
@@ -80,11 +80,37 @@ class CertificacionTaller extends Model
         }
     }
 
-
     public function getRutaVistaCertificadoAttribute()
     {
         $ruta = null;
         $ruta = route('certificadoCerTaller', ['id' => $this->attributes['id']]);
         return $ruta;
+    }
+
+    public function scopeNumFormato2($query, $search): void
+    {
+        if ($search) {
+            $query->whereHas('material', function (Builder $query) use ($search) {
+                $query->where('numSerie', 'like', '%' . $search . '%');
+            });
+        }
+    }
+
+    public function scopeIdTaller($query, $search): void
+    {
+        if ($search) {
+            $query->whereHas('Taller', function (Builder $query) use ($search) {
+                $query->where('id', $search);
+            });
+        }
+    }
+
+    public function scopeIdMaterial($query, $search): void
+    {
+        if ($search) {
+            $query->whereHas('material', function (Builder $query) use ($search) {
+                $query->where('idTipoMaterial ', $search);
+            });
+        }
     }
 }

@@ -137,9 +137,7 @@
             </p>
             <p>
                 CUARTO. - EL CONTRATADO asume las siguientes obligaciones que están vinculadas a la naturaleza propia
-                del servicio que presentará.
-            </p>
-            <p>
+                del servicio que presentará. <br>
                 - No realizar actividad alguna que pueda perjudicar a MOTOR GAS COMPANY S.A. <br>
                 - Mantener la confidencialidad de la información de MOTOR GAS COMPANY S.A. <br>
                 - Por la naturaleza propia de las labores que desempeña el contratado, deberá tener disposición para

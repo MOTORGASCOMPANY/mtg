@@ -71,6 +71,7 @@ use App\Http\Livewire\Reportes\ReportesGasolution;
 use App\Http\Livewire\Reportes\ReportesMtg;
 use App\Http\Livewire\RevisionInventario;
 use App\Http\Livewire\ServicioModi;
+use App\Http\Livewire\ServicioTaller;
 use App\Http\Livewire\TallerRevision;
 use App\Http\Livewire\Tablas\Tiposservicios;
 use App\Http\Livewire\TiposDocumentosEmple;
@@ -143,6 +144,9 @@ Route::get('/certificado-Pre-inicial-glp/{id}/temp', [PdfController::class, 'gen
 
 //Rutas para QR (ver PDF) Modificacion
 Route::get('/certificado-modificacion/{id}/temp', [PdfController::class, 'generaPdfModificacion'])->name("verPdfModificacion");
+
+//Rutas para QR (ver PDF) Certificado Inspeccion Taller
+Route::get('/certificado-taller/{id}/temp', [PdfController::class, 'generaPdfCerTaller'])->name("verPdfCerTaller");
 
 
 Route::get('phpmyinfo', function () {
@@ -245,6 +249,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/Listaboletas', ListaBoletas::class)->name('ListaBoletas');
         Route::get('/Boletas', Boletas::class)->name('Boletas');
         Route::get('/Boletas/{idBoleta}', EditarBoleta::class)->name('editar-boletas');
+
+        //PARA SERVICIO INSPECCION DE TALLER
+        Route::get('/ServicioTaller', ServicioTaller::class)->name('ServicioTaller');
 
         //Prueba Fotos
         Route::get('/CargaFotos', CargaFotos::class)->name('CargaFotos');
@@ -362,6 +369,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
             Route::get('/certificado-modificacion/{id}', 'generaPdfModificacion')->name("certificadoModificacion");
             //Ruta para descargar certificado modificacion
             Route::get('/certificado-modificacion/{id}/descargar', 'descargaPdfModificacion')->name("descargarCertificadoModificacion");
+
+            //Ruta para ver certificado inspeccion taller
+            Route::get('/certificado-taller/{id}', 'generaPdfCerTaller')->name("certificadoCerTaller");
 
             //Rutas para generar cargo de materiales
             Route::get('/cargo/{id}', 'generaCargo')->name('generaCargo');

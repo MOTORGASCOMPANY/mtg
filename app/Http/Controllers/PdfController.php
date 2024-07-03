@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Boleta;
 use App\Models\Certificacion;
+use App\Models\CertificacionTaller;
 use App\Models\ContratoTrabajo;
 use App\Models\Duplicado;
 use App\Models\Expediente;
@@ -1426,7 +1427,6 @@ class PdfController extends Controller
     }
 
     //Vista y descarga para memorando
-
     public function generaPdfMemorando($id)
     {
         $memorando = Memorando::findOrFail($id);
@@ -1495,7 +1495,7 @@ class PdfController extends Controller
 
             $pagoForma2 = $this->convertirMontoAPalabras($contrato->pago);
             $valorSoles = $contrato->pago % 1000;
-            $pagoForma = $contrato->pago . ' - ' . $pagoForma2 . ' con 00/'. $valorSoles . ' soles';
+            $pagoForma = $contrato->pago . ' - ' . $pagoForma2 . ' con 00/' . $valorSoles . ' soles';
 
             $data = [
                 'nombreEmpleado' => $nombreUsuario,
@@ -1514,7 +1514,7 @@ class PdfController extends Controller
             abort(404);
         }
     }
-    
+
     public function descargaPdfContrato($id)
     {
         $contrato = ContratoTrabajo::findOrFail($id);
@@ -1528,7 +1528,7 @@ class PdfController extends Controller
             $fechaForma2 = $fechaCert2->format('d') . ' de ' . $meses[$fechaCert2->format('m') - 1] . ' del ' . $fechaCert2->format('Y');
             $pagoForma2 = $this->convertirMontoAPalabras($contrato->pago);
             $valorSoles = $contrato->pago % 1000;
-            $pagoForma = $contrato->pago . ' - ' . $pagoForma2 . ' con 00/'. $valorSoles . ' soles';
+            $pagoForma = $contrato->pago . ' - ' . $pagoForma2 . ' con 00/' . $valorSoles . ' soles';
 
             $data = [
                 'nombreEmpleado' => $nombreUsuario,
@@ -1588,6 +1588,28 @@ class PdfController extends Controller
 
         $pdf = App::make('dompdf.wrapper');
         $pdf->loadView('boletasimage', $data);
-        return $pdf->stream('boleta-'.$id.'.pdf');
+        return $pdf->stream('boleta-' . $id . '.pdf');
+    }
+
+    //Vista para generar pdf certificado de inspeccion de taller
+    public function generaPdfCerTaller($id)    {
+
+        $certi = CertificacionTaller::findOrFail($id);
+        $meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+        $fechaCert = is_string($certi->created_at) ? new DateTime($certi->created_at) : $certi->created_at;
+        $fechaForma = $fechaCert->format('d') . ' de ' . $meses[$fechaCert->format('m') - 1] . ' del ' . $fechaCert->format('Y');
+        // Genera el código QR
+        $urlDelDocumento = 'www.motorgasperu.com' . route('verPdfCerTaller', $id, false);        
+        $qrCode = QrCode::size(70)->generate($urlDelDocumento);
+        $data = [
+            "certi" => $certi,
+            "qrCode" => $qrCode,
+            'fecha' => $fechaForma,
+        ];
+        $pdf = App::make('dompdf.wrapper');
+        $pdf->loadView('inspecciontaller', $data);
+        // Mostrar el PDF en el navegador
+        return $pdf->stream('certificado_taller_' . $id . '.pdf');
+
     }
 }

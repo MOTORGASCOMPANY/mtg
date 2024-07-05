@@ -528,7 +528,7 @@ class PdfController extends Controller
                     ];
                     $pdf = App::make('dompdf.wrapper');
                     $pdf->loadView('conversionGlp', $data);
-                    return $pdf->stream($certificacion->Vehiculo->placa . '-' . $hoja->numSerie . '-anual-glp.pdf');
+                    return $pdf->stream($certificacion->Vehiculo->placa . '-' . $hoja->numSerie . '-inicial-glp.pdf');
                 }
                 return abort(404);
             }
@@ -542,7 +542,7 @@ class PdfController extends Controller
         if (Certificacion::findOrFail($id)) {
             $certificacion = Certificacion::find($id);
             if ($certificacion->Servicio->tipoServicio->id) {
-                if ($certificacion->Servicio->tipoServicio->id == 4) {
+                if ($certificacion->Servicio->tipoServicio->id == 3) {
                     $meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
                     $fechaCert = $certificacion->created_at;
                     $fecha = $fechaCert->format('d') . ' días del mes de ' . $meses[$fechaCert->format('m') - 1] . ' del ' . $fechaCert->format('Y') . '.';
@@ -570,7 +570,7 @@ class PdfController extends Controller
                     ];
                     $pdf = App::make('dompdf.wrapper');
                     $pdf->loadView('conversionGlp', $data);
-                    return $pdf->download($certificacion->Vehiculo->placa . '-' . $hoja->numSerie . '-anual-glp.pdf');
+                    return $pdf->download($certificacion->Vehiculo->placa . '-' . $hoja->numSerie . '-inicial-glp.pdf');
                 }
                 return abort(404);
             }

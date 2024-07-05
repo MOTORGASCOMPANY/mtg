@@ -361,7 +361,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
             Route::get('/certificado-anual-glp/{id}/descargar', 'descargaPdfAnualGlp')->name("descargarCertificadoAnualGlp");
 
             //Rutas para descargar certificado inicial GLP
-            Route::get('/certificado-inicial-glp/{id}/descargar', 'generaPdfInicialGlp')->name("descargarCertificadoInicialGlp");
+            Route::get('/certificado-inicial-glp/{id}/descargar', 'descargaPdfInicialGlp')->name("descargarCertificadoInicialGlp"); //generaPdfInicialGlp
 
             //Rutas para descargar y ver documentos complementarios de GNV
             Route::get('/fichaTecnicaGlp/{idCert}', 'generarFichaTecnicaGlp')->name("fichaTecnicaGlp");

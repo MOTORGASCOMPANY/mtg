@@ -7,38 +7,25 @@
             font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
+            text-align: center;
         }
 
         .content {
             padding: 10px;
-            margin: 0; /* Ajusta el margen para hacer más espacio */
-        }
-
-        .image-row {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .image-container {
-            margin: 10px;
-        }
-
-        .image-container img {
-            width: 250px;
-            height: 300px;
+            margin: 0;
         }
 
         p {
             margin: 0;
             padding: 10px;
+            text-align: center;
         }
     </style>
 </head>
 
 <body>
     @if ($documentos->isNotEmpty())
-        <p style="text-align: center;">
+        <p>
             Comprobantes del
             @if ($documentos->first()->boleta->taller == null)
                 {{ $documentos->first()->boleta->certificador }}
@@ -52,16 +39,12 @@
             {{ $documentos->first()->boleta->fechaFin ?? '' }}
         </p>
         <br>
-        <div class="content">
-            <div class="image-row">
-                @foreach ($documentos as $doc)
-                    <div class="image-container">
-                        <img src="{{ public_path('storage/docsBoletas/' . basename($doc->ruta)) }}">
-                        {{-- @if ($doc->nombre === 'comprobante') height="500" @endif --}}
-                    </div>
-                @endforeach
-            </div>
-        </div>
+        <br>
+        <br>
+        @foreach ($documentos as $doc)
+            <img src="{{ public_path('storage/docsBoletas/' . basename($doc->ruta)) }}"
+                style="width: 250px; height: {{ $doc->nombre === 'estado de cuenta' ? '50px' : '300px' }};">
+        @endforeach
     @else
         <p>No hay comprobantes disponibles.</p>
     @endif

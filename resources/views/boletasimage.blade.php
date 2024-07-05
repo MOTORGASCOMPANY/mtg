@@ -14,26 +14,19 @@
             margin: 0; /* Ajusta el margen para hacer más espacio */
         }
 
-        .image-container {
-            text-align: center;
-            margin-bottom: 10px;
+        .image-row {
             display: flex;
+            flex-wrap: wrap;
             justify-content: center;
-            align-items: center;
         }
 
-        .image-grid {
-            display: grid;
-            /*grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));*/
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
+        .image-container {
+            margin: 10px;
         }
 
         .image-container img {
-            max-width: 100%;
-            height: auto;
-            object-fit: cover;
-            /*height: auto;*/
+            width: 250px;
+            height: 300px;
         }
 
         p {
@@ -59,13 +52,12 @@
             {{ $documentos->first()->boleta->fechaFin ?? '' }}
         </p>
         <br>
-        <br>
         <div class="content">
-            <div class="image-grid">
+            <div class="image-row">
                 @foreach ($documentos as $doc)
                     <div class="image-container">
                         <img src="{{ public_path('storage/docsBoletas/' . basename($doc->ruta)) }}">
-                        {{-- @if ($doc->nombre === 'comprobante') height="500" @endif> --}}
+                        {{-- @if ($doc->nombre === 'comprobante') height="500" @endif --}}
                     </div>
                 @endforeach
             </div>

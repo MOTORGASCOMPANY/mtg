@@ -298,6 +298,82 @@
                         </div>
                     @endforeach
                 </div>
+                <!-- Tabla boletas 
+                <div class="bg-gray-200  px-8 py-4 rounded-xl w-full mt-4">
+                    <h2 class="text-indigo-600 text-xl font-bold mb-4">Boletas</h2>
+
+                    @if (isset($grupoboletas) && count($grupoboletas) > 0)
+                        <div class="overflow-x-auto m-auto w-full">
+                            <div class="inline-block min-w-full py-2 sm:px-6">
+                                <div class="overflow-hidden">
+                                    <table
+                                        class="min-w-full border text-center text-sm font-light dark:border-neutral-500">
+                                        <thead class="border-b font-medium dark:border-neutral-500">
+                                            <tr class="bg-indigo-200">
+                                                <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
+                                                    #
+                                                </th>
+                                                <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
+                                                    Taller
+                                                </th>
+                                                <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
+                                                    Inspector
+                                                </th>
+                                                <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
+                                                    Precio
+                                                </th>
+                                                <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
+                                                    Fecha
+                                                </th>
+                                                <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
+                                                    PDF
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($grupoboletas as $bolet)
+                                                <tr class="border-b dark:border-neutral-500 bg-orange-200">
+                                                    <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
+                                                        {{ $loop->iteration }}
+                                                    </td>
+                                                    <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
+                                                        {{ $bolet['taller'] ?? null }}
+                                                    </td>
+                                                    <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
+                                                        {{ null }}
+                                                    </td>
+                                                    <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
+                                                        S/{{ number_format($bolet['precio'], 2) ?? null }}
+                                                    </td>
+                                                    <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
+                                                        {{ $bolet['fecha'] ?? null }}
+                                                    </td>
+                                                    <td>
+                                                        @if ($bolet['externo'])
+                                                            <a href="{{ $bolet['externo'] }}" target="__blank" rel="noopener noreferrer"
+                                                                class=" py-2 px-3 text-center items-center rounded-md bg-indigo-200 font-bold text-black cursor-pointer hover:bg-indigo-300 hover:animate-pulse">
+                                                                <i class="fa-solid fa-file-pdf"></i>                               
+                                                                <span
+                                                                    class="group-hover:opacity-100 transition-opacity bg-gray-800 px-1 text-sm text-gray-100 rounded-md absolute left-1/2-translate-x-1/2 translate-y-full opacity-0 m-4 mx-auto z-50">
+                                                                    Pdf
+                                                                </span>
+                                                            </a>
+                                                        @else
+                                                            No PDF
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    @else
+                        <p class="text-center text-gray-500">No hay Boletas.</p>
+                    @endif
+                </div>
+                -->
             </div>
         @endif
 

@@ -10,7 +10,8 @@ use Illuminate\Support\Facades\Redirect;
 class ListaBoletas extends Component
 {
     use WithPagination;
-    public $sort, $direction, $cant, $search;    
+    public $sort, $direction, $cant, $search;
+    public $fechaInicio, $fechaFin;
     protected $listeners = ['render', 'eliminarBoleta'];
 
     public function mount()
@@ -39,9 +40,18 @@ class ListaBoletas extends Component
     {
         $query = Boleta::query();
 
+        // Verificar si las fechas no son nulas
+        if ($this->fechaInicio && $this->fechaFin) {
+            $query->RangoFecha($this->fechaInicio, $this->fechaFin);
+        }
+
         if (!empty($this->search)) {
-            $query->whereHas('taller', function ($query) {
+            /*$query->whereHas('taller', function ($query) {
                 $query->where('nombre', 'like', '%' . $this->search . '%');
+            });*/
+            $query->where(function ($q) {
+                $q->where('taller', 'like', '%' . $this->search . '%')
+                    ->orWhere('certificador', 'like', '%' . $this->search . '%');
             });
         }
 
@@ -64,9 +74,14 @@ class ListaBoletas extends Component
         $boleta->delete();
         $this->emit('render');
     }
-    
-    public function agregar()
+
+    /*public function agregar()
     {
         return redirect()->route('Boletas');
+    }*/
+
+    public function agregar()
+    {
+        return redirect()->route('ImportarBoletas');
     }
 }

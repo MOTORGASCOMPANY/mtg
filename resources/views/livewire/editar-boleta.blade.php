@@ -1,7 +1,15 @@
 <div class="container mx-auto py-12 mt-4">
     <div class="flex flex-row  justify-between items-center">
-        <h2 class="mt-8 font-bold text-lg text-indigo-600"> Boletas/Vaucher del taller {{ $boleta->taller->nombre }} del
-            {{ $boleta->fechaInicio }} hasta {{ $boleta->fechaFin }}</h2>
+        <h2 class="mt-8 font-bold text-lg text-indigo-600"> Boletas/Vaucher del
+            @if ($boleta->taller == null)
+                {{ $boleta->certificador }}
+            @elseif ($boleta->certificador == null)
+                taller {{ $boleta->taller }}
+            @else
+            @endif
+            desde
+            {{ $boleta->fechaInicio }} hasta {{ $boleta->fechaFin }}
+        </h2>
         <div class="flex space-x-2">
             @hasanyrole('administrador|Administrador del sistema')
                 @livewire('create-boleta-archivo', ['idBoleta' => $boleta->id])
@@ -25,11 +33,11 @@
         </div>
     </div>
     <hr class="my-4">
-    @if (isset($boleta->taller))
-        <div>
-            @livewire('boletas-archivos', ['idBoleta' => $boleta->id], key($boleta->boleta_id . '-' . $boleta->id))
-        </div>
-    @endif
+    {{-- @if (isset($boleta->taller)) --}}
+    <div>
+        @livewire('boletas-archivos', ['idBoleta' => $boleta->id], key($boleta->boleta_id . '-' . $boleta->id))
+    </div>
+    {{-- @endif --}}
 
 
 </div>

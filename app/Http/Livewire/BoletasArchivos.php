@@ -24,6 +24,7 @@ class BoletasArchivos extends Component
 
     public function mount(){
         $this->boleta=Boleta::find($this->idBoleta);
+        //dd($this->boleta);
     }
 
     public function render()

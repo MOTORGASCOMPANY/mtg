@@ -40,6 +40,7 @@ use App\Http\Livewire\Empleados;
 use App\Http\Livewire\FinalizarPreConversion;
 use App\Http\Livewire\ImportarAnuales;
 use App\Http\Livewire\ImportarConversiones;
+use App\Http\Livewire\ImportarDataBoletas;
 use App\Http\Livewire\ImportarDesmontes;
 use App\Http\Livewire\ListaBoletas;
 use App\Http\Livewire\ListaCertificaciones;
@@ -250,6 +251,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/Listaboletas', ListaBoletas::class)->name('ListaBoletas');
         Route::get('/Boletas', Boletas::class)->name('Boletas');
         Route::get('/Boletas/{idBoleta}', EditarBoleta::class)->name('editar-boletas');
+        Route::get('/ImportarBoletas', ImportarDataBoletas::class)->name('ImportarBoletas');
 
         //PARA SERVICIO INSPECCION DE TALLER
         Route::get('/ServicioTaller', ServicioTaller::class)->middleware('can:ServicioTaller')->name('ServicioTaller');

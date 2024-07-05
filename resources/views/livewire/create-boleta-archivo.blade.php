@@ -15,7 +15,11 @@
         <x-slot name="content">
             <div class="mb-4">
                 <x-jet-label for="nombre" value="Nombre del Documento:" class="font-bold" />
-                <x-jet-input id="nombre" type="text" class="mt-1 block w-full" wire:model="nombre" />
+                <x-jet-input id="nombre" type="text" class="mt-1 block w-full" wire:model="nombre" list="items"/>
+                <datalist id="items">
+                    <option value="comprobante">comprobante</option>
+                    <option value="estado de cuenta">estado de cuenta</option>
+                </datalist>
                 <x-jet-input-error for="nombre" />
             </div>
             <div class="mb-4">

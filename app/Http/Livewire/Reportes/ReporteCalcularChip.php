@@ -3,8 +3,10 @@
 namespace App\Http\Livewire\Reportes;
 
 use App\Exports\ReporteTallerExport;
+use App\Models\Boleta;
 use App\Models\Certificacion;
 use App\Models\CertificacionPendiente;
+use App\Models\CertificacionTaller;
 use App\Models\Material;
 use App\Models\ServiciosImportados;
 use Illuminate\Support\Facades\DB;
@@ -25,6 +27,8 @@ class ReporteCalcularChip extends Component
     public $tabla, $diferencias, $importados, $aux;
     public $tabla2;
     public $inspectoresPorTaller = [];
+    public $boletas, $grupoboletas;
+    public $boleta, $idBoleta;
 
     protected $listeners = ['exportarExcel'];
 
@@ -38,6 +42,7 @@ class ReporteCalcularChip extends Component
         $this->inspectores = User::role(['inspector', 'supervisor'])->orderBy('name')->get();
         $this->talleres = Taller::orderBy('nombre')->get();
         $this->tipos = TipoServicio::all();
+        $this->boleta = Boleta::find($this->idBoleta);
     }
 
     public function render()
@@ -50,6 +55,8 @@ class ReporteCalcularChip extends Component
         $this->validate();
         $this->tabla = $this->generaData();
         $this->importados = $this->cargaServiciosGasolution();
+        //$this->boletas = $this->cargaBoletas();
+        //dd($this->boletas);
         $this->tabla = $this->tabla->map(function ($item) {
             $item['placa'] = trim($item['placa']);
             $item['inspector'] = trim($item['inspector']);
@@ -108,7 +115,7 @@ class ReporteCalcularChip extends Component
             // Excluir al inspector con id = 201 
             ->whereHas('Inspector', function ($query) {
                 $query->whereNotIn('id', [37, 117, 201]);
-                })
+            })
             ->rangoFecha($this->fechaInicio, $this->fechaFin)
             ->where('pagado', 0)
             //->whereIn('estado', [3, 1])
@@ -119,7 +126,7 @@ class ReporteCalcularChip extends Component
             ->IdInspectores($this->ins)
             ->whereHas('Inspector', function ($query) {
                 $query->whereNotIn('id', [37, 117, 201]);
-                })
+            })
             ->IdTipoServicios($this->servicio)
             ->rangoFecha($this->fechaInicio, $this->fechaFin)
             //->where('estado', 1)
@@ -306,4 +313,48 @@ class ReporteCalcularChip extends Component
         }
         return $disc;
     }
+
+    public function cargaBoletas()
+    {
+        // Obtener la colección de boletas según el taller y el rango de fechas
+        $boletas = Boleta::Talleres($this->taller)
+            ->RangoFecha($this->fechaInicio, $this->fechaFin)
+            ->get();
+
+        // Crear una nueva colección para almacenar los datos procesados
+        $bol = collect();
+
+
+        /*$bol = new Collection();
+        $bol = Boleta::Talleres($this->taller)
+            ->RangoFecha($this->fechaInicio, $this->fechaFin)
+            ->get();*/
+
+        foreach ($boletas as $registro) {
+            $data = [
+                "id" => $registro->id,
+                "placa" => null,
+                "taller" => $registro->taller->nombre,
+                "inspector" => null,
+                "servicio" => null,
+                "num_hoja" => Null,
+                "ubi_hoja" => Null,
+                "precio" => $registro->monto,
+                "pagado" => null,
+                "estado" => null,
+                "externo" =>  $this->generatePdfUrl($registro->id),
+                "tipo_modelo" => $registro::class,
+                "fecha" => $registro->fechaInicio . " hasta " . $registro->fechaFin,
+            ];
+            $bol->push($data);
+        }
+        $this->grupoboletas = $bol;
+        //dd($this->grupoboletas);
+        return $bol;
+    }
+
+    /*public function generatePdfUrl($boletaId)
+    {
+        return route('generaPdfBoleta', ['id' => $boletaId]);
+    }*/
 }

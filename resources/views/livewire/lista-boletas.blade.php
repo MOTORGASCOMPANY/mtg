@@ -2,7 +2,7 @@
     <div class="mt-7 overflow-x-auto">
         <div class=" items-center md:block sm:block">
             <div class="px-2 w-64 mb-4 md:w-full">
-                <h2 class="text-indigo-900 font-bold text-3xl">Registro de Boletas</h2>
+                <h2 class="text-indigo-500 font-bold text-3xl">Registro de Estado de cuenta y Comprobantes</h2>
             </div>
             <div class="w-full items-center md:flex  md:justify-between">
                 <div class="flex bg-gray-50 items-center p-2 rounded-md mb-4">
@@ -26,10 +26,22 @@
                     <input class="bg-gray-50 outline-none block rounded-md border-indigo-500 w-full" type="text"
                         wire:model="search" placeholder="buscar...">
                 </div>
+                <div class="flex bg-white items-center p-2 w-48 rounded-md mb-4 ">
+                    <span>Desde: </span>
+                    <x-date-picker wire:model="fechaInicio" placeholder="Fecha de inicio"
+                        class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full truncate" />
+                </div>
+
+                <div class="flex bg-white items-center p-2 w-48 rounded-md mb-4 ">
+                    <span>Hasta: </span>
+                    <x-date-picker wire:model="fechaFin" placeholder="Fecha de Fin"
+                        class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full truncate" />
+                </div>
+                
                 @hasanyrole('administrador|Administrador del sistema')
                     <button wire:click="agregar"
                         class="bg-indigo-600 px-6 py-4 rounded-md text-white font-semibold tracking-wide cursor-pointer">
-                        Subir Boletas
+                        Importar Boletas
                     </button>
                 @endhasanyrole
             </div>
@@ -56,6 +68,9 @@
                             Taller
                         </th>
                         <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left">
+                            Inspector
+                        </th>
+                        <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left">
                             F. Inicio
                         </th>
                         <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left">
@@ -64,9 +79,11 @@
                         <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left">
                             Monto
                         </th>
+                        {{--  
                         <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left">
                             Observación
                         </th>
+                        --}}
                         <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left">
                             <div class="flex justify-center items-center">
                                 <span>Acciones</span>
@@ -88,7 +105,14 @@
                             <td class="pl-2">
                                 <div class="flex items-center">
                                     <p class="text-sm leading-none text-gray-600 ml-2">
-                                        {{ $bol->taller->nombre ?? 'N.A' }}
+                                        {{ $bol->taller ?? null }}
+                                    </p>
+                                </div>
+                            </td>
+                            <td class="pl-2">
+                                <div class="flex items-center">
+                                    <p class="text-sm leading-none text-gray-600 ml-2">
+                                        {{ $bol->certificador ?? null }}
                                     </p>
                                 </div>
                             </td>
@@ -113,6 +137,7 @@
                                     </p>
                                 </div>
                             </td>
+                            {{-- 
                             <td>
                                 <div class="flex items-center">
                                     <p class="text-sm leading-none text-gray-600 ml-2">
@@ -120,6 +145,7 @@
                                     </p>
                                 </div>
                             </td>
+                            --}}
                             <td class="text-center">
                                 <div class="flex justify-center items-center space-x-2">
                                     <a wire:click="redirectBoletas({{ $bol->id }})"

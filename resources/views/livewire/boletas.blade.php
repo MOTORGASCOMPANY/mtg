@@ -56,8 +56,9 @@
                             </div>
                             <div>
                                 <x-jet-label value="Observación:" />
-                                <x-textarea class="w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm" 
-                                wire:model="observacion" style="height: 200px;" />
+                                <x-textarea
+                                    class="w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
+                                    wire:model="observacion" style="height: 200px;" />
                                 <x-jet-input-error for="observacion" />
                             </div>
                         </div>
@@ -78,12 +79,14 @@
                                 &nbsp;Guardar
                             </p>
                         </button>
+                        {{-- 
                         <a href="{{ route('ListaBoletas') }}"
-                        class="hover:cursor-pointer focus:ring-2 focus:ring-offset-2 focus:ring-amber-600 sm:mt-0 inline-flex items-center justify-center px-6 py-3 bg-red-400 hover:bg-red-500 focus:outline-none rounded">
-                        <p class="text-sm font-medium leading-none text-white">
-                            <i class="fas fa-archive"></i>&nbsp;Finalizar
-                        </p>
-                    </a>
+                            class="hover:cursor-pointer focus:ring-2 focus:ring-offset-2 focus:ring-amber-600 sm:mt-0 inline-flex items-center justify-center px-6 py-3 bg-red-400 hover:bg-red-500 focus:outline-none rounded">
+                            <p class="text-sm font-medium leading-none text-white">
+                                <i class="fas fa-archive"></i>&nbsp;Finalizar
+                            </p>
+                        </a>
+                        --}}
                     </div>
                 </div>
             </div>

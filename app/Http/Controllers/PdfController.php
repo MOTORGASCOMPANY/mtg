@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Boleta;
+use App\Models\CartaAclaratoria;
 use App\Models\Certificacion;
 use App\Models\CertificacionTaller;
 use App\Models\ContratoTrabajo;
@@ -1610,6 +1611,38 @@ class PdfController extends Controller
         $pdf->loadView('inspecciontaller', $data);
         // Mostrar el PDF en el navegador
         return $pdf->stream('certificado_taller_' . $id . '.pdf');
+
+    }
+
+    //Vista para generar pdf certa aclaratoria
+    public function generaPdfCartaAclaratoria($id)    {
+
+        $certi = CartaAclaratoria::findOrFail($id);
+        $meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+        $fechaCert = is_string($certi->created_at) ? new DateTime($certi->created_at) : $certi->created_at;
+        $fechaForma = $fechaCert->format('d') . ' de ' . $meses[$fechaCert->format('m') - 1] . ' del ' . $fechaCert->format('Y');
+
+        $diceData = [];
+        $debeDecirData = [];
+    
+        if ($certi->tipo == 'FORMATO GNV' || $certi->tipo == 'FORMATO GLP') {           
+            $diceData = $certi->dice_data;        
+            $debeDecirData = $certi->debe_decir_data;       
+        } elseif ($certi->tipo == 'MODIFICACION') {
+            $diceData = explode("\n", $certi->dice_modificacion); // Convertimos el texto en array
+            $debeDecirData = explode("\n", $certi->debe_decir_modificacion); // Convertimos el texto en array
+        }        
+        
+        $data = [
+            "certi" => $certi,
+            'fecha' => $fechaForma,
+            'diceData' => $diceData,
+            'debeDecirData' => $debeDecirData,
+        ];
+        $pdf = App::make('dompdf.wrapper');
+        $pdf->loadView('cartaaclaratoria', $data);
+        // Mostrar el PDF en el navegador
+        return $pdf->stream('carta_aclaratoria_' . $id . '.pdf');
 
     }
 }

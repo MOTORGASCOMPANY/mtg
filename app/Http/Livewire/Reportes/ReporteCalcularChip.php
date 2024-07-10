@@ -318,6 +318,7 @@ class ReporteCalcularChip extends Component
     {
         // Obtener la colección de boletas según el taller y el rango de fechas
         $boletas = Boleta::Talleres($this->taller)
+            ->Inspectores($this->ins)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
             ->get();
 
@@ -334,8 +335,8 @@ class ReporteCalcularChip extends Component
             $data = [
                 "id" => $registro->id,
                 "placa" => null,
-                "taller" => $registro->taller->nombre,
-                "inspector" => null,
+                "taller" => $registro->taller,
+                "inspector" => $registro->certificador,
                 "servicio" => null,
                 "num_hoja" => Null,
                 "ubi_hoja" => Null,

@@ -305,7 +305,7 @@ class ServicioModi extends Component
                 "certificado" => $hoja->numSerie,
                 "estado" => 1,
                 "idTaller" => $taller->id,
-                'usuario_idusuario' => $usuario->id,//Auth::id()
+                'usuario_idusuario' => Auth::id(), // $usuario->id,
                 'servicio_idservicio' => $servicio->id,
             ]);
 

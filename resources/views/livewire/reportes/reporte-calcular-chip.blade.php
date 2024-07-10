@@ -337,10 +337,10 @@
                                                         {{ $loop->iteration }}
                                                     </td>
                                                     <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
-                                                        {{ $bolet['taller'] ?? null }}
+                                                        {{ $bolet['taller'] ?? 'NE' }}
                                                     </td>
                                                     <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
-                                                        {{ null }}
+                                                        {{ $bolet['inspector'] ?? 'NE' }}
                                                     </td>
                                                     <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
                                                         S/{{ number_format($bolet['precio'], 2) ?? null }}

@@ -37,11 +37,11 @@
                     <x-date-picker wire:model="fechaFin" placeholder="Fecha de Fin"
                         class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full truncate" />
                 </div>
-                
+
                 @hasanyrole('administrador|Administrador del sistema')
                     <button wire:click="agregar"
-                        class="bg-indigo-600 px-6 py-4 rounded-md text-white font-semibold tracking-wide cursor-pointer">
-                        Importar Boletas
+                        class="bg-indigo-600 px-6 py-2 rounded-md text-white font-semibold tracking-wide cursor-pointer">
+                        Importar
                     </button>
                 @endhasanyrole
             </div>
@@ -65,16 +65,30 @@
                             @endif
                         </th>
                         <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left">
-                            Taller
+                            Taller / Inspector
                         </th>
+                        {{-- 
                         <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left">
                             Inspector
                         </th>
+                        --}}
                         <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left">
                             F. Inicio
                         </th>
                         <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left">
                             F. Fin
+                        </th>
+                        <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left">
+                            Anual
+                        </th>
+                        <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left">
+                            Duplicado
+                        </th>
+                        <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left">
+                            Inicial
+                        </th>
+                        <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left">
+                            Desmonte
                         </th>
                         <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left">
                             Monto
@@ -105,17 +119,25 @@
                             <td class="pl-2">
                                 <div class="flex items-center">
                                     <p class="text-sm leading-none text-gray-600 ml-2">
-                                        {{ $bol->taller ?? null }}
+                                        @if ($bol->taller == null)
+                                            {{ $bol->certificador ?? 'NE' }}
+                                        @elseif($bol->certificador == null)
+                                            {{ $bol->taller ?? 'NE' }}
+                                        @else
+                                            
+                                        @endif
                                     </p>
                                 </div>
                             </td>
+                            {{--  
                             <td class="pl-2">
                                 <div class="flex items-center">
                                     <p class="text-sm leading-none text-gray-600 ml-2">
-                                        {{ $bol->certificador ?? null }}
+                                        {{ $bol->certificador ?? 'NE' }}
                                     </p>
                                 </div>
                             </td>
+                            --}}
                             <td>
                                 <div class="flex items-center">
                                     <p class="text-sm leading-none text-gray-600 ml-2">
@@ -127,6 +149,34 @@
                                 <div class="flex items-center">
                                     <p class="text-sm leading-none text-gray-600 ml-2">
                                         {{ \Carbon\Carbon::parse($bol->fechaFin)->format('d-m-Y') }}
+                                    </p>
+                                </div>
+                            </td>
+                            <td class="pl-5">
+                                <div class="flex items-center">
+                                    <p class="text-sm leading-none text-gray-600 ml-2">
+                                        {{ $bol->anual ?? '0' }}
+                                    </p>
+                                </div>
+                            </td>
+                            <td class="pl-5">
+                                <div class="flex items-center">
+                                    <p class="text-sm leading-none text-gray-600 ml-2">
+                                        {{ $bol->duplicado ?? '0' }}
+                                    </p>
+                                </div>
+                            </td>
+                            <td class="pl-5">
+                                <div class="flex items-center">
+                                    <p class="text-sm leading-none text-gray-600 ml-2">
+                                        {{ $bol->inicial ?? '0' }}
+                                    </p>
+                                </div>
+                            </td>
+                            <td class="pl-5">
+                                <div class="flex items-center">
+                                    <p class="text-sm leading-none text-gray-600 ml-2">
+                                        {{ $bol->desmonte ?? '0' }}
                                     </p>
                                 </div>
                             </td>

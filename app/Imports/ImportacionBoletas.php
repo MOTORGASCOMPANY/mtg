@@ -9,6 +9,7 @@ use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithUpserts;
 use Maatwebsite\Excel\Imports\HeadingRowFormatter;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 class ImportacionBoletas implements ToModel, WithHeadingRow   //, WithUpserts
 {
@@ -25,6 +26,10 @@ class ImportacionBoletas implements ToModel, WithHeadingRow   //, WithUpserts
             "certificador" => $row['certificador'],
             "fechaInicio" => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['fechainicio']),
             "fechaFin" => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['fechafin']),
+            "anual" => $row['anual'],
+            "duplicado" => $row['duplicado'],
+            "inicial" => $row['inicial'],
+            "desmonte" => $row['desmonte'],
             "monto" => $row['monto'],
             "observacion" => null,
         ]);

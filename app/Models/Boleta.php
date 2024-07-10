@@ -19,11 +19,15 @@ class Boleta extends Model
         'fechaInicio',
         'fechaFin',
         'monto',
-        'observacion'
+        'observacion',
+        'anual',
+        'duplicado',
+        'inicial',
+        'desmonte',
     ];
 
     
-    /*public function taller(): BelongsTo
+    /*public function taller(): BelongsTo   
     {
         return $this->belongsTo(Taller::class, 'idTaller');
     }*/
@@ -41,14 +45,7 @@ class Boleta extends Model
         }       
     }
 
-    /*public function scopeTalleres(Builder $query, $search): void
-    {   
-        if(!empty($search)){
-            $query->whereIn('idTaller', $search);
-        }
-    }*/
-
-    /*public function scopeTalleres(Builder $query,  $search): void{   
+    public function scopeTalleres(Builder $query,  $search): void{   
         $nombres=[];
         foreach($search as $id){
            $taller=Taller::find($id);
@@ -58,12 +55,12 @@ class Boleta extends Model
            }
         }
 
-        if(!empty($nombres)){
-            $query->whereIn('idTaller', $nombres);
+        if(!empty($nombres)){ //count($nombres)>1
+            $query->whereIn('taller', $nombres);
         }       
-    }*/
+    }
 
-    /*public function scopeInspectores(Builder $query,  $search): void{   
+    public function scopeInspectores(Builder $query,  $search): void{   
         $nombres=[];
         foreach($search as $id){
            $inspector=User::find($id);           
@@ -75,7 +72,7 @@ class Boleta extends Model
         if(!empty($nombres)){
             $query->whereIn('certificador', $nombres);
         }       
-    }*/
+    }
 
     
 }

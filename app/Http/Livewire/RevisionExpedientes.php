@@ -81,6 +81,7 @@ class RevisionExpedientes extends Component
         'conteo' => 'numeric|required|min:1',
         'comentario' => 'required|max:500',
     ];
+    
 
 
 
@@ -185,8 +186,6 @@ class RevisionExpedientes extends Component
 
         return view('livewire.revision-expedientes', compact('expedientes'));
     }
-
-
 
 
     public function order($sort)

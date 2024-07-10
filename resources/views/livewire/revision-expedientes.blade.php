@@ -253,11 +253,12 @@
                                                         </td>
                                                 @endswitch
 
+                                                
                                                 <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                                                     {{-- @livewire('edit-usuario', ['usuario' => $usuario], key($usuario->id)) --}}
-                                                    <div class="flex justify-end">
+                                                    <div class="flex justify-center space-x-2">
                                                         <a wire:click="edit({{ $item->id }})"
-                                                            class="py-3 px-4 text-center rounded-md bg-amber-300 font-bold text-black cursor-pointer hover:bg-amber-400">
+                                                           class="py-3 px-4 text-center rounded-md bg-amber-300 font-bold text-black cursor-pointer hover:bg-amber-400">
                                                             <i class="fas fa-eye"></i>
                                                         </a>
                                                     </div>

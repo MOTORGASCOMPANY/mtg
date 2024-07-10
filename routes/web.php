@@ -72,6 +72,7 @@ use App\Http\Livewire\Reportes\ReporteServiciosPorInspector;
 use App\Http\Livewire\Reportes\ReportesGasolution;
 use App\Http\Livewire\Reportes\ReportesMtg;
 use App\Http\Livewire\RevisionInventario;
+use App\Http\Livewire\ServicioCartaAclaratoria;
 use App\Http\Livewire\ServicioModi;
 use App\Http\Livewire\ServicioTaller;
 use App\Http\Livewire\TallerRevision;
@@ -257,6 +258,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/ServicioTaller', ServicioTaller::class)->middleware('can:ServicioTaller')->name('ServicioTaller');
         Route::get('/AdministracionCerTaller', AdministracionCerTaller::class)->middleware('can:AdministracionCerTaller')->name('AdministracionCerTaller');
 
+        //PARA SERVICIO CARTA ACLARATORIA
+        Route::get('/ServicioCartaAclaratoria', ServicioCartaAclaratoria::class)->name('ServicioCarta');
+
         //Prueba Fotos
         Route::get('/CargaFotos', CargaFotos::class)->name('CargaFotos');
         Route::get('/CargaImagenes', CargaImagenes::class)->name('CargaImagenes');
@@ -377,6 +381,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
             //Ruta para ver certificado inspeccion taller
             Route::get('/certificado-taller/{id}', 'generaPdfCerTaller')->name("certificadoCerTaller");
 
+            //Ruta para ver carta aclaratoria
+            Route::get('/carta-aclaratoria/{id}', 'generaPdfCartaAclaratoria')->name("CartaAclaratoria");
             //Rutas para generar cargo de materiales
             Route::get('/cargo/{id}', 'generaCargo')->name('generaCargo');
 

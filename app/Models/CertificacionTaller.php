@@ -72,7 +72,7 @@ class CertificacionTaller extends Model
         ]);
         if ($cert) {
             //cambia el estado de la hoja a consumido
-            $hoja->update(["estado" => 4, "ubicacion" => "En poder del cliente"]);
+            $hoja->update(["estado" => 4, "ubicacion" => "Inspeccion de Taller"]);
             //retorna el certificado
             return $cert;
         } else {

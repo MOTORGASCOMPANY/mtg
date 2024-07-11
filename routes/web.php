@@ -182,7 +182,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/Administracion-de-certificaciones', AdministracionCertificaciones::class)->middleware('can:admin.certificaciones')->name('admin.certificaciones');
 
         Route::get('/certificados-pendientes', ListaCertificacionesPendientes::class)->middleware('can:certificaciones.pendientes')->name('certificaciones.pendientes');
-        Route::get('/certificados-desmontes', ListaDesmontes::class)->middleware('can:certificaciones.desmontes')->name('certificaciones.desmontes');
+        Route::get('/Otras-Certificaciones', ListaDesmontes::class)->middleware('can:certificaciones.desmontes')->name('certificaciones.desmontes');
 
 
         Route::get('/Solicitud/{soliId}', VistaSolicitud::class)->name('vistaSolicitud');
@@ -225,14 +225,15 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/Roles', AdminRoles::class)->name('usuarios.roles');
         Route::get('/Permisos', AdminPermisos::class)->name('usuarios.permisos');
 
-        //Rutas modulo de reportes de GNV
+        //RUTAS MODULO DE REPORTES GNV
         Route::get('/Admin-servicios-importados', AdministracionDeServiciosImportados::class)->name('reportes.adminServiciosImportados'); // servicios de servicios importados(gasolution)
         Route::get('/Reporte-general-gnv', ReporteGeneralGnv::class)->name('reportes.reporteGeneralGnv'); // reporte general revisar 
         Route::get('/Reporte-de-materiales', ReporteMateriales::class)->name('reportes.reporteMateriales'); // reporte materiales revisar
         Route::get('/Reporte-de-servicios-por-inspector', ReporteServiciosPorInspector::class)->name('reportes.reporteServiciosPorInspector'); // reporte de inspecotres que usan sistema
         Route::get('/Reporte-de-fotos-por-inspector', ReporteFotosPorInspector::class)->name('reportes.reporteFotosPorInspector'); // reporte de inspectores que suben fotos
         Route::get('/Reporte-de-documentos-a-vencer', ReporteDocumentosTaller::class)->name('reportes.reporteDocumentosTaller'); // reporte de documentos vencidos de taller
-        //Rutas para ver los reportes de los servicios    
+
+        //RUTAS PARA VER LOS REPORTES DE SERVICIOS  
         Route::get('/ReporteCalcular', ReporteCalcularGasol::class)->middleware('can:reportes.reporteCalcularGasol')->name('reportes.reporteCalcularGasol'); //1 Reporte externo
         Route::get('/ReporteCalcular-taller', ReporteCalcularChip::class)->middleware('can:reportes.reporteCalcularChip')->name('reportes.reporteCalcularChip'); //2 Reporte taller mejorar diseño excell
         Route::get('/Reporte-semanal', ReporteCalcular::class)->middleware('can:reportes.reporteCalcular')->name('reportes.reporteCalcular'); //3 Reporte Semanal
@@ -240,15 +241,16 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/Reporte-Gasol', ReportesGasolution::class)->middleware('can:reportes.reporteGasol')->name('reportes.reporteGasol'); //5 Reporte detallado Gasol
         Route::get('/Reporte-actualizar-mtg', ActualizarPrecios::class)->middleware('can:reportes.reporteActualizarPrecio')->name('reportes.reporteActualizarPrecio'); //6 Reporte Actualizar MTG
         Route::get('/Reporte-actualizar-gasol', ActualizarPreciosGasol::class)->middleware('can:reportes.reporteActualizarGasol')->name('reportes.reporteActualizarGasol'); //7  Reporte Actualizar GASOL
-        //Ruta para ver los reportes de materiales
+
+        //RUTAS PARA VER LOS REPORTES DE MATERIALES
         Route::get('/Reporte-salida-materiales', ReporteSalidaMateriales::class)->middleware('can:reportes.reporteSalidaMateriales')->name('reportes.reporteSalidaMateriales'); // reporte salida materiales
         Route::get('/Reporte-inventario', ReporteInventario::class)->middleware('can:reportes.reporteInventario')->name('reportes.reporteInventario');
         Route::get('/ConsultarHoja', ConsultarHoja::class)->middleware('can:ConsultarHoja')->name('ConsultarHoja'); //Consultar Hoja material
 
-        //Ruta para rentabilidad taller
+        //RUTA PARA RENTABILIDAD DE TALLERES
         Route::get('/Rentabilidad', Rentabilidad::class)->middleware('can:Rentabilidad')->name('Rentabilidad');
 
-        //Ruta para subir boletas y vauchers
+        //RUTA PARA IMPORTAR Y PODER ALMACENAR ESTADOS DE CUENTA Y COMPROBANTES
         Route::get('/Listaboletas', ListaBoletas::class)->name('ListaBoletas');
         Route::get('/Boletas', Boletas::class)->name('Boletas');
         Route::get('/Boletas/{idBoleta}', EditarBoleta::class)->name('editar-boletas');
@@ -273,20 +275,20 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         //Ruta para los logos
         Route::get('/Logona', Logona::class)->name('Logona');
 
-        //Ruta para Manual de Funciones
+        //RUTAS PARA MANUAL DE FUNCIONES SEGUN SU ROL
         Route::get('/ManualFunciones', ManualFunciones::class)->middleware('can:ManualFunciones')->name('ManualFunciones');
         Route::get('/ManualFunciones/{id}/download', [DocumentosController::class, 'downloadManual'])->name('download_docManual');
         Route::get('/Tablas/TiposManual', TiposManual::class)->name('table.TiposManual');
 
-        //Ruta para Organigrama
+        //RUTAS PARA VER Y DESCARGAR ORGANIGRAMA
         Route::get('/Organigrama', Organigramas::class)->name('Organigrama');
         Route::get('/Organigrama/{id}/download', [DocumentosController::class, 'downloadOrganigrama'])->name('download_docOrganigrama');
 
-        //Ruta para Memorandos
+        //RUTAS PARA CREAR Y LISTAR MEMORANDOS
         Route::get('/Memorando', Memorandos::class)->middleware('can:Memorando')->name('Memorando');
         Route::get('/ListaMemorando', ListaMemorandos::class)->middleware('can:ListaMemorando')->name('ListaMemorando');
 
-        //Rutas para contrato trabajo - documentos empleado - vacaciones
+        //RUTAS PARA CONTRATO TRABAJO - DOCUMENTOS EMPLEADO - VACACIONES
         Route::get('/Empleados', Empleados::class)->middleware('can:Empleados')->name('Empleados'); //Lista de empleados
         Route::get('/Contratos', ContratosTrabajos::class)->name('ContratoTrabajo'); //Crear contrato trabajo
         Route::get('/Empleado/{idEmpleado}', EditarEmpleado::class)->name('editar-empleado'); //Para subir sus doc del empleado
@@ -294,7 +296,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/Empleado/{idEmpleado}/download', [DocumentosController::class, 'downloadEmpleado'])->name('download_docEmpleado'); //Para descargar doc de empleado 
         Route::get('/Tablas/TiposDocumentosEmpleados', TiposDocumentosEmple::class)->name('table.TiposDocumentosEmpleados'); //Tabla para tipos de doc de empleado
 
-        // Rutas para emitir comunicado 
+        // RUTAS PARA CREAR, ACTUALIZAR, DESACTIVAR Y CARGAR IMAGENES
         Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', [WelcomeController::class, 'index'])->name('dashboard');
         Route::get('/comunicado', [WelcomeController::class, 'showComunicadoForm'])->middleware('can:comunicado.createOrUpdateForm')->name('comunicado.createOrUpdateForm');
         Route::post('/comunicado/store', [WelcomeController::class, 'store'])->name('comunicado.store');

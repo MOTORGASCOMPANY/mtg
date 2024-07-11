@@ -65,6 +65,9 @@
                             @endif
                         </th>
                         <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left">
+                            #
+                        </th>
+                        <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left">
                             Taller / Inspector
                         </th>
                         {{-- 
@@ -119,12 +122,18 @@
                             <td class="pl-2">
                                 <div class="flex items-center">
                                     <p class="text-sm leading-none text-gray-600 ml-2">
+                                        {{ $bol->identificador }}
+                                    </p>
+                                </div>
+                            </td>
+                            <td class="pl-2">
+                                <div class="flex items-center">
+                                    <p class="text-sm leading-none text-gray-600 ml-2">
                                         @if ($bol->taller == null)
                                             {{ $bol->certificador ?? 'NE' }}
                                         @elseif($bol->certificador == null)
                                             {{ $bol->taller ?? 'NE' }}
                                         @else
-                                            
                                         @endif
                                     </p>
                                 </div>
@@ -207,6 +216,14 @@
                                         </span>
                                     </a>
                                     @hasanyrole('administrador|Administrador del sistema')
+                                        <button wire:click="abrirModal({{ $bol->id }})"
+                                            class="group flex py-2 px-2 text-center items-center rounded-md bg-amber-300 font-bold text-white cursor-pointer hover:bg-amber-400 hover:animate-pulse">
+                                            <i class="fas fa-pen"></i>
+                                            <span
+                                                class="group-hover:opacity-100 transition-opacity bg-gray-800 px-1 text-sm text-gray-100 rounded-md absolute left-1/2-translate-x-1/2 translate-y-full opacity-0 m-4 mx-auto z-50">
+                                                Editar
+                                            </span>
+                                        </button>
                                         <button wire:click="$emit('deleteBoleta',{{ $bol->id }})"
                                             class="group flex py-2 px-2 text-center items-center rounded-md bg-red-500 font-bold text-white cursor-pointer hover:bg-red-700 hover:animate-pulse">
                                             <i class="fas fa-times-circle"></i>
@@ -232,6 +249,96 @@
             </div>
         @endif
     </div>
+
+
+    @if ($boleta)
+        <x-jet-dialog-modal wire:model="openEdit">
+            <x-slot name="title">
+                <h1 class="text-xl font-bold">Editando documento</h1>
+            </x-slot>
+            <x-slot name="content">
+                @if ($boleta->certificador == null)
+                    <div>
+                        <x-jet-label value="Taller:" />
+                        <x-jet-input type="text"
+                            class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full"
+                            wire:model="boleta.taller" />
+                        <x-jet-input-error for="boleta.taller" />
+                    </div>
+                @elseif ($boleta->taller == null)
+                    <div>
+                        <x-jet-label value="Certificador:" />
+                        <x-jet-input type="text"
+                            class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full"
+                            wire:model="boleta.certificador" />
+                        <x-jet-input-error for="boleta.certificador" />
+                    </div>
+                @else
+                @endif
+
+
+                <div class="grid grid-cols-3 gap-4 py-2">
+                    <div>
+                        <x-jet-label value="Fecha Inicio:" />
+                        <x-jet-input type="date"
+                            class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full"
+                            wire:model="boleta.fechaInicio" />
+                        <x-jet-input-error for="boleta.fechaInicio" />
+                    </div>
+                    <div>
+                        <x-jet-label value="Fecha Fin:" />
+                        <x-jet-input type="date"
+                            class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full"
+                            wire:model="boleta.fechaFin" />
+                        <x-jet-input-error for="boleta.fechaFin" />
+                    </div>
+                    <div>
+                        <x-jet-label value="Monto:" />
+                        <x-jet-input type="number"
+                            class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full"
+                            wire:model="boleta.monto" />
+                        <x-jet-input-error for="boleta.monto" />
+                    </div>
+                </div>
+                <div class="grid grid-cols-4 gap-4 py-2">
+                    <div>
+                        <x-jet-label value="Anual:" />
+                        <x-jet-input type="number" wire:model="boleta.anual"
+                            class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full" />
+                        <x-jet-input-error for="boleta.anual" />
+                    </div>
+                    <div>
+                        <x-jet-label value="Duplicado:" />
+                        <x-jet-input type="number" wire:model="boleta.duplicado"
+                            class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full" />
+                        <x-jet-input-error for="boleta.duplicado" />
+                    </div>
+                    <div>
+                        <x-jet-label value="Inicial:" />
+                        <x-jet-input type="number" wire:model="boleta.inicial"
+                            class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full" />
+                        <x-jet-input-error for="boleta.inicial" />
+                    </div>
+                    <div>
+                        <x-jet-label value="Desmonte:" />
+                        <x-jet-input type="number" wire:model="boleta.desmonte"
+                            class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full" />
+                        <x-jet-input-error for="boleta.desmonte" />
+                    </div>
+                </div>
+            </x-slot>
+            <x-slot name="footer">
+                <x-jet-secondary-button wire:click="$set('openEdit',false)" class="mx-2">
+                    Cancelar
+                </x-jet-secondary-button>
+                <x-jet-button wire:click="editarBoleta" wire:target="editarBoleta" wire:loading.attr="disabled">
+                    Actualizar
+                </x-jet-button>
+            </x-slot>
+        </x-jet-dialog-modal>
+    @endif
+
+
 
     {{-- JS --}}
     @push('js')

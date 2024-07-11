@@ -24,6 +24,7 @@ class Boleta extends Model
         'duplicado',
         'inicial',
         'desmonte',
+        'identificador'
     ];
 
     

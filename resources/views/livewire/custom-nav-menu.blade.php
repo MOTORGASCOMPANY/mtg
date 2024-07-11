@@ -291,7 +291,7 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                             <li class="transition-colors duration-150">
                                                 <x-jet-responsive-nav-link class="text-sm"
                                                     href="{{ route('certificaciones.desmontes') }}" :active="request()->routeIs('certificaciones.desmontes')">
-                                                    Listado de desmontes
+                                                    Otras Certificaciones
                                                 </x-jet-responsive-nav-link>
                                             </li>
                                         @endcan

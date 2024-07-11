@@ -3,29 +3,47 @@
 namespace App\Imports;
 
 use App\Models\Boleta;
-use Illuminate\Support\Collection;
-
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Maatwebsite\Excel\Concerns\WithUpserts;
-use Maatwebsite\Excel\Imports\HeadingRowFormatter;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 
-class ImportacionBoletas implements ToModel, WithHeadingRow   //, WithUpserts
+class ImportacionBoletas implements ToModel, WithHeadingRow
 {
-    /*public function uniqueBy()
-    {
-        return 'placa_serie';
-    }*/
-
     public function model(array $row)
     {
-        //dd($row);        
+        $fechaInicio = Date::excelToDateTimeObject($row['fechainicio']);
+        $fechaFin = Date::excelToDateTimeObject($row['fechafin']);
+
+        // Verificar si la boleta ya existe
+        $boleta = Boleta::where([
+            ['taller', $row['taller']],
+            ['certificador', $row['certificador']],
+            ['fechaInicio', $fechaInicio],
+            ['fechaFin', $fechaFin]
+        ])->first();
+
+        if ($boleta) {
+            // Actualizar el registro existente
+            $boleta->update([
+                "identificador" => $row['identificador'],
+                "anual" => $row['anual'],
+                "duplicado" => $row['duplicado'],
+                "inicial" => $row['inicial'],
+                "desmonte" => $row['desmonte'],
+                "monto" => $row['monto'],
+                "observacion" => null,
+                
+            ]);
+            return null; // No crear un nuevo registro
+        }
+
+        // Crear un nuevo registro si no existe
         return new Boleta([
+            "identificador" => $row['identificador'],
             "taller" => $row['taller'],
             "certificador" => $row['certificador'],
-            "fechaInicio" => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['fechainicio']),
-            "fechaFin" => \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['fechafin']),
+            "fechaInicio" => $fechaInicio,
+            "fechaFin" => $fechaFin,
             "anual" => $row['anual'],
             "duplicado" => $row['duplicado'],
             "inicial" => $row['inicial'],

@@ -49,7 +49,7 @@ class ImportarDataBoletas extends Component
         }
     }
 
-    /*public function cargarBoletas(){
+    public function cargarBoletas(){
         $this->validate([
             'file' => 'required|mimes:xls,xlsx',
         ]);       
@@ -61,9 +61,9 @@ class ImportarDataBoletas extends Component
         } catch (\Maatwebsite\Excel\Validators\ValidationException $e) {
             $this->emit("minAlert", ["titulo" => "AVISO DEL SISTEMA", "mensaje" => "Ocurrio un problema con los datos de su archivo: ".$e, "icono" => "warning"]);    
         }
-    }*/
+    }
 
-    public function cargarBoletas()
+    /*public function cargarBoletas()
     {
         $this->validate([
             'file' => 'required|mimes:xls,xlsx',
@@ -111,18 +111,18 @@ class ImportarDataBoletas extends Component
         } catch (\Exception $e) {
             $this->emit("minAlert", ["titulo" => "AVISO DEL SISTEMA", "mensaje" => "Ocurrió un problema con los datos de su archivo: " . $e->getMessage(), "icono" => "warning"]);
         }
-    }
+    }*/
 
     public function validaCoincidencias($data)
     {
         $cuenta = 0;
         foreach ($data as $row) {
-            $taller = $row[0];
-            $certificador = $row[1];
+            $taller = $row[1];
+            $certificador = $row[2];
             //$fechaInicio=$row[2]; 
             //$fechaFin=$row[3]; 
-            $fechaInicio = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[2]);
-            $fechaFin = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[3]);
+            $fechaInicio = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[3]);
+            $fechaFin = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row[4]);
             $servicio = Boleta::where([['taller', $taller], ['certificador', $certificador], ['fechainicio', $fechaInicio], ['fechafin', $fechaFin]])->first();
             if ($servicio != null) {
                 $cuenta++;

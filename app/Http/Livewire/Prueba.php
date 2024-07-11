@@ -320,7 +320,7 @@ class Prueba extends Component
         }
 
 
-        /* Obtener la fecha de hoy
+        // Obtener la fecha de hoy
         $hoy = Carbon::today();
         if (empty($this->fechaCertificacion)) {
             $fechaCertificacion = $hoy;
@@ -332,7 +332,7 @@ class Prueba extends Component
         if ($fechaCertificacion->lt($hoy->subDays(3)) || $fechaCertificacion->gt(Carbon::today())) {
             $this->emit("minAlert", ["titulo" => "AVISO DEL SISTEMA", "mensaje" => "La fecha de certificación debe estar dentro de los últimos tres días", "icono" => "warning"]);
             return;
-        }*/
+        }
 
         $certi = Certificacion::certificarGnv($taller, $servicio, $hoja, $this->vehiculo, Auth::user(), $this->serviexterno);
 

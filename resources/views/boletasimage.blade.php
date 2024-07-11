@@ -26,7 +26,7 @@
 <body>
     @if ($documentos->isNotEmpty())
         <p>
-            Comprobantes del
+            {{$documentos->first()->boleta->identificador . ") " }}
             @if ($documentos->first()->boleta->taller == null)
                 {{ $documentos->first()->boleta->certificador }}
             @elseif ($documentos->first()->boleta->certificador == null)

@@ -122,7 +122,7 @@
                             <td class="pl-2">
                                 <div class="flex items-center">
                                     <p class="text-sm leading-none text-gray-600 ml-2">
-                                        {{ $bol->identificador }}
+                                        {{ $bol->identificador ?? null}}
                                     </p>
                                 </div>
                             </td>

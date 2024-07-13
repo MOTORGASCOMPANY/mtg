@@ -291,7 +291,7 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                             <li class="transition-colors duration-150">
                                                 <x-jet-responsive-nav-link class="text-sm"
                                                     href="{{ route('certificaciones.desmontes') }}" :active="request()->routeIs('certificaciones.desmontes')">
-                                                    Otras Certificaciones
+                                                    Listado otras Certificaciones
                                                 </x-jet-responsive-nav-link>
                                             </li>
                                         @endcan
@@ -307,7 +307,7 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                             <li class="transition-colors duration-150">
                                                 <x-jet-responsive-nav-link class="bg-gray-400 text-sm"
                                                     href="{{ route('AdministracionCerTaller') }}" :active="request()->routeIs('AdministracionCerTaller')">
-                                                    Admin. CertsTaller
+                                                    Admin. Certificaciones
                                                 </x-jet-responsive-nav-link>
                                             </li>
                                         @endcan
@@ -592,6 +592,12 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                             <x-jet-responsive-nav-link class="text-sm truncate"
                                                 href="{{ route('Rentabilidad') }}" :active="request()->routeIs('Rentabilidad')">
                                                 Rentabilidad Talleres
+                                            </x-jet-responsive-nav-link>
+                                        @endcan
+                                        @can('ListaBoletas')
+                                            <x-jet-responsive-nav-link class="text-sm truncate"
+                                                href="{{ route('ListaBoletas') }}" :active="request()->routeIs('ListaBoletas')">
+                                                Listado de Comprobantes
                                             </x-jet-responsive-nav-link>
                                         @endcan
 

@@ -306,18 +306,14 @@
                         <div class="overflow-x-auto m-auto w-full">
                             <div class="inline-block min-w-full py-2 sm:px-6">
                                 <div class="overflow-hidden">
-                                    <table
-                                        class="min-w-full border text-center text-sm font-light dark:border-neutral-500">
+                                    <table class="min-w-full border text-center text-sm font-light dark:border-neutral-500">
                                         <thead class="border-b font-medium dark:border-neutral-500">
                                             <tr class="bg-indigo-200">
                                                 <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
                                                     #
                                                 </th>
                                                 <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
-                                                    Taller
-                                                </th>
-                                                <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
-                                                    Inspector
+                                                    Taller /Inspector
                                                 </th>
                                                 <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
                                                     Precio
@@ -337,10 +333,13 @@
                                                         {{ $loop->iteration }}
                                                     </td>
                                                     <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
-                                                        {{ $bolet['taller'] ?? 'NE' }}
-                                                    </td>
-                                                    <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
-                                                        {{ $bolet['inspector'] ?? 'NE' }}
+
+                                                        @if ($bolet['taller'] == null)
+                                                            {{ $bolet['inspector'] ?? 'NE' }}
+                                                        @elseif ($bolet['inspector'] == null)
+                                                            {{ $bolet['taller'] ?? 'NE' }}
+                                                        @else
+                                                        @endif
                                                     </td>
                                                     <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
                                                         S/{{ number_format($bolet['precio'], 2) ?? null }}
@@ -350,9 +349,10 @@
                                                     </td>
                                                     <td>
                                                         @if ($bolet['externo'])
-                                                            <a href="{{ $bolet['externo'] }}" target="__blank" rel="noopener noreferrer"
+                                                            <a href="{{ $bolet['externo'] }}" target="__blank"
+                                                                rel="noopener noreferrer"
                                                                 class=" py-2 px-3 text-center items-center rounded-md bg-indigo-200 font-bold text-black cursor-pointer hover:bg-indigo-300 hover:animate-pulse">
-                                                                <i class="fa-solid fa-file-pdf"></i>                               
+                                                                <i class="fa-solid fa-file-pdf"></i>
                                                                 <span
                                                                     class="group-hover:opacity-100 transition-opacity bg-gray-800 px-1 text-sm text-gray-100 rounded-md absolute left-1/2-translate-x-1/2 translate-y-full opacity-0 m-4 mx-auto z-50">
                                                                     Pdf
@@ -372,8 +372,8 @@
                     @else
                         <p class="text-center text-gray-500">No hay Boletas.</p>
                     @endif
-                </div>
-                -->
+                </div> -->
+
             </div>
         @endif
 

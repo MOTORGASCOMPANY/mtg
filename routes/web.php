@@ -251,14 +251,14 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/Rentabilidad', Rentabilidad::class)->middleware('can:Rentabilidad')->name('Rentabilidad');
 
         //RUTA PARA IMPORTAR Y PODER ALMACENAR ESTADOS DE CUENTA Y COMPROBANTES
-        Route::get('/Listaboletas', ListaBoletas::class)->name('ListaBoletas');
+        Route::get('/Listaboletas', ListaBoletas::class)->middleware('can:ListaBoletas')->name('ListaBoletas');
         Route::get('/Boletas', Boletas::class)->name('Boletas');
         Route::get('/Boletas/{idBoleta}', EditarBoleta::class)->name('editar-boletas');
         Route::get('/ImportarBoletas', ImportarDataBoletas::class)->name('ImportarBoletas');
 
         //PARA SERVICIO INSPECCION DE TALLER
         Route::get('/ServicioTaller', ServicioTaller::class)->middleware('can:ServicioTaller')->name('ServicioTaller');
-        Route::get('/AdministracionCerTaller', AdministracionCerTaller::class)->middleware('can:AdministracionCerTaller')->name('AdministracionCerTaller');
+        Route::get('/Admin-otras-certificaciones', AdministracionCerTaller::class)->middleware('can:AdministracionCerTaller')->name('AdministracionCerTaller');
 
         //PARA SERVICIO CARTA ACLARATORIA
         Route::get('/ServicioCartaAclaratoria', ServicioCartaAclaratoria::class)->name('ServicioCarta');

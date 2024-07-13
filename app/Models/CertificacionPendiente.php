@@ -90,4 +90,9 @@ class CertificacionPendiente extends Model
             $query->whereBetween('created_at', [$desde . ' 00:00', $hasta . ' 23:59']);
         }
     }
+
+    public function getplacaAttribute()
+    {
+        return $this->Vehiculo->placa;
+    }
 }

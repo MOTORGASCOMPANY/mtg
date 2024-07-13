@@ -108,9 +108,7 @@ class CertificacionTaller extends Model
     public function scopeIdMaterial($query, $search): void
     {
         if ($search) {
-            $query->whereHas('material', function (Builder $query) use ($search) {
-                $query->where('idTipoMaterial ', $search);
-            });
+            $query->where('idMaterial', $search);
         }
     }
 }

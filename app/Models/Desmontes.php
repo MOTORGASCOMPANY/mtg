@@ -46,6 +46,12 @@ class Desmontes extends Model
             $query->where('idInspector', $search);
         }
     }
+    public function scopeIdTaller(Builder $query, string $search): void
+    {
+        if ($search) {
+            $query->where('idTaller', $search);
+        }
+    }
 
     public function scopePlaca(Builder $query, ?string $search): void
     {

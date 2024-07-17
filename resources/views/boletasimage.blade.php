@@ -41,9 +41,10 @@
         <br>
         <br>
         <br>
+        <br>
         @foreach ($documentos as $doc)
             <img src="{{ public_path('storage/docsBoletas/' . basename($doc->ruta)) }}"
-                style="width: 250px; height: {{ $doc->nombre === 'estado de cuenta' ? '50px' : '300px' }};">
+                style="width: 260px; height: {{ $doc->nombre === 'estado de cuenta' ? '100px' : '400px' }};">
         @endforeach
     @else
         <p>No hay comprobantes disponibles.</p>

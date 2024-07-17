@@ -7,6 +7,7 @@ use App\Models\Boleta;
 use App\Models\Certificacion;
 use App\Models\CertificacionPendiente;
 use App\Models\CertificacionTaller;
+use App\Models\Desmontes;
 use App\Models\Material;
 use App\Models\ServiciosImportados;
 use Illuminate\Support\Facades\DB;
@@ -133,6 +134,16 @@ class ReporteCalcularChip extends Component
             //->whereNull('idCertificacion')
             ->get();
 
+        //TODO DESMONTES:
+        $desmontes = Desmontes::idTalleres($this->taller)
+            ->IdInspectores($this->ins)
+            ->whereHas('Inspector', function ($query) {
+                $query->whereNotIn('id', [37, 117, 201]);
+            })
+            ->IdTipoServicios($this->servicio)
+            ->rangoFecha($this->fechaInicio, $this->fechaFin)
+            ->get();
+
         //unificando certificaciones     
         foreach ($certificaciones as $certi) {
             //modelo preliminar
@@ -171,6 +182,25 @@ class ReporteCalcularChip extends Component
                 "externo" => $cert_pend->externo,
                 "tipo_modelo" => $cert_pend::class,
                 "fecha" => $cert_pend->created_at,
+            ];
+            $tabla->push($data);
+        }
+
+        foreach ($desmontes as $des) {
+            $data = [
+                "id" => $des->id,
+                "placa" => $des->placa,
+                "taller" => $des->Taller->nombre,
+                "inspector" => $des->Inspector->name,
+                "servicio" => $des->Servicio->tipoServicio->descripcion,
+                "num_hoja" => Null,
+                "ubi_hoja" => Null,
+                "precio" => $des->precio,
+                "pagado" => $des->pagado,
+                "estado" => $des->estado,
+                "externo" => $des->externo,
+                "tipo_modelo" => $des::class,
+                "fecha" => $des->created_at,
             ];
             $tabla->push($data);
         }

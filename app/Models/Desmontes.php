@@ -84,4 +84,13 @@ class Desmontes extends Model
             $query->whereBetween('created_at', [$desde . ' 00:00', $hasta . ' 23:59']);
         }
     }
+
+    public function scopeIdTipoServicios($query, $search): void
+    {
+        if ($search) {
+            $query->whereHas('Servicio', function (Builder $query) use ($search) {
+                $query->where('tipoServicio_idtipoServicio', $search);
+            });
+        }
+    }
 }

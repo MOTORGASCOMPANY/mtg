@@ -136,6 +136,14 @@ class ReportesMtg extends Component
                 //->where('estado', 1)
                 //->whereNull('idCertificacion')
                 ->get();
+            //TODO DESMONTES PARA INSPECTOR:
+            $desmontes = Desmontes::idTalleres($this->taller)
+                ->whereHas('Inspector', function ($query) {
+                    $query->where('id', $this->user->id);
+                })
+                ->IdTipoServicios($this->servicio)
+                ->rangoFecha($this->fechaInicio, $this->fechaFin)
+                ->get();
         } else {
             //TODO CERTIFICACIONES PARA OFICINA:
             $certificaciones = Certificacion::idTalleres($this->taller)
@@ -159,6 +167,16 @@ class ReportesMtg extends Component
                 ->rangoFecha($this->fechaInicio, $this->fechaFin)
                 //->where('estado', 1)   //Analizar esto - se comento porque algunas cer-pendientes se realizan en la misma semana y no muestra ni activacion ni revision
                 //->whereNull('idCertificacion') //Analizar esto - se comento porque algunas cer-pendientes se realizan en la misma semana y no muestra ni activacion ni revision
+                ->get();
+
+            //TODO DESMONTES PARA OFICINA:
+            $desmontes = Desmontes::idTalleres($this->taller)
+                ->IdInspectores($this->ins)
+                ->whereHas('Inspector', function ($query) {
+                    $query->whereNotIn('id', [37, 117, 201]);
+                })
+                ->IdTipoServicios($this->servicio)
+                ->rangoFecha($this->fechaInicio, $this->fechaFin)
                 ->get();
         }
 
@@ -203,6 +221,26 @@ class ReportesMtg extends Component
             ];
             $tabla->push($data);
         }
+
+        foreach ($desmontes as $des) {
+            $data = [
+                "id" => $des->id,
+                "placa" => $des->placa,
+                "taller" => $des->Taller->nombre,
+                "inspector" => $des->Inspector->name,
+                "servicio" => $des->Servicio->tipoServicio->descripcion,
+                "num_hoja" => Null,
+                "ubi_hoja" => Null,
+                "precio" => $des->precio,
+                "pagado" => $des->pagado,
+                "estado" => $des->estado,
+                "externo" => $des->externo,
+                "tipo_modelo" => $des::class,
+                "fecha" => $des->created_at,
+            ];
+            $tabla->push($data);
+        }
+
 
         $this->grupoinspectores = $tabla->groupBy('inspector');
         return $tabla;

@@ -28,7 +28,7 @@ class AdministracionCertificaciones extends Component
     public $documentos = [];
     public $files = [];
 
-    protected $listeners = ['render', 'delete', 'anular', 'deleteChip'];
+    protected $listeners = ['render', 'delete', 'anular', 'deleteChip', 'anularchip'];
 
     protected $queryString = [
         'cant' => ['except' => '10'],
@@ -103,6 +103,27 @@ class AdministracionCertificaciones extends Component
         $certificacion->update(['estado' => 2]); // estado anulado en CERTIFICACION
         $this->emitTo('administracion-certificaciones', 'render');
     }
+
+    public function anularchip(Certificacion $certificacion)
+    {
+        // Anular Hoja si existe
+        if ($certificacion->Hoja) {
+            $certificacion->Hoja->update(['estado' => 5]); // estado anulado en MATERIAL
+        }
+        
+        // Anular chipMaterial si existe
+        if ($certificacion->chipMaterial) {
+            $certificacion->chipMaterial->update(['estado' => 3]); // estado posecion inspector
+        }
+        
+        // Anular certificacion
+        $certificacion->update(['estado' => 2]); // estado anulado en CERTIFICACION
+        
+        // Emitir evento para renderizar nuevamente el componente
+        $this->emitTo('administracion-certificaciones', 'render');
+    }
+
+
 
 
 

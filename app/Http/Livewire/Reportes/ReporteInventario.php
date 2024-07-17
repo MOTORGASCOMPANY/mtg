@@ -2,14 +2,18 @@
 
 namespace App\Http\Livewire\Reportes;
 
+use App\Exports\ReporteMarterialesExport;
 use App\Models\Material;
 use App\Models\User;
+use Maatwebsite\Excel\Facades\Excel;
 use Livewire\Component;
 
 class ReporteInventario extends Component
 {
     public $fechaInicio, $fechaFin, $inspectores, $inspector;
     public $tipoMaterial, $resultado, $estado;
+
+    protected $listeners = ['exportarExcel'];
 
     protected $rules = [
         //"inspector"=>"required|numeric|min:1",
@@ -41,7 +45,9 @@ class ReporteInventario extends Component
         ->get();
     }
 
-    public function exportarExcel()
+    public function exportarExcel($data)
     {
+        //dd($data);
+        return Excel::download(new ReporteMarterialesExport($data), 'reporte_inventario.xlsx');
     }
 }

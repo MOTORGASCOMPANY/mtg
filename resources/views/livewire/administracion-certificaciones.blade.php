@@ -419,11 +419,19 @@
                                                     @endif
                                                 </div>
                                                 <div class="" role="none">
-                                                    <a wire:click="$emit('anularCertificacion',{{ $certificacion->id }})"
-                                                        class="flex px-4 py-2 text-sm text-indigo-700 hover:bg-slate-600 hover:text-white justify-between items-center rounded-b-md hover:cursor-pointer">
-                                                        <i class="fas fa-eraser"></i>
-                                                        <span>Anular servicio</span>
-                                                    </a>
+                                                    @if ($certificacion->Servicio->tipoServicio->id == 10)
+                                                        <a wire:click="$emit('anularCertificacionChip',{{ $certificacion->id }})"
+                                                            class="flex px-4 py-2 text-sm text-indigo-700 hover:bg-slate-600 hover:text-white justify-between items-center rounded-b-md hover:cursor-pointer">
+                                                            <i class="fas fa-eraser"></i>
+                                                            <span>Anular servicio</span>
+                                                        </a>
+                                                    @else
+                                                        <a wire:click="$emit('anularCertificacion',{{ $certificacion->id }})"
+                                                            class="flex px-4 py-2 text-sm text-indigo-700 hover:bg-slate-600 hover:text-white justify-between items-center rounded-b-md hover:cursor-pointer">
+                                                            <i class="fas fa-eraser"></i>
+                                                            <span>Anular servicio</span>
+                                                        </a>
+                                                    @endif                                                    
                                                 </div>
                                             </div>
                                         </div>
@@ -666,6 +674,31 @@
                     if (result.isConfirmed) {
 
                         Livewire.emitTo('administracion-certificaciones', 'anular', certificacionId);
+
+                        Swal.fire(
+                            'Listo!',
+                            'Servicio anulado correctamente.',
+                            'success'
+                        )
+                    }
+                })
+            });
+        </script>
+
+        <script>
+            Livewire.on('anularCertificacionChip', certificacionId => {
+                Swal.fire({
+                    title: '¿Seguro que quieres anular este servicio?',
+                    text: "Al anular este servicio el formato asociado quedará inutilizable",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Si, anular'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+
+                        Livewire.emitTo('administracion-certificaciones', 'anularchip', certificacionId);
 
                         Swal.fire(
                             'Listo!',

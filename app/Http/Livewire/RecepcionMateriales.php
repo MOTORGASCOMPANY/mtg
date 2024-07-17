@@ -36,7 +36,7 @@ class RecepcionMateriales extends Component
         $this->open=true;
     }
 
-    public function cuentaMateriales($materiales){
+    /*public function cuentaMateriales($materiales){
         $end=[];
         $tipos=TipoMaterial::All();    
         $aux=$materiales->toArray();       
@@ -48,7 +48,45 @@ class RecepcionMateriales extends Component
             }
         }        
         return $end;        
+    }*/
+
+    public function cuentaMateriales($materiales)
+    {
+        $end = [];
+        $tipos = TipoMaterial::all();
+        $aux = $materiales->toArray();
+
+        // Agrupar los materiales por tipo de material
+        $agrupados = [];
+        foreach ($aux as $material) {
+            $idTipoMaterial = $material['idTipoMaterial'];
+            if (!isset($agrupados[$idTipoMaterial])) {
+                $agrupados[$idTipoMaterial] = [];
+            }
+            $agrupados[$idTipoMaterial][] = $material;
+        }
+
+        // Crear el array final con tipo, cantidad, numSerie mínimo y máximo
+        foreach ($tipos as $tipo) {
+            if (isset($agrupados[$tipo->id])) {
+                $cantidad = count($agrupados[$tipo->id]);
+                $numSeries = array_column($agrupados[$tipo->id], 'numSerie');
+
+                $numSerieMin = min($numSeries);
+                $numSerieMax = max($numSeries);
+
+                array_push($end, [
+                    "tipo" => $tipo->descripcion,
+                    "cantidad" => $cantidad,
+                    "numSerieMin" => $numSerieMin,
+                    "numSerieMax" => $numSerieMax
+                ]);
+            }
+        }
+
+        return $end;
     }
+
 
     public function terminar(){
         $usuario=User::find(Auth::id());

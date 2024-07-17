@@ -44,12 +44,18 @@
                 @endif             
                 @if($materiales)
                         <div class="flex flex-row justify-between m-auto w-96">
-                            <p class="font-bold text-red-900">Material</p> <p class="font-bold text-red-900">cantidad</p> 
+                            <p class="font-bold text-red-900">Material</p> 
+                            <p class="font-bold text-red-900">cantidad</p> 
+                            <p class="font-bold text-red-900">desde</p>
+                            <p class="font-bold text-red-900">hasta</p>
                         </div>
                         <hr class="mb-2 w-96 m-auto">               
                     @foreach ($materiales as $material)
                         <div class="flex flex-row justify-between m-auto w-96">
-                            <p>{{$material["tipo"]}}</p> <p>{{$material["cantidad"]}}</p> 
+                            <p>{{$material["tipo"]}}</p> 
+                            <p>{{$material["cantidad"]}}</p> 
+                            <p>{{ $material["numSerieMin"] }}</p>
+                            <p>{{ $material["numSerieMax"] }}</p>
                             {{--
                             ." (".($material["tipo"] = 1  ?  :).")"    
                             --}}

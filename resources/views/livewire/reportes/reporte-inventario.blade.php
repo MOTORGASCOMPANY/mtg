@@ -81,6 +81,12 @@
 
         @if (isset($resultado))
             <div wire.model="">
+                <div class="m-auto flex justify-center items-center bg-gray-200 rounded-md w-full p-4 mt-4">
+                    <button wire:click="$emit('exportaData')"
+                        class="bg-green-400 px-6 py-4 w-1/3 text-sm rounded-md text-sm text-white font-semibold tracking-wide cursor-pointer ">
+                        <p class="truncate"><i class="fa-solid fa-file-excel fa-lg"></i> Desc. Excel </p>
+                    </button>
+                </div>
                 <div class="bg-gray-200  px-8 py-4 rounded-xl w-full mt-4 text-center">
                         <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-x-6 lg:gap-x-0 items-center">
                             <div class="mb-12 lg:mb-0 relative">
@@ -116,7 +122,7 @@
                     </div>
                 </div>
 
-                <div class="bg-gray-200  px-8 py-4 rounded-xl w-full mt-4">
+                <div id='data_1' class="bg-gray-200  px-8 py-4 rounded-xl w-full mt-4">
                     <div class="overflow-x-auto m-auto w-full">
                         <div class="inline-block min-w-full py-2 sm:px-6">
                             <div class="overflow-hidden">
@@ -138,9 +144,11 @@
                                             <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
                                                 Ubicación
                                             </th>
+                                            {{--
                                             <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
                                                 Fecha
                                             </th>
+                                            --}}
                                             <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
                                                 Ultima act.
                                             </th>
@@ -194,9 +202,11 @@
                                                 <td class="border-r px-6 py-4 dark:border-neutral-500">
                                                     {{ $resul->ubicacion }}
                                                 </td>
+                                                {{-- 
                                                 <td class="border-r px-6 py-4 dark:border-neutral-500">
                                                     {{ $resul->created_at->format('d-m-Y') }}
                                                 </td>
+                                                --}}
                                                 <td class="border-r px-6 py-4 dark:border-neutral-500">
                                                     {{ $resul->updated_at->format('d-m-Y') }}
                                                 </td>
@@ -215,4 +225,15 @@
             </div>
         @endif
     </div>
+    @push('js')
+        <script>
+            Livewire.on('exportaData', () => {
+                // Obtener los datos de la tabla
+                data = document.getElementById('data_1').innerHTML;
+                console.log(data);
+                // Emitir el evento exportarExcel con los datos de la tabla
+                Livewire.emit('exportarExcel', data);
+            });
+        </script>
+    @endpush
 </div>

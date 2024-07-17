@@ -19,8 +19,8 @@ class ReporteMateriales extends Component
         return view('livewire.reportes.reporte-materiales',compact("materiales"));
     }
 
-    public function exportarExcel(){
+    /*public function exportarExcel(){
         
         return Excel::download(new ReporteMarterialesExport, 'Reporte_material.xlsx');
-    }
+    }*/
 }

@@ -46,33 +46,48 @@ class Boleta extends Model
         }       
     }
 
-    public function scopeTalleres(Builder $query,  $search): void{   
-        $nombres=[];
-        foreach($search as $id){
-           $taller=Taller::find($id);
-           //dd($taller);
-           if($taller){
-            array_push($nombres, $taller->nombre);
-           }
+    public function scopeTalleres(Builder $query, $search): void
+    {   
+        $nombres = [];
+
+        if (is_string($search)) {
+            $search = explode(',', $search); // Convertir la cadena en un array
         }
 
-        if(!empty($nombres)){ //count($nombres)>1
-            $query->whereIn('taller', $nombres);
-        }       
+        if (is_array($search)) {
+            foreach ($search as $id) {
+                $taller = Taller::find($id);
+                if ($taller) {
+                    $nombres[] = $taller->nombre;
+                }
+            }
+
+            if (!empty($nombres)) {
+                $query->whereIn('taller', $nombres);
+            }
+        }
     }
 
-    public function scopeInspectores(Builder $query,  $search): void{   
-        $nombres=[];
-        foreach($search as $id){
-           $inspector=User::find($id);           
-           if($inspector){
-            array_push($nombres, $inspector->name);
-           }
+    public function scopeInspectores(Builder $query, $search): void
+    {   
+        $nombres = [];
+
+        if (is_string($search)) {
+            $search = explode(',', $search); // Convertir la cadena en un array
         }
 
-        if(!empty($nombres)){
-            $query->whereIn('certificador', $nombres);
-        }       
+        if (is_array($search)) {
+            foreach ($search as $id) {
+                $inspector = User::find($id);
+                if ($inspector) {
+                    $nombres[] = $inspector->name;
+                }
+            }
+
+            if (!empty($nombres)) {
+                $query->whereIn('certificador', $nombres);
+            }
+        }
     }
 
     

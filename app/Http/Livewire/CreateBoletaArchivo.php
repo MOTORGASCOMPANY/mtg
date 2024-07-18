@@ -32,10 +32,27 @@ class CreateBoletaArchivo extends Component
             'nombre' => 'required|string|max:255'
         ]);
 
+        // Obtener la boleta
+        $boleta = Boleta::find($this->idBoleta);
+
+        if ($boleta->taller == null) {
+            $nombre2 = $boleta->certificador;
+        } elseif ($boleta->certificador == null) {
+            $nombre2 = $boleta->taller;
+        } else {
+            $nombre2 = '';
+        }             
+        
+        // Construir el nombre antes de agregar el nuevo nombre del input
+        $antesdenombre = $boleta->id . '-' . $nombre2;
+
+        // Construir el nombre completo del archivo
+        $nombreArchivo = $antesdenombre . '-' . $this->nombre;
+
         BoletaArchivo::create([
             'boleta_id' => $this->idBoleta,
             'nombre' => $this->nombre,
-            'ruta' => $this->documento->storeAs('public/docsBoletas', $this->nombre . '.' . $this->documento->extension()),
+            'ruta' => $this->documento->storeAs('public/docsBoletas', $nombreArchivo . '.' . $this->documento->extension()),
             'extension' => $this->documento->extension(),
         ]);
         $this->emitTo('editar-boleta', 'refrescaBoleta');

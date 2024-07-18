@@ -7,8 +7,8 @@
                 taller {{ $boleta->taller }}
             @else
             @endif
-            desde
-            {{ $boleta->fechaInicio }} hasta {{ $boleta->fechaFin }}
+            desde {{ $boleta->fechaInicio }} hasta {{ $boleta->fechaFin }}
+            con el monto  {{ 'S/' . $boleta->monto ?? null}}
         </h2>
         <div class="flex space-x-2">
             @hasanyrole('administrador|Administrador del sistema')

@@ -3,6 +3,8 @@
 namespace App\Http\Livewire;
 
 use App\Models\Boleta;
+use App\Models\Taller;
+use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Redirect;
@@ -13,6 +15,8 @@ class ListaBoletas extends Component
     public $sort, $direction, $cant, $search;
     public $fechaInicio, $fechaFin;
     public $openEdit = false, $boleta;
+    //para filtros
+    public $inspectores, $talleres, $ins, $ta;
     protected $listeners = ['render', 'eliminarBoleta'];
 
     protected $rules = [
@@ -29,9 +33,12 @@ class ListaBoletas extends Component
 
     public function mount()
     {
-        $this->direction = 'desc';
+        $this->direction = 'asc';
         $this->sort = 'id';
-        $this->cant = 10;
+        $this->cant = 50;
+        //Para filtros
+        $this->inspectores = User::role(['inspector', 'supervisor'])->get();
+        $this->talleres = Taller::all()->sortBy('nombre');
     }
 
     public function order($sort)
@@ -47,6 +54,14 @@ class ListaBoletas extends Component
     public function render()
     {
         $query = Boleta::query();
+
+        // Aplicar los scopes para filtros taller e inspector
+        if (!empty($this->ta)) {
+            $query->Talleres($this->ta);
+        }
+        if (!empty($this->ins)) {
+            $query->Inspectores($this->ins);
+        }
 
         // Verificar si las fechas no son nulas
         if ($this->fechaInicio && $this->fechaFin) {

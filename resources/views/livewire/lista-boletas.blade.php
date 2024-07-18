@@ -26,6 +26,34 @@
                     <input class="bg-gray-50 outline-none block rounded-md border-indigo-500 w-full" type="text"
                         wire:model="search" placeholder="buscar...">
                 </div>
+            </div>
+            <div class="w-full items-center md:flex  md:justify-between">
+                <div class="flex bg-white items-center p-2 rounded-md mb-4 ">
+                    <span>Taller: </span>
+                    <select wire:model="ta"
+                        class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full truncate">
+                        <option value="">SELECCIONE</option>
+                        @isset($talleres)
+                            @foreach ($talleres as $taller)
+                                <option class="" value="{{ $taller->id }}">{{ $taller->nombre }}
+                                </option>
+                            @endforeach
+                        @endisset
+                    </select>
+                </div>
+                <div class="flex bg-white items-center p-2 rounded-md mb-4 ">
+                    <span>Inspector: </span>
+                    <select wire:model="ins"
+                        class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full truncate">
+                        <option value="">SELECCIONE</option>
+                        @isset($inspectores)
+                            @foreach ($inspectores as $inspector)
+                                <option value="{{ $inspector->id }}">{{ $inspector->name }}</option>
+                            @endforeach
+                        @endisset
+                    </select>
+                </div>
+
                 <div class="flex bg-white items-center p-2 w-48 rounded-md mb-4 ">
                     <span>Desde: </span>
                     <x-date-picker wire:model="fechaInicio" placeholder="Fecha de inicio"

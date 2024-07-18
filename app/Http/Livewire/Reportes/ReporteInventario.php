@@ -23,7 +23,7 @@ class ReporteInventario extends Component
     public function mount()
     {
         $this->inspectores = User::role(['inspector', 'supervisor'])
-            ->where('id', '!=', 201)
+            //->where('id', '!=', 201)
             ->orderBy('name')
             ->get();
         $this->fechaInicio = '';

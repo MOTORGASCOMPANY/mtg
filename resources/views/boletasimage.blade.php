@@ -20,6 +20,15 @@
             padding: 10px;
             text-align: center;
         }
+
+        h5 {
+            position: absolute;
+            bottom: 200px;
+            right: 0.5px;
+            transform: rotate(-90deg);
+            transform-origin: right bottom;
+            margin: 1.5px;
+        }
     </style>
 </head>
 
@@ -49,6 +58,19 @@
     @else
         <p>No hay comprobantes disponibles.</p>
     @endif
+
+    <h5>
+        @if ($documentos->isNotEmpty())
+            {{$documentos->first()->boleta->identificador . ") " }}
+                @if ($documentos->first()->boleta->taller == null)
+                    {{"Inspector " . $documentos->first()->boleta->certificador }}
+                @elseif ($documentos->first()->boleta->certificador == null)
+                    {{"Taller " . $documentos->first()->boleta->taller }}
+                @else
+                @endif
+        @endif
+    </h5>
 </body>
+
 
 </html>

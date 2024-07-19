@@ -235,7 +235,17 @@
                             --}}
                             <td class="text-center">
                                 <div class="flex justify-center items-center space-x-2">
-                                    <a wire:click="redirectBoletas({{ $bol->id }})"
+                                    {{-- 
+                                     <a wire:click="redirectBoletas({{ $bol->id }})"
+                                        class="group flex py-2 px-2 text-center items-center rounded-md bg-indigo-300 font-bold text-white cursor-pointer hover:bg-indigo-400 hover:animate-pulse">
+                                        <i class="fas fa-folder-plus"></i>
+                                        <span
+                                            class="group-hover:opacity-100 transition-opacity bg-gray-800 px-1 text-sm text-gray-100 rounded-md absolute left-1/2-translate-x-1/2 translate-y-full opacity-0 m-4 mx-auto z-100">
+                                            Bol/Vau
+                                        </span>
+                                     </a>
+                                    --}}
+                                    <a href="Boletas/{{ $bol->id }}" target="_blank" wire:click.prevent="redirectBoletas({{ $bol->id }})"
                                         class="group flex py-2 px-2 text-center items-center rounded-md bg-indigo-300 font-bold text-white cursor-pointer hover:bg-indigo-400 hover:animate-pulse">
                                         <i class="fas fa-folder-plus"></i>
                                         <span
@@ -353,6 +363,13 @@
                             class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full" />
                         <x-jet-input-error for="boleta.desmonte" />
                     </div>
+                </div>
+                <div>
+                    <x-jet-label value="Observación:" />
+                    <x-textarea
+                        class="w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
+                        wire:model="boleta.observacion" style="height: 150px;" />
+                    <x-jet-input-error for="boleta.observacion" />
                 </div>
             </x-slot>
             <x-slot name="footer">

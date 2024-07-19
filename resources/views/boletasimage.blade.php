@@ -2,6 +2,9 @@
 <html>
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprobantes</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -21,6 +24,12 @@
             text-align: center;
         }
 
+        a {
+            text-align: center;
+            font-style: italic;
+            font-size: smaller;
+        }
+
         h5 {
             position: absolute;
             bottom: 200px;
@@ -35,12 +44,11 @@
 <body>
     @if ($documentos->isNotEmpty())
         <p>
-            {{$documentos->first()->boleta->identificador . ") " }}
+            {{ $documentos->first()->boleta->identificador . ') ' }}
             @if ($documentos->first()->boleta->taller == null)
                 {{ $documentos->first()->boleta->certificador }}
             @elseif ($documentos->first()->boleta->certificador == null)
                 taller {{ $documentos->first()->boleta->taller }}
-            @else
             @endif
             desde
             {{ $documentos->first()->boleta->fechaInicio ?? '' }}
@@ -55,19 +63,25 @@
             <img src="{{ public_path('storage/docsBoletas/' . basename($doc->ruta)) }}"
                 style="width: 260px; height: {{ $doc->nombre === 'estado de cuenta' ? '100px' : '400px' }};">
         @endforeach
+        <br>
+        <a>
+            @if ($documentos->first()->boleta->observacion) 
+                Nota:
+            @endif
+            {{ $documentos->first()->boleta->observacion ?? null }}
+        </a>
     @else
         <p>No hay comprobantes disponibles.</p>
     @endif
 
     <h5>
         @if ($documentos->isNotEmpty())
-            {{$documentos->first()->boleta->identificador . ") " }}
-                @if ($documentos->first()->boleta->taller == null)
-                    {{"Inspector " . $documentos->first()->boleta->certificador }}
-                @elseif ($documentos->first()->boleta->certificador == null)
-                    {{"Taller " . $documentos->first()->boleta->taller }}
-                @else
-                @endif
+            {{ $documentos->first()->boleta->identificador . ') ' }}
+            @if ($documentos->first()->boleta->taller == null)
+                {{ 'Inspector ' . $documentos->first()->boleta->certificador }}
+            @elseif ($documentos->first()->boleta->certificador == null)
+                {{ 'Taller ' . $documentos->first()->boleta->taller }}
+            @endif
         @endif
     </h5>
 </body>

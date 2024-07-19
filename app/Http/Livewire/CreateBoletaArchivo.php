@@ -12,12 +12,14 @@ class CreateBoletaArchivo extends Component
     use WithFileUploads;
     public $idBoleta, $boleta;
     public $addDocument = false;
-    public  $documento, $nombre;
+    //public  $documento, $nombre;
+    public $documentos = [], $nombres = [];
+
 
     public function mount()
     {
         $this->boleta = Boleta::find($this->idBoleta);
-        $this->nombre = ''; 
+        //$this->nombre = ''; 
     }
 
     public function render()
@@ -25,7 +27,13 @@ class CreateBoletaArchivo extends Component
         return view('livewire.create-boleta-archivo');
     }
 
-    public function agregarDocumento()
+    public function updatedDocumentos()
+    {
+        // Inicialice la matriz de nombres según la cantidad de archivos cargados
+        $this->nombres = array_fill(0, count($this->documentos), '');
+    }
+
+    /*public function agregarDocumento()
     {
         $this->validate([
             'documento' => 'required|mimes:jpg,jpeg,png|max:2048', //pdf,
@@ -59,6 +67,47 @@ class CreateBoletaArchivo extends Component
         $this->emitTo('boletas-archivos', 'resetBoleta');
         $this->reset(['documento', 'nombre', 'addDocument']);
         $this->emit("CustomAlert", ["titulo" => "BUEN TRABAJO!", "mensaje" => "Se ingreso correctamente un nuevo documento", "icono" => "success"]);
-    }
+    }*/
 
+    public function agregarDocumento()
+    {
+        $this->validate([
+            'documentos.*' => 'required|mimes:jpg,jpeg,png|max:2048', // Add 'pdf' if needed
+            'nombres.*' => 'required|string|max:255'
+        ]);
+
+        // Obtener la boleta
+        $boleta = Boleta::find($this->idBoleta);
+
+        foreach ($this->documentos as $index => $documento) {
+            $nombreInput = $this->nombres[$index];
+
+            // Determinar el nombre2 basado en la lógica proporcionada
+            if ($boleta->taller == null) {
+                $nombre2 = $boleta->certificador;
+            } elseif ($boleta->certificador == null) {
+                $nombre2 = $boleta->taller;
+            } else {
+                $nombre2 = '';
+            }
+
+            // Construir el nombre antes de agregar el nuevo nombre del input
+            $antesdenombre = $boleta->identificador . '-' . $nombre2;
+
+            // Construir el nombre completo del archivo
+            $nombreArchivo = $antesdenombre . '-' . $nombreInput;
+
+            BoletaArchivo::create([
+                'boleta_id' => $this->idBoleta,
+                'nombre' => $this->nombres[$index],
+                'ruta' => $documento->storeAs('public/docsBoletas', $nombreArchivo . '.' . $documento->extension()),
+                'extension' => $documento->extension(),
+            ]);
+        }
+
+        $this->emitTo('editar-boleta', 'refrescaBoleta');
+        $this->emitTo('boletas-archivos', 'resetBoleta');
+        $this->reset(['documentos', 'nombres', 'addDocument']);
+        $this->emit("CustomAlert", ["titulo" => "BUEN TRABAJO!", "mensaje" => "Se ingresaron correctamente los documentos", "icono" => "success"]);
+    }
 }

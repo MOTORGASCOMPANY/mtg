@@ -29,6 +29,7 @@ class ListaBoletas extends Component
         "boleta.duplicado" => "nullable",
         "boleta.inicial" => "nullable",
         "boleta.desmonte" => "nullable",
+        "boleta.observacion" => "nullable",
     ];
 
     public function mount()
@@ -37,7 +38,7 @@ class ListaBoletas extends Component
         $this->sort = 'id';
         $this->cant = 50;
         //Para filtros
-        $this->inspectores = User::role(['inspector', 'supervisor'])->get();
+        $this->inspectores = User::role(['inspector', 'supervisor'])->orderBy('name')->get();
         $this->talleres = Taller::all()->sortBy('nombre');
     }
 

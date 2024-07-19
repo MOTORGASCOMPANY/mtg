@@ -13,6 +13,7 @@
             <h1 class="text-xl font-bold">Agregar documento</h1>
         </x-slot>
         <x-slot name="content">
+            {{-- 
             <div class="mb-4">
                 <x-jet-label for="nombre" value="Nombre del Documento:" class="font-bold" />
                 <x-jet-input type="text" class="mt-1 block w-full" wire:model="nombre" list="items"/>  
@@ -28,6 +29,26 @@
                     acceptedFileTypes="['application/pdf', 'image/*']" />
                 <x-jet-input-error for="documento" />
             </div>
+            --}}
+            <div class="mb-4">
+                <x-jet-label for="documentos" value="Seleccionar Comprobantes:" class="font-bold" />
+                <x-file-pond name="documentos"  id="documentos"  wire:model="documentos"  multiple 
+                    class="mt-1 block w-full" accepted-file-types="['image/*']" allow-multiple="true" />
+                <x-jet-input-error for="documentos.*" />
+            </div>
+
+            @foreach ($documentos as $index => $documento)
+                <div class="mb-4">
+                    <x-jet-label for="nombres[{{ $index }}]" value="Nombre del Documento {{ $index + 1 }}:"
+                        class="font-bold" />
+                    <x-jet-input type="text" class="mt-1 block w-full" wire:model="nombres.{{ $index }}" list="items"/>
+                    <datalist id="items">
+                        <option value="comprobante">comprobante</option>
+                        <option value="estado de cuenta">estado de cuenta</option>
+                    </datalist>
+                    <x-jet-input-error for="nombres.{{ $index }}" />
+                </div>
+            @endforeach
         </x-slot>
 
         <x-slot name="footer">

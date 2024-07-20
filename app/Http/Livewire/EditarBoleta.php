@@ -9,11 +9,13 @@ use Illuminate\Support\Facades\Redirect;
 class EditarBoleta extends Component
 {
     public $idBoleta, $boleta;
+    public $auditoria; //para auditoria
     protected $listeners = ["refrescaBoleta"];
 
     public function mount()
     {
         $this->boleta = Boleta::find($this->idBoleta);
+        $this->auditoria = $this->boleta->auditoria;
     }
 
     public function render()
@@ -24,6 +26,7 @@ class EditarBoleta extends Component
     public function refrescaBoleta()
     {
         $this->boleta->refresh();
+        $this->auditoria = $this->boleta->auditoria;
     }
 
     public function regresar()
@@ -34,5 +37,11 @@ class EditarBoleta extends Component
     public function generatePdf()
     {
         return redirect()->route('generaPdfBoleta', ['id' => $this->idBoleta]);
+    }
+
+    public function updatedAuditoria($value)
+    {
+        $this->boleta->auditoria = $value ? 1 : 0;
+        $this->boleta->save();
     }
 }

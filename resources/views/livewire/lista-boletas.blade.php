@@ -122,6 +122,9 @@
                             Desmonte
                         </th>
                         <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left">
+                            Auditoria
+                        </th>
+                        <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left">
                             Monto
                         </th>
                         {{--  
@@ -189,35 +192,48 @@
                                     </p>
                                 </div>
                             </td>
-                            <td class="pl-5">
-                                <div class="flex items-center">
+                            <td class="pl-10">
+                                <div class="flex items-center ">
                                     <p class="text-sm leading-none text-gray-600 ml-2">
                                         {{ $bol->anual ?? '0' }}
                                     </p>
                                 </div>
                             </td>
-                            <td class="pl-5">
-                                <div class="flex items-center">
+                            <td class="pl-10">
+                                <div class="flex items-center ">
                                     <p class="text-sm leading-none text-gray-600 ml-2">
                                         {{ $bol->duplicado ?? '0' }}
                                     </p>
                                 </div>
                             </td>
-                            <td class="pl-5">
-                                <div class="flex items-center">
+                            <td class="pl-10">
+                                <div class="flex items-center ">
                                     <p class="text-sm leading-none text-gray-600 ml-2">
                                         {{ $bol->inicial ?? '0' }}
                                     </p>
                                 </div>
                             </td>
-                            <td class="pl-5">
-                                <div class="flex items-center">
+                            <td class="pl-10">
+                                <div class="flex items-center ">
                                     <p class="text-sm leading-none text-gray-600 ml-2">
                                         {{ $bol->desmonte ?? '0' }}
                                     </p>
                                 </div>
                             </td>
-                            <td>
+                            <td class="pl-10">
+                                <div class="flex items-center">
+                                    @switch($bol->auditoria)
+                                        @case(0)
+                                            <i class="far fa-times-circle fa-lg" style="color: red;"></i>
+                                        @break
+                                        @case(1)
+                                            <i class="far fa-check-circle fa-lg" style="color: forestgreen;"></i>
+                                        @break                                        
+                                        @default
+                                    @endswitch
+                                </div>
+                            </td>
+                            <td class="pl-5">
                                 <div class="flex items-center">
                                     <p class="text-sm leading-none text-gray-600 ml-2">
                                         {{ $bol->monto }}

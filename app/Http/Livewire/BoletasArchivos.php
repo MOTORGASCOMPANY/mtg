@@ -42,7 +42,7 @@ class BoletasArchivos extends Component
         Storage::delete([$documento->ruta]);
         $documento->delete();
         $this->refrescaBoleta();
-        $this->emit("CustomAlert", ["titulo" => "¡BUEN TRABAJO!", "mensaje" => "Documento eliminado correctamente", "icono" => "success"]);
+        //$this->emit("CustomAlert", ["titulo" => "¡BUEN TRABAJO!", "mensaje" => "Documento eliminado correctamente", "icono" => "success"]);
     }
 
     /*public function generatePdf()

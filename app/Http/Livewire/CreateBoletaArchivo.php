@@ -14,6 +14,7 @@ class CreateBoletaArchivo extends Component
     public $addDocument = false;
     //public  $documento, $nombre;
     public $documentos = [], $nombres = [];
+    public $idBoletas = ''; 
 
 
     public function mount()
@@ -69,7 +70,7 @@ class CreateBoletaArchivo extends Component
         $this->emit("CustomAlert", ["titulo" => "BUEN TRABAJO!", "mensaje" => "Se ingreso correctamente un nuevo documento", "icono" => "success"]);
     }*/
 
-    public function agregarDocumento()
+    /*public function agregarDocumento()
     {
         $this->validate([
             'documentos.*' => 'required|mimes:jpg,jpeg,png|max:2048', // Add 'pdf' if needed
@@ -109,5 +110,56 @@ class CreateBoletaArchivo extends Component
         $this->emitTo('boletas-archivos', 'resetBoleta');
         $this->reset(['documentos', 'nombres', 'addDocument']);
         $this->emit("CustomAlert", ["titulo" => "BUEN TRABAJO!", "mensaje" => "Se ingresaron correctamente los documentos", "icono" => "success"]);
+    }*/
+
+    public function agregarDocumento()
+    {
+        $this->validate([
+            'documentos.*' => 'required|mimes:jpg,jpeg,png|max:2048', // Add 'pdf' if needed
+            'nombres.*' => 'required|string|max:255',
+            'idBoletas' => 'nullable|string', // Validar que sea una cadena de texto si es proporcionado
+        ]);
+
+        // Convertir $idBoletas a un array si no es nulo
+        $idBoletas = $this->idBoletas ? array_map('trim', explode(',', $this->idBoletas)) : [$this->idBoleta];
+
+        foreach ($idBoletas as $idBoleta) {
+            // Obtener la boleta
+            $boleta = Boleta::find($idBoleta);
+
+            if (!$boleta) continue; // Si la boleta no existe, continuar con el siguiente ID
+
+            foreach ($this->documentos as $index => $documento) {
+                $nombreInput = $this->nombres[$index];
+
+                // Determinar el nombre basado en la lógica proporcionada
+                if ($boleta->taller == null) {
+                    $nombre2 = $boleta->certificador;
+                } elseif ($boleta->certificador == null) {
+                    $nombre2 = $boleta->taller;
+                } else {
+                    $nombre2 = '';
+                }
+
+                // Construir el nombre antes de agregar el nuevo nombre del input
+                $antesdenombre = $boleta->id . '-' . $boleta->identificador . '-' . $nombre2;
+
+                // Construir el nombre completo del archivo
+                $nombreArchivo = $antesdenombre . '-' . $nombreInput;
+
+                BoletaArchivo::create([
+                    'boleta_id' => $idBoleta,
+                    'nombre' => $nombreInput,
+                    'ruta' => $documento->storeAs('public/docsBoletas', $nombreArchivo . '.' . $documento->extension()),
+                    'extension' => $documento->extension(),
+                ]);
+            }
+        }
+
+        // Emitir eventos para actualizar componentes relacionados
+        $this->emitTo('editar-boleta', 'refrescaBoleta');
+        $this->emitTo('boletas-archivos', 'resetBoleta');
+        $this->reset(['documentos', 'nombres', 'addDocument', 'idBoletas']);
+        $this->emit("CustomAlert", ["titulo" => "¡BUEN TRABAJO!", "mensaje" => "Se ingresaron correctamente los documentos", "icono" => "success"]);
     }
 }

@@ -30,6 +30,13 @@
                 <x-jet-input-error for="documento" />
             </div>
             --}}
+
+            <div class="mb-4">
+                <x-jet-label for="idBoletas" value="IDs de Boletas (separados por comas)" />
+                <x-jet-input id="idBoletas" type="text" wire:model="idBoletas" class="mt-1 block w-full" />
+                <x-jet-input-error for="idBoletas" class="mt-2" />
+            </div>
+
             <div class="mb-4">
                 <x-jet-label for="documentos" value="Seleccionar Comprobantes:" class="font-bold" />
                 <x-file-pond name="documentos"  id="documentos"  wire:model="documentos"  multiple 

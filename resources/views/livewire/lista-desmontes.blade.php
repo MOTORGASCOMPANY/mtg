@@ -11,10 +11,11 @@
                             class="bg-gray-50 border-indigo-500 rounded-md outline-none ml-1 block w-1/3">
                             <option value="">Seleccione</option>
                             <option value="chipsConsumidos">Lista de Chips</option>
-                            <option value="desmontes">Lista de Desmontes</option>                     
+                            <option value="desmontes">Lista de Desmontes</option>
+                            <!--
                             <option value="taller">Inspeccion del Taller</option>
                             <option value="carta">Carta Aclaratoria Sunarp</option>                   
-                            <!--option value="certificaciones">Certificaciones Pendientes</option-->         
+                            <option value="certificaciones">Certificaciones Pendientes</option-->         
                         </select>
                         <x-jet-input-error for="modelo" />
                     </div>

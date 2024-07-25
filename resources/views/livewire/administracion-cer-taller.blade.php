@@ -12,8 +12,10 @@
                             <option value="">Seleccione</option>
                             <option value="chipsConsumidos">Lista de Chips</option>
                             <option value="desmontes">Lista de Desmontes</option>
+                            {{-- 
                             <option value="taller">Inspeccion del Taller</option>
                             <option value="carta">Carta Aclaratoria Sunarp</option>
+                            --}}
                             <option value="pendientes">Certificaciones Pendientes</option>
                         </select>
                         <x-jet-input-error for="modelo" />
@@ -437,54 +439,52 @@
                                                     </p>
                                                 </div>
                                             </td>
-                                            <td class="pl-2">
-                                                <div class="flex items-center justify-center">
+                                            <td class="pl-12">
+                                                <div class="flex items-center">
                                                     @switch($certificacion->estado)
                                                         @case(1)
-                                                            <i class="far fa-check-circle fa-lg"
-                                                                style="color: forestgreen;"></i>
-                                                        @break
-
-                                                        @case(2)
                                                             <i class="far fa-times-circle fa-lg" style="color: red;"></i>
                                                         @break
-
-                                                        @case(3)
-                                                            <i class="fa-regular fa-circle-pause fa-lg text-amber-400"></i>
-                                                        @break
-
+                                                        @case(2)
+                                                            <i class="far fa-check-circle fa-lg"
+                                                                style="color: forestgreen;"></i>
+                                                        @break                                                       
                                                         @default
                                                     @endswitch
                                                 </div>
                                             </td>
                                             
-                                            <td class="pl-4">
-                                                <div class="relative flex justify-center px-5">
-                                                    <div class="inline-block text-left" x-data="{ menu: false }">
-                                                        <button x-on:click="menu = ! menu" type="button"
-                                                            class="flex items-center text-gray-400 hover:text-gray-600 focus:outline-none"
-                                                            id="menu-button" aria-expanded="true"
-                                                            aria-haspopup="true">
-                                                            <span class="sr-only"></span>
-                                                            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg"
-                                                                viewBox="0 0 20 20" fill="currentColor"
-                                                                aria-hidden="true">
-                                                                <path
-                                                                    d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
-                                                            </svg>
-                                                        </button>
-                                                        <div x-show="menu" x-on:click.away="menu = false"
-                                                            class="origin-top-right absolute right-12 mt-2 w-56 rounded-md shadow-lg bg-gray-300 ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none z-40"
-                                                            role="menu" aria-orientation="vertical"
-                                                            aria-labelledby="menu-button" tabindex="-1">
-                                                            <div class="" role="none">
-                                                                <a wire:click=""
-                                                                    class="flex px-4 py-2 text-sm text-indigo-700 hover:bg-slate-600 hover:text-white justify-between items-center rounded-b-md hover:cursor-pointer">
-                                                                    <i class="fas fa-eraser"></i>
-                                                                    <span>Eliminar</span>
-                                                                </a>
-                                                            </div>
-                                                        </div>
+                                            <td class="px-5 py-5 border-b border-gray-200 text-sm">
+                                                <div class="flex items-center justify-center"
+                                                    x-data="{ menu: false }">
+                                                    <button
+                                                        class="focus:ring-2 rounded-md focus:outline-none hover:text-indigo-500"
+                                                        role="button" x-on:click="menu = ! menu" id="menu-button"
+                                                        aria-expanded="true" aria-haspopup="true"
+                                                        data-te-ripple-init data-te-ripple-color="light"
+                                                        aria-label="option">
+                                                        <i class="fa-solid fa-ellipsis fa-xl"></i>
+                                                    </button>
+                                                    <div x-show="menu" x-on:click.away="menu = false" class="dropdown-content flex flex-col  bg-gray-200 shadow w-48 absolute z-30 right-0 mt-20 mr-6">
+                                                        @if ($certificacion->estado == 1)                                                                  
+                                                            <button wire:click="muestraModal({{$certificacion->id}})"
+                                                                class="focus:outline-none flex items-center space-x-4 focus:text-lime-400 text-xs w-full hover:bg-indigo-600 py-2 px-6 cursor-pointer hover:text-white">
+                                                                <i class="fa-solid fa-file-signature"></i>
+                                                                <span>Certificar</span>
+                                                            </button>  
+                                                            <button 
+                                                                class="focus:outline-none flex items-center space-x-4 focus:text-lime-400 text-xs w-full hover:bg-indigo-600 py-2 px-6 cursor-pointer hover:text-white">
+                                                                <i class="fas fa-trash"></i>
+                                                                <span>Eliminar</span>
+                                                            </button>                                                                                                                                          
+                                                        @endif
+                                                        @if ($certificacion->estado == 2)  
+                                                        <a href="{{ route("certificadoAnualGnv",['id'=>$certificacion->idCertificacion])}}" class="focus:outline-none flex items-center space-x-4  focus:text-indigo-400 text-xs w-full hover:bg-indigo-600 py-2 px-6 cursor-pointer hover:text-white">
+                                                            <i class="fas fa-eye"></i>
+                                                            <span>ver certificado</span>
+                                                        </a>
+                                                        @endif
+                                                        
                                                     </div>
                                                 </div>
                                             </td>
@@ -1184,6 +1184,56 @@
             @endif
         @endif
     </div>
+
+
+
+    {{--  MODAL PARA CERTIFICACIONES PENDIENTES  --}}
+    <x-jet-dialog-modal wire:model="open" wire:loading.attr="disabled">
+        <x-slot name="title" class="font-bold">
+            <h1 class="text-xl font-bold"><i class="fa-solid fa-plus text-white"></i> &nbsp;Nueva Certificación</h1>
+        </x-slot>
+
+        <x-slot name="content">
+            <div class="mb-4 flex flex-row space-x-2 w-full">
+                <div class="w-1/2">
+                    <x-jet-label value="Combustible:" />
+                    <x-jet-input type="text" class="w-full" wire:model="combustible" list="items"/>
+                    <datalist id="items">
+                        <option value="GASOLINA">GASOLINA</option>                   
+                        <option value="BI-COMBUSTIBLE GNV">BI-COMBUSTIBLE GNV</option>
+                        <option value="BI-COMBUSTIBLE GLP">BI-COMBUSTIBLE GLP</option>
+                        <option value="GNV">GNV</option>
+                        <option value="GLP">GLP</option>
+                    </datalist>
+                    <x-jet-input-error for="combustible" />
+                </div >
+                <div class="w-1/2">
+                    <x-jet-label value="Nuevo peso neto:" />
+                    <x-jet-input wire:model="pesoNeto" class="w-full" type="number" inputmode="numeric"/>
+                    <x-jet-input-error for="pesoNeto" />
+                </div>                
+            </div>
+            <div class="mb-4">
+                <x-jet-label value="N° Formato:" />
+                <x-jet-input wire:model.debounce.500ms="numSugerido" type="text" class="w-full" />
+                <x-jet-input-error for="numSugerido" />
+            </div>       
+            <div>
+                <x-jet-input type="text" wire:model="pertenece" class="w-full" placeholder="# Pertenece" disabled/>
+            </div>        
+        </x-slot>
+
+        <x-slot name="footer">
+            <x-jet-secondary-button wire:click="$set('open',false)" class="mx-2">
+                Cancelar
+            </x-jet-secondary-button>
+            <x-jet-button wire:click="certificar" wire:loading.attr="disabled" wire:target="certificar">
+                Certificar
+            </x-jet-button>
+
+        </x-slot>
+
+    </x-jet-dialog-modal>
 
     {{-- JS --}}
     @push('js')

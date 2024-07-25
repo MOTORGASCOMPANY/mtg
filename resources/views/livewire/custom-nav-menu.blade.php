@@ -307,7 +307,7 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                             <li class="transition-colors duration-150">
                                                 <x-jet-responsive-nav-link class="bg-gray-400 text-sm"
                                                     href="{{ route('AdministracionCerTaller') }}" :active="request()->routeIs('AdministracionCerTaller')">
-                                                    Admin. Certificaciones
+                                                    Otros. Servicios
                                                 </x-jet-responsive-nav-link>
                                             </li>
                                         @endcan

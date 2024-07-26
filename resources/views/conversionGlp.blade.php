@@ -268,7 +268,7 @@
                 <td style="text-align:center;">15</td>
                 <td style="text-align:center;">Peso neto(kg)</td>
                 <td style="text-align:center;">{{--$carro->pesoNeto + 30--}}
-                    @if ($carro->combustible === 'GNV')
+                    @if ($carro->combustible === 'GNV' || $carro->combustible === 'BI-COMBUSTIBLE GNV')
                         {{ $carro->pesoNeto - 30 }}
                     @else
                         {{ $carro->pesoNeto + 30 }}

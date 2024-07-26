@@ -44,7 +44,7 @@
                         class="bg-indigo-600 px-6 py-4 w-full md:w-auto rounded-md text-white font-semibold tracking-wide cursor-pointer mb-4">
                         <p class="truncate"> Realizar Consulta </p>
                     </button>
-                    @hasanyrole('administrador|Administrador del sistema')
+                    @hasanyrole('Administrador del sistema')
                         @if ($consultaRealizada)
                             <button wire:click="abrirModal"
                                 class="bg-indigo-600 px-6 py-4 w-full md:w-auto rounded-md text-white font-semibold tracking-wide cursor-pointer mb-4">

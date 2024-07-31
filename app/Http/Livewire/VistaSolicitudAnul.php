@@ -13,7 +13,7 @@ class VistaSolicitudAnul extends Component
     public $inspector, $anulacion, $anuId, $userId, $cerId;
     public $images, $user, $certi;
 
-    protected $listeners = ['render', 'anular'];
+    protected $listeners = ['render', 'anular', 'anularchip'];
 
 
     public function mount()
@@ -38,5 +38,25 @@ class VistaSolicitudAnul extends Component
         $this->emitTo('administracion-certificaciones', 'render');
         return redirect(route('dashboard'));
         
+    }
+
+    public function anularchip(Certificacion $certificacion)
+    {
+        // Anular Hoja si existe
+        if ($certificacion->Hoja) {
+            $certificacion->Hoja->update(['estado' => 5]); // estado anulado en MATERIAL
+        }
+        
+        // Anular chipMaterial si existe
+        if ($certificacion->chipMaterial) {
+            $certificacion->chipMaterial->update(['estado' => 3]); // estado posecion inspector
+        }
+        
+        // Anular certificacion
+        $certificacion->update(['estado' => 2]); // estado anulado en CERTIFICACION
+        
+        // Emitir evento para renderizar nuevamente el componente
+        $this->emitTo('administracion-certificaciones', 'render');
+        return redirect(route('dashboard'));
     }
 }

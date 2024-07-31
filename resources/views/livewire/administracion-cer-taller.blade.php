@@ -472,7 +472,7 @@
                                                                 <i class="fa-solid fa-file-signature"></i>
                                                                 <span>Certificar</span>
                                                             </button>  
-                                                            <button 
+                                                            <button wire:click="$emit('deletePendiente',{{ $certificacion->id }})"
                                                                 class="focus:outline-none flex items-center space-x-4 focus:text-lime-400 text-xs w-full hover:bg-indigo-600 py-2 px-6 cursor-pointer hover:text-white">
                                                                 <i class="fas fa-trash"></i>
                                                                 <span>Eliminar</span>
@@ -1251,6 +1251,31 @@
                     if (result.isConfirmed) {
 
                         Livewire.emitTo('administracion-cer-taller', 'delete', certificacionId);
+
+                        Swal.fire(
+                            'Listo!',
+                            'Servicio eliminado correctamente.',
+                            'success'
+                        )
+                    }
+                })
+            });
+        </script>
+
+        <script>
+            Livewire.on('deletePendiente', certificacionId => {
+                Swal.fire({
+                    title: '¿Estas seguro de eliminar este certificado?',
+                    text: "una vez eliminado este registro, no podras recuperarlo.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Si, eliminar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+
+                        Livewire.emitTo('administracion-cer-taller', 'deletependiente', certificacionId);
 
                         Swal.fire(
                             'Listo!',

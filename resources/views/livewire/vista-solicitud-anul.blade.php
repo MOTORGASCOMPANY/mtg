@@ -39,12 +39,21 @@
                     @endif
                     <div class="flex items-center justify-center mt-4" role="none">
                         @if ($certi && $certi->Hoja && $certi->Hoja->estado !== 5)
-                            <button wire:click="$emit('anularCertificacion',{{ $certi->id }})"
-                                class="p-3 bg-indigo-500 rounded-xl text-white text-sm hover:font-bold hover:bg-indigo-700"
-                                title="Anular servicio">
-                                <i class="fa-solid fa-rectangle-xmark"></i>
-                                Anular servicio
-                            </button>
+                            @if ($certi->Servicio->tipoServicio->id == 10)
+                                <button wire:click="$emit('anularCertificacionChip',{{ $certi->id }})"
+                                    class="p-3 bg-indigo-500 rounded-xl text-white text-sm hover:font-bold hover:bg-indigo-700"
+                                    title="Anular servicio + Chip">
+                                    <i class="fa-solid fa-rectangle-xmark"></i>
+                                    AnularServicio + Chip
+                                </button>
+                            @else
+                                <button wire:click="$emit('anularCertificacion',{{ $certi->id }})"
+                                    class="p-3 bg-indigo-500 rounded-xl text-white text-sm hover:font-bold hover:bg-indigo-700"
+                                    title="Anular servicio">
+                                    <i class="fa-solid fa-rectangle-xmark"></i>
+                                    Anular servicio
+                                </button>                                
+                            @endif                            
                         @else
                             <button class="p-3 bg-gray-400 rounded-xl text-white text-sm"
                                 style="cursor: not-allowed;" disabled
@@ -60,29 +69,58 @@
         </div>
 
     @endif
-    <script>
-        Livewire.on('anularCertificacion', certificacionId => {
-            Swal.fire({
-                title: '¿Seguro que quieres anular este servicio?',
-                text: "Al anular este servicio el formato asociado quedará inutilizable",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Si, anular'
-            }).then((result) => {
-                if (result.isConfirmed) {
 
-                    Livewire.emitTo('vista-solicitud-anul', 'anular', certificacionId);
+    {{-- JS --}}
+    @push('js')
+        <script>
+            Livewire.on('anularCertificacion', certificacionId => {
+                Swal.fire({
+                    title: '¿Seguro que quieres anular este servicio?',
+                    text: "Al anular este servicio el formato asociado quedará inutilizable",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Si, anular'
+                }).then((result) => {
+                    if (result.isConfirmed) {
 
-                    Swal.fire(
-                        'Listo!',
-                        'Servicio anulado correctamente.',
-                        'success'
-                    )
-                }
-            })
-        });
-    </script>
+                        Livewire.emitTo('vista-solicitud-anul', 'anular', certificacionId);
+
+                        Swal.fire(
+                            'Listo!',
+                            'Servicio anulado correctamente.',
+                            'success'
+                        )
+                    }
+                })
+            });
+        </script>
+
+        <script>
+            Livewire.on('anularCertificacionChip', certificacionId => {
+                Swal.fire({
+                    title: '¿Seguro que quieres anular este servicio?',
+                    text: "Al anular este servicio el formato asociado quedará inutilizable",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Si, anular'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+
+                        Livewire.emitTo('vista-solicitud-anul', 'anularchip', certificacionId);
+
+                        Swal.fire(
+                            'Listo!',
+                            'Servicio anulado correctamente.',
+                            'success'
+                        )
+                    }
+                })
+            });
+        </script>
+    @endpush
 
 </div>

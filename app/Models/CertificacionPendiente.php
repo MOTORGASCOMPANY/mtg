@@ -63,7 +63,7 @@ class CertificacionPendiente extends Model
     {
         if ($search) {
             $query->whereHas('Taller', function (Builder $query) use ($search) {
-                $query->whereIn('id', $search);
+                $query->where('id', $search);
             });
         }
     }

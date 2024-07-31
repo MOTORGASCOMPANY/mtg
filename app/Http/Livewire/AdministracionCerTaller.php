@@ -32,7 +32,7 @@ class AdministracionCerTaller extends Component
     public $numSugerido,$open=false,$pendiente,$combustible,$pesoNeto;
     public $tipoServicio, $pertenece, $chip, $servicios, $taller, $servicio;
 
-    protected $listeners = ['render', 'delete'];
+    protected $listeners = ['render', 'delete', 'deletependiente'];
 
     protected $rules=["numSugerido"=>"required|min:1","combustible"=>"required|min:2","pesoNeto"=>"required:numeric|min:1"];
 
@@ -118,6 +118,8 @@ class AdministracionCerTaller extends Component
                     ['material.idTipoMaterial', '=', 2], // Tipo de material CHIP
                     //['material.idUsuario', '=', Auth::id()], // Filtra por el usuario actualmente autenticado
                 ])
+                ->Inspector($this->ins) 
+                ->RangoFecha($this->fecIni, $this->fecFin)
                 ->orderBy($this->sort, $this->direction)
                 ->paginate($this->cant);
         }
@@ -328,6 +330,12 @@ class AdministracionCerTaller extends Component
     public function delete(CertificacionTaller $certificacion)
     {
         $certificacion->delete();
+        $this->emit('render');
+    }
+
+    public function deletependiente(CertificacionPendiente $pendiente)
+    {
+        $pendiente->delete();
         $this->emit('render');
     }
 }

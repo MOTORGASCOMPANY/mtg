@@ -179,7 +179,7 @@ class AdministracionCerTaller extends Component
     public function obtienePertenece($val)
     {
         if ($val) {
-            $m = Material::where("numSerie", $val)->where("idTipoMaterial", 1)->first();
+            $m = Material::where("numSerie", $val)->where("idTipoMaterial", 1)->where("estado", 3)->first();
             // return User::find(Material::where([["numSerie", $val],["idTipoMaterial", 4]] )->first()->idUsuario);
             if ($m == null) {
                 return "No existe";

@@ -77,11 +77,14 @@ class ConsultarHoja extends Component
             ->leftJoin('serviciomaterial', 'material.id', '=', 'serviciomaterial.idMaterial')
             ->leftJoin('certificacion', 'serviciomaterial.idCertificacion', '=', 'certificacion.id')
             ->leftJoin('vehiculo', 'certificacion.idVehiculo', '=', 'vehiculo.id')
+            ->leftJoin('detallesalida', 'material.id', '=', 'detallesalida.idMaterial')
+            ->leftJoin('salidas', 'detallesalida.idSalida', '=', 'salidas.id')
             ->select(
                 'material.*',
                 'users.name as nombreUsuario',
                 'tipomaterial.descripcion as descripcionTipoMaterial',
-                'vehiculo.placa as placa'
+                'vehiculo.placa as placa',
+                'salidas.created_at as fechaAsignacion'
             )
             ->whereBetween('material.numSerie', [$this->desde, $this->hasta]);
 

@@ -162,5 +162,13 @@ class Material extends Model
         }
     }
 
+    public function scopeResumenInventario($query)
+    {
+        return $query->where('estado', 3)
+            ->whereIn('idTipoMaterial', [1, 2, 3, 4])
+            ->select('idUsuario', 'idTipoMaterial', Material::raw('count(*) as total'))
+            ->groupBy('idUsuario', 'idTipoMaterial');
+    }
+
     
 }

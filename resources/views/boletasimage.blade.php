@@ -32,11 +32,10 @@
 
         h5 {
             position: absolute;
-            bottom: 200px;
+            bottom: 250px;
             right: 0.5px;
             transform: rotate(-90deg);
             transform-origin: right bottom;
-            margin: 1.5px;
         }
     </style>
 </head>
@@ -63,25 +62,20 @@
             <img src="{{ public_path('storage/docsBoletas/' . basename($doc->ruta)) }}"
                 style="width: 260px; height: {{ $doc->nombre === 'estado de cuenta' ? '100px' : '400px' }};">
         @endforeach
-        <br>
-        <a>
-            @if ($documentos->first()->boleta->observacion) 
-                Nota:
-            @endif
-            {{ $documentos->first()->boleta->observacion ?? null }}
-        </a>
     @else
         <p>No hay comprobantes disponibles.</p>
     @endif
 
+    <a>
+        {!! nl2br(e($boleta->observacion)) !!}
+    </a>
+
     <h5>
-        @if ($documentos->isNotEmpty())
-            {{ $documentos->first()->boleta->identificador . ') ' }}
-            @if ($documentos->first()->boleta->taller == null)
-                {{ 'Inspector ' . $documentos->first()->boleta->certificador }}
-            @elseif ($documentos->first()->boleta->certificador == null)
-                {{ 'Taller ' . $documentos->first()->boleta->taller }}
-            @endif
+        {{ $boleta->identificador . ') ' }}
+        @if ($boleta->taller == null)
+            {{ 'Inspector ' . $boleta->certificador }}
+        @elseif ($boleta->certificador == null)
+            {{ 'Taller ' . $boleta->taller }}
         @endif
     </h5>
 </body>

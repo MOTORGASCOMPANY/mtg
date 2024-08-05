@@ -1585,6 +1585,7 @@ class PdfController extends Controller
 
         $data = [
             'documentos' => $documentos,
+            'boleta' => $boleta,
         ];
 
         $pdf = App::make('dompdf.wrapper');

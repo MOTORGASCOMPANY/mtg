@@ -283,7 +283,7 @@ class AdministracionCerTaller extends Component
         $certi->Vehiculo->update(["combustible"=>$this->combustible,"pesoNeto"=>$this->pesoNeto]);
         $precio=$certi->precio;
 
-        $m = Material::where("numSerie", $this->numSugerido)->where("idTipoMaterial", 1)->first();
+        $m = Material::where("numSerie", $this->numSugerido)->where("idTipoMaterial", 1)->where("estado", 3)->first();
         $usuario = User::find($m->idUsuario);
 
         $hoja=$this->procesaFormato($this->numSugerido, 2);

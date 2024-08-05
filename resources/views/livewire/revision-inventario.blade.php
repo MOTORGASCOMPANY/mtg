@@ -1,6 +1,13 @@
 <div>
     <div class="container block justify-center m-auto py-12">
-        <h1 class="text-2xl text-center font-bold text-indigo-500 uppercase">Consulta de inventario</h1>
+        <div class="flex justify-between items-center">
+            <h1 class="text-2xl text-center font-bold text-indigo-500 uppercase flex-grow">Consulta de inventario</h1>
+            <button class="p-3 bg-indigo-500 rounded-xl text-white text-sm hover:font-bold hover:bg-indigo-700 ml-4"
+                wire:click="resumen">
+                <i class="fa-solid fa-clipboard-list"></i>
+                Resumen
+            </button>
+        </div>
         <div class="rounded-xl m-4 bg-white p-8 mx-auto max-w-max shadow-lg">
             <div class="flex flex-row">
                 <div class="w-full">
@@ -27,19 +34,21 @@
                     <x-jet-input-error for="inspector" />
                 </div>
             </div>
-            <div class="flex items-center justify-center mt-4">
+            <div class="flex items-center justify-center mt-4 space-x-4">
                 <button class="p-3 bg-indigo-500 rounded-xl text-white text-sm hover:font-bold hover:bg-indigo-700"
                     wire:click="consultar">
                     <i class="fas fa-search"></i>
                     Buscar
                 </button>
+
             </div>
         </div>
-        <div class="w-full text-center font-semibold text-gray-100 p-4 mb-4 border rounded-md bg-indigo-400 shadow-lg" wire:loading>
-            CARGANDO  <i class="fa-solid fa-spinner animate-spin"></i>
+        <div class="w-full text-center font-semibold text-gray-100 p-4 mb-4 border rounded-md bg-indigo-400 shadow-lg"
+            wire:loading>
+            CARGANDO <i class="fa-solid fa-spinner animate-spin"></i>
         </div>
 
-        @if(isset($resultado))
+        @if (isset($resultado))
 
             @if ($resultado->count())
                 <div class="w-full border bg-white rounded-md shadow-md" wire:loading.class="hidden">
@@ -47,7 +56,8 @@
                         <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-x-6 lg:gap-x-0 items-center">
                             <div class="mb-12 lg:mb-0 relative">
                                 <i class="fa-solid fa-cubes fa-3x text-amber-600 mx-auto mb-6"></i>
-                                <h5 class="text-lg font-medium text-blue-600 font-bold mb-4">{{ $resultado->count() }}</h5>
+                                <h5 class="text-lg font-medium text-blue-600 font-bold mb-4">{{ $resultado->count() }}
+                                </h5>
                                 <h6 class="font-medium text-gray-500">Total</h6>
                                 <hr class="absolute right-0 top-0 w-px bg-gray-200 h-full hidden lg:block" />
                             </div>
@@ -145,7 +155,7 @@
                                             {{ $item->ubicacion }}
                                         </td>
                                         <td class="px-6 py-4 ">
-                                            {{ $item->updated_at->format('d-m-Y H:i:s a')}}
+                                            {{ $item->updated_at->format('d-m-Y H:i:s a') }}
                                         </td>
                                     </tr>
                                 @endforeach
@@ -163,7 +173,66 @@
 
         @endif
 
-
+        @if (isset($resumen))
+            <div class="bg-gray-200  px-8 py-4 rounded-xl w-full mt-4">
+                <div class="overflow-x-auto m-auto w-full">
+                    <div class="inline-block min-w-full py-2 sm:px-6">
+                        <div class="overflow-hidden">
+                            <table class="min-w-full border text-center text-sm font-light dark:border-neutral-500">
+                                <thead class="border-b font-medium dark:border-neutral-500">
+                                    <tr class="bg-indigo-200">
+                                        <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
+                                            #
+                                        </th>
+                                        <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
+                                            Inspector
+                                        </th>
+                                        <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
+                                            GNV
+                                        </th>
+                                        <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
+                                            CHIP
+                                        </th>
+                                        <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
+                                            GLP
+                                        </th>
+                                        <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
+                                            MODIFICACION
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($resumen as $index => $data)
+                                        <tr class="border-b dark:border-neutral-500 bg-gray-100">
+                                            <td class="border-r px-6 py-4 dark:border-neutral-500">
+                                                {{ $index + 1 }}
+                                            </td>
+                                            <td class="border-r px-6 py-4 dark:border-neutral-500">
+                                                {{ $data['usuario'] }}
+                                            </td>
+                                            <td class="border-r px-6 py-4 dark:border-neutral-500">
+                                                {{ $data['materiales']->where('idTipoMaterial', 1)->first()->total ?? 0 }}
+                                            </td>
+                                            <td class="border-r px-6 py-4 dark:border-neutral-500">
+                                                {{ $data['materiales']->where('idTipoMaterial', 2)->first()->total ?? 0 }}
+                                            </td>
+                                            <td class="border-r px-6 py-4 dark:border-neutral-500">
+                                                {{ $data['materiales']->where('idTipoMaterial', 3)->first()->total ?? 0 }}
+                                            </td>
+                                            <td class="border-r px-6 py-4 dark:border-neutral-500">
+                                                {{ $data['materiales']->where('idTipoMaterial', 4)->first()->total ?? 0 }}
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @else
+            <div class="text-center mt-4 text-gray-600"> </div>
+        @endif
 
     </div>
 </div>

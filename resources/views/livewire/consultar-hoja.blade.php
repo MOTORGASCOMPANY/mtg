@@ -75,6 +75,9 @@
                                                     #
                                                 </th>
                                                 <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
+                                                    ID
+                                                </th>
+                                                <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
                                                     Inspector
                                                 </th>
                                                 <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
@@ -96,9 +99,11 @@
                                                 <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
                                                     Ubicacion
                                                 </th>
+                                                {{-- 
                                                 <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
                                                     Fecha Asignación
                                                 </th>
+                                                --}}
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -107,6 +112,10 @@
                                                     <td
                                                         class="whitespace-nowrap border-r px-6 py-4 dark:border-neutral-500">
                                                         {{ $key + 1 }}
+                                                    </td>
+                                                    <td
+                                                        class="whitespace-nowrap border-r px-6 py-4 dark:border-neutral-500">
+                                                        {{ $item->id }}
                                                     </td>
                                                     <td
                                                         class="whitespace-nowrap border-r px-6 py-4 dark:border-neutral-500">
@@ -167,10 +176,12 @@
                                                         class="whitespace-nowrap border-r px-6 py-4  dark:border-neutral-500">
                                                         {{ $item->ubicacion ?? 'NE' }}
                                                     </td>
+                                                    {{-- 
                                                     <td
                                                         class="whitespace-nowrap border-r px-6 py-4  dark:border-neutral-500">
                                                         {{ $item->fechaAsignacion ?? 'NE' }}
                                                     </td>
+                                                    --}}
                                                 </tr>
                                             @endforeach
                                         </tbody>

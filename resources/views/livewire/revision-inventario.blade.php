@@ -2,11 +2,13 @@
     <div class="container block justify-center m-auto py-12">
         <div class="flex justify-between items-center">
             <h1 class="text-2xl text-center font-bold text-indigo-500 uppercase flex-grow">Consulta de inventario</h1>
-            <button class="p-3 bg-indigo-500 rounded-xl text-white text-sm hover:font-bold hover:bg-indigo-700 ml-4"
-                wire:click="resumen">
-                <i class="fa-solid fa-clipboard-list"></i>
-                Resumen
-            </button>
+            @hasanyrole('Administrador del sistema')
+                <button class="p-3 bg-indigo-500 rounded-xl text-white text-sm hover:font-bold hover:bg-indigo-700 ml-4"
+                    wire:click="resumen">
+                    <i class="fa-solid fa-clipboard-list"></i>
+                    Resumen
+                </button>
+            @endhasanyrole
         </div>
         <div class="rounded-xl m-4 bg-white p-8 mx-auto max-w-max shadow-lg">
             <div class="flex flex-row">

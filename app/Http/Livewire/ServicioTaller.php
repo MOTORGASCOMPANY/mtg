@@ -61,6 +61,7 @@ class ServicioTaller extends Component
         if ($val && $this->material) {
             $material = Material::where("numSerie", $val)
                 ->where("idTipoMaterial", $this->material)
+                ->where("estado", 3) //Agrege esto por el error de que primero busca la hoja del año anterior y esa ya esta consumida
                 ->first();
             if (!$material) {
                 return "No existe";
@@ -85,6 +86,7 @@ class ServicioTaller extends Component
     {
         $material = Material::where("numSerie", $this->numSugerido)
             ->where("idTipoMaterial", $this->material)
+            ->where("estado", 3) //Agrege esto por el error de que primero busca la hoja del año anterior y esa ya esta consumida
             ->first();
         if (!$material) {
             $this->emit("minAlert", ["titulo" => "AVISO DEL SISTEMA", "mensaje" => "Material no encontrado", "icono" => "warning"]);

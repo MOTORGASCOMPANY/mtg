@@ -14,8 +14,8 @@
                             <option value="desmontes">Lista de Desmontes</option>
                             {{-- 
                             <option value="taller">Inspeccion del Taller</option>
-                            <option value="carta">Carta Aclaratoria Sunarp</option>
-                            --}}
+                            <option value="carta">Carta Aclaratoria Sunarp</option>--}}
+                            
                             <option value="pendientes">Certificaciones Pendientes</option>
                         </select>
                         <x-jet-input-error for="modelo" />

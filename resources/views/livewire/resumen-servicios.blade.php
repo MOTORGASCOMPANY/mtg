@@ -55,9 +55,9 @@
                             </div>
                             <div class="p-6">
                                 <select class="rounded-md mb-4 py-1" wire:model="periodo">
-                                    <option value="1">Último día</option>
-                                    <option value="2">Última Semana</option>
-                                    <option value="3">Último mes</option>
+                                    <option value="1">Día</option>
+                                    <option value="2">Semana</option>
+                                    <option value="3">Mes</option>
                                 </select>
                                 <h5 class="text-lg font-medium mb-4">Periodo</h5>
                             </div>

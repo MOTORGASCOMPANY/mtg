@@ -106,7 +106,7 @@
         <p>Presente.-</p>
         <p style="text-align: justify;">
             De mi especial consideración; <br>
-            <strong>Yo ROLANDO ALBERJO CAJO RAVELLO,</strong> con <strong>DNI N°</strong> 21538229 en calidad de Gerente
+            <strong>Yo  LESLY PAMELA EGOAVIL LOMOTE,</strong> con <strong>DNI N°</strong> 74760461 en calidad de Gerente
             General de la
             empresa <strong>MOTOR GAS COMPANY</strong> con <strong>RUC N°</strong> 20472634501 con dirección en Jr. San
             Pedro de Carabayllo
@@ -136,9 +136,9 @@
 
         <p>
             @if ($certi->tipo == 'FORMATO GNV')
-                En cierto que, en el certificado de Conformidad de conversión a GNV, hubo un error de digitación.
+                Es cierto que, en el certificado de Conformidad de conversión a GNV, hubo un error de digitación.
             @elseif ($certi->tipo == 'FORMATO GLP')
-                En cierto que, en el certificado de Conformidad de conversión a GLP, hubo un error de digitación.
+                Es cierto que, en el certificado de Conformidad de conversión a GLP, hubo un error de digitación.
             @elseif ($certi->tipo == 'MODIFICACION')
                 En el certificado de Conformidad de Modificación, hubo un error tipográfico.
             @else

@@ -17,4 +17,10 @@ class DocumentoTaller extends Model
         "estado",
         "combustible",
     ];
+
+    // Relación con el modelo Documento
+    public function documento()
+    {
+        return $this->belongsTo(Documento::class, 'idDocumento');
+    }
 }

@@ -62,8 +62,11 @@
         <p>Señor(a):</p>        
         <p>{{$inspector}}</p>
         <br>
-        <p>Asunto:</p>        
-        <p>Le enviamos el siguiente material de trabajo por parte de la empresa <strong>{{$empresa}}</strong> </p>
+        <p>Asunto: Entrega de Materiales</p>   
+        <p>Presente.-</p>     
+        <p>De mi especial consideración.</p>
+        <p>Por medio del presente me dirigo a usted, para saludarlo y hacerle llegar los siguientes materiales por parte de la empresa <strong>{{$empresa}}</strong></p>
+        <!--p>Le enviamos el siguiente material de trabajo por parte de la empresa <strong>{{$empresa}}</strong> </p-->
         <ol>        
             @foreach ($materiales as $key=>$material)                
                 @if ($material["tipo"]=="FORMATO GNV" || $material["tipo"]=="FORMATO GLP" || $material["tipo"]=="MODIFICACION")
@@ -147,16 +150,38 @@
                                          
         </ol>
         
-        <p>Sin otro particular me despido de usted muy atentamente.</p>
-        <br>      
-        <p>Recibi conforme:</p>
-        <br>
+        <p>Sin otro particular me despido;</p>
+
+        <p>Atentamente.</p>
+        <!--br>
         <br>
         <br>
         <p>_________________________</p>
       
         <p>Nombre:</p>
-        <p>DNI:</p>
+        <p>DNI:</p-->
+        <table style="width: 100%;">
+            <tr>
+                <td style="text-align: center;">
+                    <h4></h4>
+                    <h4></h4>
+                    <h4></h4>
+                    <h4></h4>
+                    <h4></h4>
+                    <h4>_________________________</h4>
+                    <h4><strong>{{$inspector}}</strong></ul>
+                    <h4 style="text-align: left; margin-left: 50px;">Recibí Conforme</h4>
+                    <h4 style="text-align: left; margin-left: 50px;">Dni :</h4>
+                </td>
+                
+                <td style="text-align: center;">
+                    <p style="text-align: center;">
+                        <img src="{{ public_path('/images/firmLesly.jfif') }}" width="250" height="112" />
+                    </p>
+                </td>
+                
+            </tr>
+        </table>
 
     </main>
     

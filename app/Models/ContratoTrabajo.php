@@ -21,6 +21,7 @@ class ContratoTrabajo extends Model
         'celularEmpleado',
         'correoEmpleado',
         'cumpleaosEmpleado',
+        'fechaIniciodos',
         //'renovacion_id',
     ];
 

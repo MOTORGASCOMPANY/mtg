@@ -123,7 +123,7 @@
             <tr>
                 <td style="padding: 0 5px 0 5px; text-align:center;">2</td>
                 <td>Categoria</td>
-                <td>{{ $carro->categoria }}</td>
+                <td>{{ isset($carro->categoria) ? $carro->categoria : 'NE' }}</td>
                 <td style="padding: 0 5px 0 5px; text-align:center;">10</td>
                 <td>Combustible</td>
                 <td>{{ $carro->combustible }}</td>

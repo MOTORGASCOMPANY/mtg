@@ -16,7 +16,7 @@ class ContratosTrabajos extends Component
     use pdfTrait;
 
     public $inspectores;
-    public $idUser, $dniEmpleado, $domicilioEmpleado, $fechaInicio, $fechaExpiracion, $cargo, $pago, $celularEmpleado, $correoEmpleado, $cumpleaosEmpleado ,$renovacion_id;
+    public $idUser, $dniEmpleado, $domicilioEmpleado, $fechaInicio, $fechaExpiracion, $cargo, $pago, $celularEmpleado, $correoEmpleado, $cumpleaosEmpleado ,$renovacion_id, $fechaIniciodos;
     public $contrato;
     public $mostrarCampos = false;
     public $contratoPreview = null;
@@ -45,6 +45,7 @@ class ContratosTrabajos extends Component
             'pago' => 'required|numeric',
             //'celularEmpleado' => 'required|digits:9',
             //'correoEmpleado' => 'required|email',
+            //'fechaIniciodos' => 'required|date|before:fechaExpiracion',
 
         ]);
 
@@ -60,6 +61,7 @@ class ContratosTrabajos extends Component
                 'celularEmpleado' => $this->celularEmpleado,
                 'correoEmpleado' => $this->correoEmpleado,
                 'cumpleaosEmpleado' => $this->cumpleaosEmpleado,
+                'fechaIniciodos' => $this->fechaInicio,
 
             ]);
 

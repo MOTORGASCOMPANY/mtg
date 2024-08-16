@@ -29,6 +29,7 @@ class Empleados extends Component
         'emp.celularEmpleado' => 'required|digits:9',
         'emp.correoEmpleado' => 'required|email',
         'emp.cumpleaosEmpleado' => 'required|date',
+        'emp.fechaIniciodos' => 'required|date|before:fechaExpiracion',
     ];
 
     public function mount()
@@ -89,6 +90,7 @@ class Empleados extends Component
             'emp.fechaExpiracion' => 'required|date|after:emp.fechaInicio',
             'emp.cargo' => 'required',
             'emp.pago' => 'required|numeric',
+            'emp.fechaIniciodos' => 'required|date',
             //'emp.celularEmpleado' => 'required|digits:9',
             //'emp.correoEmpleado' => 'required|email',
             //'emp.cumpleaosEmpleado' => 'required|date',

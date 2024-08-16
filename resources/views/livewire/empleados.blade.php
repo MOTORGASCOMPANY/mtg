@@ -40,7 +40,7 @@
                 <thead class="bg-slate-600 border-b font-bold text-white">
 
                     <tr>
-                        <th scope="col" class=" bg-gray-100" colspan="8"></th>
+                        <th scope="col" class=" bg-gray-100" colspan="9"></th>
                         <th scope="col" class="text-sm font-medium font-semibold text-white" colspan="3">
                             <div class="flex justify-center items-center">
                                 <span>Vacaciones</span>
@@ -75,6 +75,9 @@
                         </th>
                         <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-3 text-left">
                             Domicilio
+                        </th>
+                        <th scope="col" class="text-sm font-medium font-semibold text-white px-4 py-3 text-left">
+                            F. Base
                         </th>
                         <th scope="col" class="text-sm font-medium font-semibold text-white px-4 py-3 text-left">
                             F. Inicio
@@ -154,6 +157,14 @@
                             <td>
                                 <div class="flex items-center">
                                     <p class="text-sm leading-none text-gray-600 ml-2">
+                                        {{ \Carbon\Carbon::parse($emple->fechaIniciodos)->format('d-m-Y') }}
+                                    </p>
+                                </div>
+                            </td>
+                            
+                            <td>
+                                <div class="flex items-center">
+                                    <p class="text-sm leading-none text-gray-600 ml-2">
                                         {{ \Carbon\Carbon::parse($emple->fechaExpiracion)->format('d-m-Y') }}
                                     </p>
                                 </div>
@@ -195,6 +206,7 @@
                             </td>
                             <td class="text-center">
                                 <div class="flex justify-center items-center space-x-2">
+                                    {{-- 
                                     <button wire:click="verContrato({{ $emple->id }})"
                                         class="group flex py-2 px-2 text-center items-center rounded-md bg-blue-300 font-bold text-white cursor-pointer hover:bg-blue-400 hover:animate-pulse">
                                         <i class="fas fa-eye"></i>
@@ -203,6 +215,17 @@
                                             Contrato
                                         </span>
                                     </button>
+                                    --}}
+                                    <a href="{{ route('contratoTrabajo', ['id' => $emple->id]) }}"
+                                        target="_blank"
+                                        class="group flex py-2 px-2 text-center items-center rounded-md bg-blue-300 font-bold text-white cursor-pointer hover:bg-blue-400 hover:animate-pulse">
+                                         <i class="fas fa-eye"></i>
+                                         <span
+                                             class="group-hover:opacity-100 transition-opacity bg-gray-800 px-1 text-sm text-gray-100 rounded-md absolute left-1/2-translate-x-1/2 translate-y-full opacity-0 m-4 mx-auto z-50">
+                                             Contrato
+                                         </span>
+                                     </a>
+                                     
                                     @hasanyrole('administrador|Administrador del sistema')
                                         <button wire:click="abrirModal({{ $emple->id }})"
                                             class="group flex py-2 px-2 text-center items-center rounded-md bg-indigo-300 font-bold text-white cursor-pointer hover:bg-indigo-400 hover:animate-pulse">
@@ -296,11 +319,28 @@
             </div>
             <div class="grid grid-cols-2 gap-4 py-2">
                 <div>
-                    <x-jet-label value="Fecha Inicio:" />
+                    <x-jet-label value="Fecha Base:" />
                     <x-jet-input type="date"
                         class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full "
                         wire:model="emp.fechaInicio" disabled />
                     <x-jet-input-error for="emp.fechaInicio" />
+                </div>
+                <div>
+                    <x-jet-label value="Fecha de Nacimiento:" />
+                    <x-jet-input type="date"
+                        class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full "
+                        wire:model="emp.cumpleaosEmpleado" />
+                    <x-jet-input-error for="emp.cumpleaosEmpleado" />
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 py-2">
+                <div>
+                    <x-jet-label value="Fecha Inicio:" />
+                    <x-jet-input type="date"
+                        class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full "
+                        wire:model="emp.fechaIniciodos"/>
+                    <x-jet-input-error for="emp.fechaIniciodos" />
                 </div>
                 <div>
                     <x-jet-label value="Fecha Expiración:" />
@@ -324,15 +364,6 @@
                         class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full "
                         wire:model="emp.pago" />
                     <x-jet-input-error for="emp.pago" />
-                </div>
-            </div>
-            <div class="grid grid-cols-2 gap-4 py-2">
-                <div>
-                    <x-jet-label value="Fecha de Nacimiento:" />
-                    <x-jet-input type="date"
-                        class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full "
-                        wire:model="emp.cumpleaosEmpleado" />
-                    <x-jet-input-error for="emp.cumpleaosEmpleado" />
                 </div>
             </div>
         </x-slot>

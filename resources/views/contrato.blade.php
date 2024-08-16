@@ -110,7 +110,8 @@
                 por Don <strong>ROLANDO ALBERTO CAJO RAVELLO</strong> identificada con DNI 21538229, a quien en adelante
                 se denominará EL
                 CONTRATANTE <strong>{{ $nombreEmpleado }}</strong>
-                y por el otro parte identificado con DNI <strong>{{ $dniEmpleado }}</strong> , domiciliada en {{ $domicilioEmpleado }},
+                y por el otro parte identificado con DNI <strong>{{ $dniEmpleado }}</strong> , domiciliada en
+                {{ $domicilioEmpleado }},
                 quien en adelante se le denominará EL CONTRATADO bajo los términos siguientes:
             </p>
             <p>
@@ -119,9 +120,10 @@
                 entre los días <strong>{{ $fechaInicio }} al {{ $fechaExpiracion }}</strong>.
             </p>
             <p>
-                SEGUNDO. - EL CONTRATADO cumplirá las funciones de <strong>{{ $cargo }}</strong> con puntualidad,
-                responsabilidad y cumplimiento con el horario de trabajo y todas las metas establecidas por la empresa y
-                otras funciones que le designe el contratante.
+                SEGUNDO. - EL CONTRATADO cumplirá las funciones de <strong>{{ $cargo }}</strong> en el proceso de Certificaciones
+                Vehiculares de Conversiones a Gas Natural Vehicular – GNV, encargadas por el ministerio de Transportes y
+                Comunicaciones con puntualidad, responsabilidad y cumplimiento con el horario de trabajo y todas las
+                metas establecidas por la empresa y otras funciones que le designe el contratante.
             </p>
             <p>
                 TERCERO. - EL CONTRATANTE se compromete a abonar por sus <strong>HONORARIOS DE INSPECTOR</strong> al
@@ -144,8 +146,10 @@
                 efectuar viajes por todas las distintas ciudades del País.
             </p>
             <p>
-                En caso de que el taller asignado dejará de laboral con nosotros o solicita el cambio de su persona, por falta de taller;
-                se terminará el contrato. Ambas partes se ratifican en todos los extremos y firman en aceptación del presente contrato el día {{$fechaInicio}}. 
+                En caso de que el taller asignado dejará de laboral con nosotros o solicita el cambio de su persona, por
+                falta de taller;
+                se terminará el contrato. Ambas partes se ratifican en todos los extremos y firman en aceptación del
+                presente contrato el día {{ $fechaInicio }}.
             </p>
         </div>
 
@@ -153,9 +157,9 @@
             <tr>
                 <td style="text-align: center;">
                     <p style="text-align: center;"></p>
-                    <img src="{{ public_path('/images/firmaRolando.PNG') }}" width="230" height="120" />
-                    <h4>-------------------------------------------------------</h4>
-                    <h4><strong>Rolando Alberto Cajo Ravello</strong> <br> Gerente General </h4>
+                    <img src="{{ public_path('/images/firmLesly.jfif') }}" width="200" height="94" />
+                    <h4>_________________________</h4>
+                    <h4><strong>Lesly Pamela Egoavil Lomote</strong> <br> Gerente General </h4>
                 </td>
                 <td style="text-align: center;">
                     <br>
@@ -168,10 +172,8 @@
                     <br>
                     <br>
                     <br>
-                    <br>
-                    <br>
-                    <h4>-------------------------------------------------------</h4>
-                    <h4><strong>{{ $nombreEmpleado }}</strong>  <br>{{ $dniEmpleado }} </h4>
+                    <h4>_________________________</h4>
+                    <h4><strong>{{ $nombreEmpleado }}</strong> <br>{{ $dniEmpleado }} </h4>
                 </td>
             </tr>
         </table>

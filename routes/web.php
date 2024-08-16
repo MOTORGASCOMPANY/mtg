@@ -388,6 +388,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
             //Rutas para generar cargo de materiales
             Route::get('/cargo/{id}', 'generaCargo')->name('generaCargo');
 
+            //Rutas para generar cargo de anulacion de material
+            Route::get('/cargoanulacion/{id}', 'generaPdfSolicitudAnulacion')->name('generaPdfSolicitudAnulacion');
+
             Route::get('/boletoAnalizadorDeGases/{id}', 'generaBoletoDeAnalizador')->name("analizadorGnv");
         });
 

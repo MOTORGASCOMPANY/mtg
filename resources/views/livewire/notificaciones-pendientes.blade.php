@@ -28,9 +28,16 @@
                         <th scope="col" class="text-sm font-medium font-semibold text-gray-900 px-6 py-4 text-left">
                             Realizado
                         </th>
+                        {{-- 
                         <th scope="col" class="text-sm font-medium font-semibold text-gray-900 px-6 py-4 text-left">
-                            Acciones
+                            Cargo
                         </th>
+                        --}}
+                        @hasanyrole('administrador|Administrador del sistema')
+                            <th scope="col" class="text-sm font-medium font-semibold text-gray-900 px-6 py-4 text-left">
+                                Acciones
+                            </th>
+                        @endhasanyrole
                     </tr>
                 </thead>
                 <tbody>
@@ -61,15 +68,8 @@
                             </td>
                             <td class="pl-2">
                                 <div class="flex items-center">
-                                    {{-- 
-                                    <p class="flex flex-shrink-0 justify-center items-center relative
-                                            @if ($notificacion->type === 'App\Notifications\AnulacionSolicitud') bg-green-200
-                                            @elseif ($notificacion->type === 'App\Notifications\SolicitudEliminacion') bg-red-200
-                                            @elseif ($notificacion->type === 'App\Notifications\CreateSolicitud') bg-yellow-200 @endif rounded-sm w-10 h-5">
-                                        {{ $notificacion->nombreInspector ?? 'N/A' }}
-                                    </p>
-                                    --}}
-                                    <p class="text-base  leading-none text-gray-700 mr-2">{{ $notificacion->nombreInspector ?? 'NA' }}</p>
+                                    <p class="text-base  leading-none text-gray-700 mr-2">
+                                        {{ $notificacion->nombreInspector ?? 'NA' }}</p>
                                 </div>
                             </td>
                             <td class="pl-2">
@@ -81,15 +81,8 @@
                             </td>
                             <td class="pl-2">
                                 <div class="flex items-center">
-                                    {{--
-                                    <p class="flex flex-shrink-0 justify-center items-center relative
-                                            @if ($notificacion->type === 'App\Notifications\AnulacionSolicitud') bg-green-200
-                                            @elseif ($notificacion->type === 'App\Notifications\SolicitudEliminacion') bg-red-200
-                                            @elseif ($notificacion->type === 'App\Notifications\CreateSolicitud') bg-yellow-200 @endif rounded-sm w-10 h-5">
-                                        {{ $notificacion->placa ?? 'NE' }}
-                                    </p>
-                                    --}}
-                                    <p class="text-base  leading-none text-gray-700 mr-2">{{ $notificacion->placa ?? 'NE' }}</p>
+                                    <p class="text-base  leading-none text-gray-700 mr-2">
+                                        {{ $notificacion->placa ?? 'NE' }}</p>
                                 </div>
                             </td>
                             <td class="pl-2">
@@ -110,6 +103,7 @@
                                             @case(2)
                                                 <i class="far fa-check-circle fa-lg" style="color: forestgreen;"></i>
                                             @break
+
                                             @case(3)
                                                 <i class="far fa-times-circle fa-lg" style="color: red;"></i>
                                             @break
@@ -127,28 +121,43 @@
                                     @endif
                                 </div>
                             </td>
+                            {{-- 
                             <td>
-                                <div x-data="{ dropdownMenu: false }" class="relative">
-                                    <!-- Dropdown toggle button -->
-                                    <button @click="dropdownMenu = ! dropdownMenu"
-                                        class="flex items-center p-2 border border-indigo-500  bg-gray-200 rounded-md">
-                                        <span class="mr-4">Seleccione <i class="fas fa-sort-down -mt-2"></i></span>
-                                    </button>
-                                    <!-- Dropdown list -->
-                                    <div x-show="dropdownMenu"
-                                        class="absolute py-2 mt-2  bg-slate-300 rounded-md shadow-xl w-70 z-20 ">
-                                        <button wire:click="verNotificacion('{{ $notificacion->id }}')"
-                                            class="block px-4 py-2 text-sm text-indigo-700 hover:bg-indigo-300 hover:text-white">
-                                            <i class="fas fa-eye"></i> Enlace
+                                @foreach ($notificacionesPendientes as $notificacion)
+                                    <div>
+                                        <button wire:click="RutaVistaAnulacion('{{ $notificacion->id }}')">
+                                            Ver cargo
                                         </button>
-                                        <button wire:click="eliminarNotificacion('{{ $notificacion->id }}')"
-                                            class="block px-4 py-2 text-sm text-indigo-700 hover:bg-indigo-300 hover:text-white">
-                                            <i class="fas fa-trash"></i> Eliminar
-                                        </button>
-
                                     </div>
-                                </div>
+                                @endforeach
                             </td>
+                            --}}
+                            @hasanyrole('administrador|Administrador del sistema')
+                                <td>
+                                    <div x-data="{ dropdownMenu: false }" class="relative">
+                                        <!-- Dropdown toggle button -->
+                                        <button @click="dropdownMenu = ! dropdownMenu"
+                                            class="flex items-center p-2 border border-indigo-500  bg-gray-200 rounded-md">
+                                            <span class="mr-4">Seleccione <i class="fas fa-sort-down -mt-2"></i></span>
+                                        </button>
+                                        <!-- Dropdown list -->
+                                        <div x-show="dropdownMenu"
+                                            class="absolute py-2 mt-2  bg-slate-300 rounded-md shadow-xl w-70 z-20 ">
+                                            <button wire:click="verNotificacion('{{ $notificacion->id }}')"
+                                                class="block px-4 py-2 text-sm text-indigo-700 hover:bg-indigo-300 hover:text-white">
+                                                <i class="fas fa-eye"></i> Enlace
+                                            </button>
+
+                                            <button wire:click="eliminarNotificacion('{{ $notificacion->id }}')"
+                                                class="block px-4 py-2 text-sm text-indigo-700 hover:bg-indigo-300 hover:text-white">
+                                                <i class="fas fa-trash"></i> Eliminar
+                                            </button>
+
+
+                                        </div>
+                                    </div>
+                                </td>
+                            @endhasanyrole
                         </tr>
                     @endforeach
                 </tbody>

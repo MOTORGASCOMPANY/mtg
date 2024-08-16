@@ -183,13 +183,13 @@
                                 rel="noopener noreferrer"
                                 class="flex px-4 py-2 text-sm text-indigo-700 hover:bg-slate-600 hover:text-white justify-between items-center rounded-t-md hover:cursor-pointer">
                                 <i class="fas fa-eye"></i>
-                                <span>Ver Certificado.</span>
+                                <span>Ver Contrato.</span>
                             </a>
                             <a href="{{ $contrato->rutaDescargaContratoTrabajo }}" target="__blank"
                                 rel="noopener noreferrer"
                                 class="flex px-4 py-2 text-sm text-indigo-700 hover:bg-slate-600 hover:text-white justify-between items-center hover:cursor-pointer">
                                 <i class="fas fa-download"></i>
-                                <span>desc. Certificado</span>
+                                <span>desc. Contrato</span>
                             </a>
                         </div>
                     </div>

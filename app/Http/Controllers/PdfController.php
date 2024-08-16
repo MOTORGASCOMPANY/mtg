@@ -16,6 +16,7 @@ use App\Models\User;
 use DateTime;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
 use Nette\Utils\Json;
@@ -1491,6 +1492,10 @@ class PdfController extends Controller
             $meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
             $fechaCert = is_string($contrato->fechaInicio) ? new DateTime($contrato->fechaInicio) : $contrato->fechaInicio;
             $fechaForma = $fechaCert->format('d') . ' de ' . $meses[$fechaCert->format('m') - 1] . ' del ' . $fechaCert->format('Y');
+
+            $fechaCertInicio = is_string($contrato->fechaIniciodos) ? new DateTime($contrato->fechaIniciodos) : $contrato->fechaIniciodos;
+            $fechaInicio = $fechaCertInicio->format('d') . ' de ' . $meses[$fechaCertInicio->format('m') - 1] . ' del ' . $fechaCertInicio->format('Y');
+
             $fechaCert2 = is_string($contrato->fechaExpiracion) ? new DateTime($contrato->fechaExpiracion) : $contrato->fechaExpiracion;
             $fechaForma2 = $fechaCert2->format('d') . ' de ' . $meses[$fechaCert2->format('m') - 1] . ' del ' . $fechaCert2->format('Y');
 
@@ -1502,7 +1507,8 @@ class PdfController extends Controller
                 'nombreEmpleado' => $nombreUsuario,
                 'dniEmpleado' => $contrato->dniEmpleado,
                 'domicilioEmpleado' => $contrato->domicilioEmpleado,
-                'fechaInicio' => $fechaForma,
+                'fechaBase' => $fechaForma,
+                'fechaInicio' => $fechaInicio,
                 'fechaExpiracion' => $fechaForma2,
                 'cargo' => $contrato->cargo,
                 'pago' => $pagoForma,
@@ -1525,6 +1531,10 @@ class PdfController extends Controller
             $meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
             $fechaCert = is_string($contrato->fechaInicio) ? new DateTime($contrato->fechaInicio) : $contrato->fechaInicio;
             $fechaForma = $fechaCert->format('d') . ' de ' . $meses[$fechaCert->format('m') - 1] . ' del ' . $fechaCert->format('Y');
+
+            $fechaCertInicio = is_string($contrato->fechaIniciodos) ? new DateTime($contrato->fechaIniciodos) : $contrato->fechaIniciodos;
+            $fechaInicio = $fechaCertInicio->format('d') . ' de ' . $meses[$fechaCertInicio->format('m') - 1] . ' del ' . $fechaCertInicio->format('Y');
+
             $fechaCert2 = is_string($contrato->fechaExpiracion) ? new DateTime($contrato->fechaExpiracion) : $contrato->fechaExpiracion;
             $fechaForma2 = $fechaCert2->format('d') . ' de ' . $meses[$fechaCert2->format('m') - 1] . ' del ' . $fechaCert2->format('Y');
             $pagoForma2 = $this->convertirMontoAPalabras($contrato->pago);
@@ -1535,7 +1545,8 @@ class PdfController extends Controller
                 'nombreEmpleado' => $nombreUsuario,
                 'dniEmpleado' => $contrato->dniEmpleado,
                 'domicilioEmpleado' => $contrato->domicilioEmpleado,
-                'fechaInicio' => $fechaForma,
+                'fechaBase' => $fechaForma,
+                'fechaInicio' => $fechaInicio,
                 'fechaExpiracion' => $fechaForma2,
                 'cargo' => $contrato->cargo,
                 'pago' => $pagoForma,
@@ -1645,5 +1656,35 @@ class PdfController extends Controller
         // Mostrar el PDF en el navegador
         return $pdf->stream('carta_aclaratoria_' . $id . '.pdf');
 
+    }
+
+    public function generaPdfSolicitudAnulacion($id)
+    {
+        // Buscar la notificación en la tabla notifications por su ID
+        $notification = DatabaseNotification::find($id);
+
+        // Si la notificación no existe, retornar un error o manejar la excepción
+        if (!$notification) {
+            abort(404, 'Notificación no encontrada.');
+        }
+
+        // Extraer datos del campo 'data' (que es un array JSON) de la notificación
+        $data = $notification->data;
+
+        // Crear el arreglo de datos para la vista del PDF
+        $pdfData = [
+            "fecha" => $notification->created_at,
+            "empresa" => "MOTORGAS COMPANY S.A.",
+            "idAnulacion" => $data['idAnulacion'] ?? 'N/A',
+            "idInspector" => $data['idInspector'] ?? 'N/A',
+            "idServicio" => $data['idServicio'] ?? 'N/A',
+        ];
+
+        // Generar el PDF usando dompdf
+        $pdf = App::make('dompdf.wrapper');
+        $pdf->loadView('cargoAnulacion', $pdfData);
+
+        // Retornar el PDF generado
+        return $pdf->stream('cargo_anulacion_' . $id . '.pdf');
     }
 }

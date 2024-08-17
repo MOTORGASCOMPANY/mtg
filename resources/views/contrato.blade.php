@@ -157,9 +157,9 @@
             <tr>
                 <td style="text-align: center;">
                     <p style="text-align: center;"></p>
-                    <img src="{{ public_path('/images/firmLesly.jfif') }}" width="200" height="94" />
+                    <img src="{{ public_path('/images/firmaRolando.PNG') }}" width="200" height="94" />
                     <h4>_________________________</h4>
-                    <h4><strong>Lesly Pamela Egoavil Lomote</strong> <br> Gerente General </h4>
+                    <h4><strong>Rolando Alberto Cajo Ravello</strong> <br> Gerente General </h4>
                 </td>
                 <td style="text-align: center;">
                     <br>

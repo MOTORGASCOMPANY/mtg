@@ -60,6 +60,8 @@
                                             Solicitud de Eliminación
                                         @elseif ($notificacion->type === 'App\Notifications\CreateSolicitud')
                                             Solicitud de Materiales
+                                        @elseif ($notificacion->type === 'App\Notifications\SolicitudDevolucion')
+                                            Devolucion de Materiales
                                         @else
                                             {{ $notificacion->type }}
                                         @endif
@@ -115,6 +117,12 @@
                                             <i class="far fa-times-circle fa-lg" style="color: red;"></i>
                                         @elseif($notificacion->estado == null)
                                             <i class="far fa-check-circle fa-lg" style="color: forestgreen;"></i>
+                                        @endif
+                                    @elseif($notificacion->type === 'App\Notifications\SolicitudDevolucion')
+                                        @if ($notificacion->material == 4 || $notificacion->material == 5)
+                                            <i class="far fa-check-circle fa-lg" style="color: forestgreen;"></i>
+                                        @else
+                                            <i class="far fa-times-circle fa-lg" style="color: red;"></i>
                                         @endif
                                     @elseif($notificacion->type === 'App\Notifications\CreateSolicitud')
                                         <i class="fa-solid fa-file-circle-plus" style="color: rgb(216, 219, 46);"></i>

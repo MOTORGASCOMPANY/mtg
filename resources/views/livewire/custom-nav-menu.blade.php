@@ -101,7 +101,7 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                         {{-- Notificacion para Solicitud Anulacion --}}
                         @if ($notification->type == 'App\Notifications\AnulacionSolicitud')
                             <x-jet-dropdown-link href="{{ route('leerAnular', [$notification->id]) }}">
-                                <p class="text-xs "> Nueva solicitud de Anulación <strong
+                                <p class="text-xs "> Nueva solicitud de Anulación: <strong
                                         class="text-indigo-500">{{ $notification->data['idAnulacion'] }}</strong></p>
                             </x-jet-dropdown-link>
                             <div class="border-t border-gray-100"></div>
@@ -109,7 +109,7 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                         {{--  Notificacion para Solicitud de Eliminacion --}}
                         @if ($notification->type == 'App\Notifications\SolicitudEliminacion')
                             <x-jet-dropdown-link href="{{ route('leerEliminar', [$notification->id]) }}">
-                                <p class="text-xs "> Nueva solicitud de Eliminación <strong
+                                <p class="text-xs "> Nueva solicitud de Eliminación: <strong
                                         class="text-indigo-500">{{ $notification->data['idEliminacion'] }}</strong></p>
                             </x-jet-dropdown-link>
                             <div class="border-t border-gray-100"></div>
@@ -117,9 +117,43 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                         {{--  Notificacion para Memorando --}}
                         @if ($notification->type == 'App\Notifications\MemorandoSolicitud')
                             <x-jet-dropdown-link href="{{ route('leerMemorando', [$notification->id]) }}">
-                                <p class="text-xs "> Nuevo Memorando <strong
+                                <p class="text-xs "> Nuevo Memorando: <strong
                                         class="text-indigo-500">{{ $notification->data['idMemorando'] }}</strong></p>
                                 {{-- var_export --}}
+                            </x-jet-dropdown-link>
+                            <div class="border-t border-gray-100"></div>
+                        @endif
+                        {{-- Notificacion para Devolucion Formatos --}}
+                        @if ($notification->type == 'App\Notifications\SolicitudDevolucion')
+                            <x-jet-dropdown-link href="{{ route('leerDevolucion', [$notification->id]) }}">
+                                <p class="text-xs"> Devolución formatos:</p>
+                                    <ol class="text-indigo-500">
+                                        @foreach($notification->data['anulaciones'] as $anulacion)
+                                                @php
+                                                    // Asignar el nombre del material según el tipo
+                                                    $tipoMaterial = '';
+                                                    switch ($anulacion['tipo_material']) {
+                                                        case 1:
+                                                            $tipoMaterial = 'GNV';
+                                                            break;
+                                                        case 2:
+                                                            $tipoMaterial = 'CHIP';
+                                                            break;
+                                                        case 3:
+                                                            $tipoMaterial = 'GLP';
+                                                            break;
+                                                        case 4:
+                                                            $tipoMaterial = 'MODI';
+                                                            break;
+                                                        default:
+                                                            $tipoMaterial = 'Desconocido';
+                                                    }
+                                                @endphp
+                                            <li>                                                
+                                                {{ $tipoMaterial }} ({{ $anulacion['num_serie_desde'] }} - {{ $anulacion['num_serie_hasta'] }})
+                                            </li>
+                                        @endforeach
+                                    </ol>
                             </x-jet-dropdown-link>
                             <div class="border-t border-gray-100"></div>
                         @endif
@@ -585,7 +619,7 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                         @can('reportes.reporteDocumentosTaller')
                                             <x-jet-responsive-nav-link class="text-sm truncate"
                                                 href="{{ route('reportes.reporteDocumentosTaller') }}" :active="request()->routeIs('reportes.reporteDocumentosTaller')">
-                                                Documentos a vencer
+                                                Documentos autorizados
                                             </x-jet-responsive-nav-link>
                                         @endcan
                                         @can('Rentabilidad')

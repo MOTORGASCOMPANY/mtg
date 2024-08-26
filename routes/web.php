@@ -83,6 +83,7 @@ use App\Http\Livewire\Usuarios;
 use App\Http\Livewire\VacacionesAsignadas;
 use App\Http\Livewire\VistaEliminacion;
 use App\Http\Livewire\VistaSolicitudAnul;
+use App\Http\Livewire\VistaSolicitudDevolucion;
 use App\Http\Livewire\VistaSolicitudMemorando;
 use Illuminate\Support\Facades\Auth;
 
@@ -189,6 +190,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/SolicitudAnu/{anuId}/{cerId}/{userId}', VistaSolicitudAnul::class)->name('vistaSolicitudAnul');
         Route::get('/SolicitudEli/{eliId}/{cerId}/{userId}', VistaEliminacion::class)->name('vistaSolicitudEli');
         Route::get('/Memorando/{memoId}', VistaSolicitudMemorando::class)->name('vistaSolicitudMemorando');
+        Route::get('/SolicitudDevolucion/{anuId}/{matId}/{userId}', VistaSolicitudDevolucion::class)->name('vistaDevolucion');
         Route::get('/Notificaciones', NotificacionesPendientes::class)->name('Notificaciones');
         //Route::get('/Recepcion-de-materiales',RecepcionMateriales::class)->middleware('can:recepcion')->name('recepcion');
 
@@ -273,7 +275,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/documentosTaller', PruebaDocumentosTaller::class)->name('documentosTaller');
 
         //Ruta para los logos
-        Route::get('/Logona', Logona::class)->name('Logona');
+        Route::get('/Devolucion', Logona::class)->name('Devolucion');
 
         //RUTAS PARA MANUAL DE FUNCIONES SEGUN SU ROL
         Route::get('/ManualFunciones', ManualFunciones::class)->middleware('can:ManualFunciones')->name('ManualFunciones');
@@ -389,7 +391,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
             Route::get('/cargo/{id}', 'generaCargo')->name('generaCargo');
 
             //Rutas para generar cargo de anulacion de material
-            Route::get('/cargoanulacion/{id}', 'generaPdfSolicitudAnulacion')->name('generaPdfSolicitudAnulacion');
+            Route::get('/cargodevolucion/{cart_id}', 'generaPdfSolicitudDevolucion')->name('SolicitudDevolucion');
 
             Route::get('/boletoAnalizadorDeGases/{id}', 'generaBoletoDeAnalizador')->name("analizadorGnv");
         });
@@ -400,6 +402,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get("Notification/{idNoti}anular", "App\Http\Controllers\AnulacionController@marcarAnulacion")->name("leerAnular");
         Route::get("Notification/{idNoti}eliminar", "App\Http\Controllers\EliminacionController@marcarEliminacion")->name("leerEliminar");
         Route::get("Notification/{idNoti}memorando", "App\Http\Controllers\MemorandoController@marcarMemorando")->name("leerMemorando");
+        Route::get("Notification/{idNoti}devolucion", "App\Http\Controllers\DevolucionController@marcarDevolucion")->name("leerDevolucion");
         //Route::get('/leer-memorando/{notification}', [MemorandoController::class, 'marcarMemorando'])->name('leerMemorando');
 
 

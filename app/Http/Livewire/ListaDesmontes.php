@@ -2,12 +2,14 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Anulacion;
 use App\Models\CartaAclaratoria;
 use App\Models\CertificacionPendiente;
 use App\Models\CertificacionTaller;
 use App\Models\Desmontes;
 use App\Models\Material;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -32,6 +34,7 @@ class ListaDesmontes extends Component
         $taller = null;
         $carta = null;
         $chipsConsumidos = null;
+        $devolucion = null;
 
         if ($this->modelo === 'desmontes') {
             $desmontes = Desmontes::placa($this->search)
@@ -50,6 +53,12 @@ class ListaDesmontes extends Component
             $carta = CartaAclaratoria::idInspector(Auth::id())
                 ->orderBy($this->sort, $this->direction)
                 ->paginate($this->cant);
+        } elseif ($this->modelo === 'devolucion') {
+            $devolucion = Anulacion::select('cart_id', 'created_at', 'idUsuario', DB::raw('COUNT(*) as total'))
+            ->idInspector(Auth::id())
+            ->groupBy('cart_id', 'created_at', 'idUsuario')
+            ->orderBy($this->sort, $this->direction)
+            ->paginate($this->cant);
         } elseif ($this->modelo === 'chipsConsumidos') {
             $chipsConsumidos = Material::query()
                 ->select(
@@ -70,7 +79,7 @@ class ListaDesmontes extends Component
                 ->orderBy($this->sort, $this->direction)
                 ->paginate($this->cant);
         }
-        return view('livewire.lista-desmontes', compact("certificaciones", "desmontes", "taller", "carta", "chipsConsumidos"));
+        return view('livewire.lista-desmontes', compact("certificaciones", "desmontes", "taller", "carta", "chipsConsumidos", "devolucion"));
     }
 
     public function order($sort)

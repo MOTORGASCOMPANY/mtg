@@ -107,7 +107,7 @@
                 N° 20472634501 con domicilio
                 fiscal en Jr. San Pedro De Carabayllo N° 180 Urbanización Santa Isabel Distrito de Carabayllo, Provincia
                 y Departamento de Lima, representado
-                por Don <strong>ROLANDO ALBERTO CAJO RAVELLO</strong> identificada con DNI 21538229, a quien en adelante
+                por Don <strong>LESLY PAMELA EGOAVIL LOMOTE</strong> identificada con DNI 74760461, a quien en adelante
                 se denominará EL
                 CONTRATANTE <strong>{{ $nombreEmpleado }}</strong>
                 y por el otro parte identificado con DNI <strong>{{ $dniEmpleado }}</strong> , domiciliada en
@@ -157,9 +157,9 @@
             <tr>
                 <td style="text-align: center;">
                     <p style="text-align: center;"></p>
-                    <img src="{{ public_path('/images/firmaRolando.PNG') }}" width="200" height="94" />
+                    <img src="{{ public_path('/images/firmLesly.jfif') }}" width="200" height="94" />
                     <h4>_________________________</h4>
-                    <h4><strong>Rolando Alberto Cajo Ravello</strong> <br> Gerente General </h4>
+                    <h4><strong>Lesly Pamela Egoavil Lomote</strong> <br> Gerente General </h4>
                 </td>
                 <td style="text-align: center;">
                     <br>

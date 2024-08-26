@@ -60,14 +60,18 @@
         <h5>Lima, {{$fecha}}</h5>
         <br>
         <p>Señor(a):</p>        
-        <p>{{$idInspector}}</p>
+        <p>{{$inspector}}</p>
         <br>
-        <p>Asunto: Entrega de Materiales</p>   
+        <p>Asunto: Devolucion de Formatos Malogrados</p>   
         <p>Presente.-</p>     
         <p>De mi especial consideración.</p>
-        <p>Por medio del presente me dirigo a usted, para saludarlo y hacerle llegar los siguientes materiales por parte de la empresa <strong>{{$empresa}}</strong></p>
-       <p>{{$idAnulacion}}</p>
-       <p>{{$idServicio}}</p>
+        <p>Por medio del presente me dirigo a usted, para saludarlo y hacerle llegar la de materiales malogrados.</p>
+        <ol>
+            @foreach ($anulaciones as $anulacion)
+                <li> {{$anulacion->material->descripcion}} - ({{$anulacion->numSerieDesde}} - {{$anulacion->numSerieHasta}}) por motivo de <strong>{{$anulacion->motivo}}</strong></li>
+            @endforeach
+        </ol>
+        
         
         <p>Sin otro particular me despido;</p>
 
@@ -81,15 +85,16 @@
                     <h4></h4>
                     <h4></h4>
                     <h4>_________________________</h4>
-                    <h4><strong>Inspector</strong></ul>
                     <h4 style="text-align: left; margin-left: 50px;">Recibí Conforme</h4>
-                    <h4 style="text-align: left; margin-left: 50px;">Dni :</h4>
+                    <h4 style="text-align: left; margin-left: 50px;">Nombre :</h4>
                 </td>
                 
                 <td style="text-align: center;">
-                    <p style="text-align: center;">
-                        <img src="{{ public_path('/images/firmLesly.jfif') }}" width="250" height="112" />
-                    </p>
+                    <h4></h4>
+                    <h4></h4>
+                    <h4></h4>
+                    <h4>_________________________</h4>
+                    <h4><strong>{{$inspector}}</strong></h4>
                 </td>
                 
             </tr>

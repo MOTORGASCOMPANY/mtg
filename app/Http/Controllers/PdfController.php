@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Anulacion;
 use App\Models\Boleta;
 use App\Models\CartaAclaratoria;
 use App\Models\Certificacion;
@@ -1658,26 +1659,24 @@ class PdfController extends Controller
 
     }
 
-    public function generaPdfSolicitudAnulacion($id)
+    /*public function generaPdfSolicitudDevolucion($id)
     {
-        // Buscar la notificación en la tabla notifications por su ID
-        $notification = DatabaseNotification::find($id);
+        $anulacion = Anulacion::findOrFail($id);
+        $inspector = $anulacion->usuario->name;
+        $material = $anulacion->material->descripcion;
 
-        // Si la notificación no existe, retornar un error o manejar la excepción
-        if (!$notification) {
-            abort(404, 'Notificación no encontrada.');
-        }
+        $meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+        $fecSal = $anulacion->created_at;
+        $fecha = $fecSal->format('d') . ' de ' . $meses[$fecSal->format('m') - 1] . ' del ' . $fecSal->format('Y') . '.';
 
-        // Extraer datos del campo 'data' (que es un array JSON) de la notificación
-        $data = $notification->data;
-
-        // Crear el arreglo de datos para la vista del PDF
         $pdfData = [
-            "fecha" => $notification->created_at,
-            "empresa" => "MOTORGAS COMPANY S.A.",
-            "idAnulacion" => $data['idAnulacion'] ?? 'N/A',
-            "idInspector" => $data['idInspector'] ?? 'N/A',
-            "idServicio" => $data['idServicio'] ?? 'N/A',
+        "empresa" => "MOTORGAS COMPANY S.A.",
+        "inspector" => $inspector,
+        "tipoMaterial" => $material,
+        "numSerieDesde" => $anulacion->numSerieDesde,
+        "numSerieHasta" => $anulacion->numSerieHasta,
+        "motivo" => $anulacion->motivo,
+        "fecha" => $fecha,
         ];
 
         // Generar el PDF usando dompdf
@@ -1686,5 +1685,34 @@ class PdfController extends Controller
 
         // Retornar el PDF generado
         return $pdf->stream('cargo_anulacion_' . $id . '.pdf');
+    }*/
+
+    public function generaPdfSolicitudDevolucion($cart_id)
+    {
+        // Obtener todas las anulaciones con el mismo cart_id
+        $anulaciones = Anulacion::where('cart_id', $cart_id)->get();
+        if ($anulaciones->isEmpty()) {
+            // Manejar el caso en que no hay anulaciones para el cart_id dado
+            abort(404, 'No se encontraron anulaciones para el identificador de carrito proporcionado.');
+        }
+
+        // Obtener el nombre del inspector
+        $inspector = $anulaciones->first()->usuario->name;
+        $empresa = "MOTORGAS COMPANY S.A.";
+        $meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+
+        $pdfData = [
+            "empresa" => $empresa,
+            "inspector" => $inspector,
+            "anulaciones" => $anulaciones,
+            "fecha" => now()->format('d') . ' de ' . $meses[now()->format('m') - 1] . ' del ' . now()->format('Y') . '.',
+        ];
+
+        $pdf = App::make('dompdf.wrapper');
+        $pdf->loadView('cargoAnulacion', $pdfData);
+
+        return $pdf->stream('cargo_anulacion_' . $cart_id . '.pdf');
     }
+
+
 }

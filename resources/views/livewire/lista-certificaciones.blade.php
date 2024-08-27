@@ -316,13 +316,29 @@
                                                                     <i class="fas fa-download"></i>
                                                                     <span>desc. Ficha Tec.</span>
                                                                 </a>
+                                                                {{-- 
                                                                 <a href="{{ route('checkListArribaGnv', [$item->id]) }}"
                                                                     target="__blank" rel="noopener noreferrer"
                                                                     class="focus:outline-none flex items-center space-x-4 focus:text-lime-400 text-xs w-full hover:bg-indigo-600 py-2 px-6 cursor-pointer hover:text-white">
                                                                     <i class="fas fa-eye"></i>
                                                                     <span>CheckList Arriba</span>
                                                                 </a>
+                                                                --}}
+                                                                <a href="{{ $item->rutaVistaCheckListArriba }}"
+                                                                    target="__blank" rel="noopener noreferrer"
+                                                                    class="focus:outline-none flex items-center space-x-4 focus:text-lime-400 text-xs w-full hover:bg-indigo-600 py-2 px-6 cursor-pointer hover:text-white">
+                                                                    <i class="fas fa-eye"></i>
+                                                                    <span>CheckList Arriba</span>
+                                                                </a>
+                                                                {{-- 
                                                                 <a href="{{ route('checkListAbajoGnv', [$item->id]) }}"
+                                                                    target="__blank" rel="noopener noreferrer"
+                                                                    class="focus:outline-none flex items-center space-x-4 focus:text-lime-400 text-xs w-full hover:bg-indigo-600 py-2 px-6 cursor-pointer hover:text-white">
+                                                                    <i class="fas fa-eye"></i>
+                                                                    <span>CheckList Abajo</span>
+                                                                </a>
+                                                                --}}
+                                                                <a href="{{ $item->rutaVistaCheckListAbajo }}"
                                                                     target="__blank" rel="noopener noreferrer"
                                                                     class="focus:outline-none flex items-center space-x-4 focus:text-lime-400 text-xs w-full hover:bg-indigo-600 py-2 px-6 cursor-pointer hover:text-white">
                                                                     <i class="fas fa-eye"></i>

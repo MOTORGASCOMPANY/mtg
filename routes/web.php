@@ -275,7 +275,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/documentosTaller', PruebaDocumentosTaller::class)->name('documentosTaller');
 
         //Ruta para los logos
-        Route::get('/Devolucion', Logona::class)->name('Devolucion');
+        Route::get('/Devolucion', Logona::class)->middleware('can:Devolucion')->name('Devolucion');
 
         //RUTAS PARA MANUAL DE FUNCIONES SEGUN SU ROL
         Route::get('/ManualFunciones', ManualFunciones::class)->middleware('can:ManualFunciones')->name('ManualFunciones');

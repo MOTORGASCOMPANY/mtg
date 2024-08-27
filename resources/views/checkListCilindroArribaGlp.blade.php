@@ -162,7 +162,7 @@
                             Marca regulador:
                         </th>
                         <td style="border: 1px solid; border-collapse: collapse;">
-                            {{ $reductor->id }}
+                            {{ $reductor->marca }}
                         </td>
                     </tr>
                     <tr>

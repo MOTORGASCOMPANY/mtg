@@ -160,7 +160,7 @@
                                                             @case(9)
                                                                 <p
                                                                     class="text-sm leading-none text-gray-600 ml-2 p-2 bg-orange-200 rounded-full">
-                                                                    Duplicado GNV
+                                                                    Duplicado GLP
                                                                 </p>
                                                             @break
 
@@ -283,7 +283,7 @@
                                                                 <i class="fas fa-eye"></i>
                                                                 <span>Ver Certificado.</span>
                                                             </a>
-                                                            @if ($item->Servicio->tipoServicio->id != 8)
+                                                            @if ($item->Servicio->tipoServicio->id != 8 && $item->Servicio->tipoServicio->id != 9)
                                                                 <a href="{{ $item->rutaDescargaCertificado }}"
                                                                     target="__blank" rel="noopener noreferrer"
                                                                     class="focus:outline-none flex items-center space-x-4 focus:text-lime-400 text-xs w-full hover:bg-indigo-600 py-2 px-6 cursor-pointer hover:text-white">
@@ -303,7 +303,7 @@
                                                                     <span>Ver Preconversion.</span>
                                                                 </a>
                                                             @endif
-                                                            @if ($item->Servicio->tipoServicio->id != 8)
+                                                            @if ($item->Servicio->tipoServicio->id != 8 && $item->Servicio->tipoServicio->id != 9)
                                                                 <a href="{{ $item->rutaVistaFt }}" target="__blank"
                                                                     rel="noopener noreferrer"
                                                                     class="focus:outline-none flex items-center space-x-4 focus:text-lime-400 text-xs w-full hover:bg-indigo-600 py-2 px-6 cursor-pointer hover:text-white">

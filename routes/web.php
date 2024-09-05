@@ -138,9 +138,13 @@ Route::get('/preConver-gnv/{id}/temp', [PdfController::class, 'generaPdfPreGnv']
 
 // Rutas para QR (ver PDF) Anual-GLP
 Route::get('/certificado-anual-glp/{id}/temp', [PdfController::class, 'generaPdfAnualGlp'])->name("verPdfAnualGlp");
+Route::get('/duplicado-anual-glp/{id}/temp', [PdfController::class, 'generaDuplicadoAnualGlp'])->name("verPdfAnualDupliGlp");
+Route::get('/duplicado-anual-ex-glp/{id}/temp', [PdfController::class, 'generaDuplicadoExternoAnualGlp'])->name("verPdfAnualDupliExtGlp");
 
 // Rutas para QR (ver PDF) Inicial-GLP
 Route::get('/certificado-inicial-glp/{id}/temp', [PdfController::class, 'generaPdfInicialGlp'])->name("verPdfInicialGlp");
+Route::get('/duplicado-inicial-glp/{id}/temp', [PdfController::class, 'generaDuplicadoInicialGlp'])->name("verPdfInicialDupliGlp");
+Route::get('/duplicado-inicial-ex-glp/{id}/temp', [PdfController::class, 'generaDuplicadoExternoInicialGlp'])->name("verPdfInicialDupliExtGlp");
 
 // Rutas para QR (ver PDF) PRE-Inicial-GLP
 Route::get('/certificado-Pre-inicial-glp/{id}/temp', [PdfController::class, 'generaPdfPreGlp'])->name("verPdfPreInicialGlp");
@@ -361,9 +365,13 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
 
             //Rutas para ver certificado anual GLP
             Route::get('/certificado-anual-glp/{id}', 'generaPdfAnualGlp')->name("certificadoAnualGlp");
+            Route::get('/duplicado-anual-glp/{id}', 'generaDuplicadoAnualGlp')->name("duplicadoAnualGlp");
+            Route::get('/duplicado-anual-ex-glp/{id}', 'generaDuplicadoExternoAnualGlp')->name("duplicadoExternoAnualGlp");
 
             //Rutas para ver certificado inicial GLP
             Route::get('/certificado-inicial-glp/{id}', 'generaPdfInicialGlp')->name("certificadoInicialGlp");
+            Route::get('/duplicado-inicial-glp/{id}', 'generaDuplicadoInicialGlp')->name("duplicadoInicialGlp");
+            Route::get('/duplicado-inicial-ex-glp/{id}', 'generaDuplicadoExternoInicialGlp')->name("duplicadoExternoInicialGlp");
 
             //Rutas para descargar certificado anual GLP
             Route::get('/certificado-anual-glp/{id}/descargar', 'descargaPdfAnualGlp')->name("descargarCertificadoAnualGlp");

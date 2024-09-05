@@ -28,6 +28,7 @@ class Material extends Model
     'idTipoMaterial',
     'añoActivo',
     'anio',
+    'devuelto',
     'created_at',
     'updated_at',
     ];

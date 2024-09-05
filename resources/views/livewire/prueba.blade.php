@@ -55,13 +55,17 @@
                             <div class="max-w-5xl m-auto bg-white rounded-lg shadow-md my-4 py-4">
                                 <div class="my-2 flex flex-col md:flex-row justify-evenly items-center">
                                     <div>
-                                        <input  class="form-input rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" 
-                                        type="date" wire:model="fechaCertificacion" min="{{ $minDate }}" max="{{ $maxDate }}">
+                                        <input
+                                            class="form-input rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                            type="date" wire:model="fechaCertificacion" min="{{ $minDate }}"
+                                            max="{{ $maxDate }}">
                                         <x-jet-input-error for="fechaCertificacion" />
                                     </div>
-                                    <div class="w-full md:w-2/6 flex justify-center items-center">                                        
-                                        <x-jet-input type="checkbox" wire:model="serviexterno" class="w-4 h-4 text-indigo-600 bg-white border-gray-300 rounded outline-none hover:cursor-pointer focus:ring-indigo-600  focus:ring-1 dark:bg-gray-600 dark:border-gray-500" />
-                                        <x-jet-label value="Externo" class="py-2 ml-2 text-sm font-medium text-gray-900 select-none hover:cursor-pointer " />
+                                    <div class="w-full md:w-2/6 flex justify-center items-center">
+                                        <x-jet-input type="checkbox" wire:model="serviexterno"
+                                            class="w-4 h-4 text-indigo-600 bg-white border-gray-300 rounded outline-none hover:cursor-pointer focus:ring-indigo-600  focus:ring-1 dark:bg-gray-600 dark:border-gray-500" />
+                                        <x-jet-label value="Externo"
+                                            class="py-2 ml-2 text-sm font-medium text-gray-900 select-none hover:cursor-pointer " />
                                         <x-jet-input-error for="serviexterno" />
                                     </div>
                                     <div>
@@ -197,13 +201,17 @@
                             <div class="max-w-5xl m-auto bg-white rounded-lg shadow-md my-4 py-4">
                                 <div class="my-2 flex flex-col md:flex-row justify-evenly items-center">
                                     <div>
-                                        <input  class="form-input rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" 
-                                        type="date" wire:model="fechaCertificacion" min="{{ $minDate }}" max="{{ $maxDate }}">
+                                        <input
+                                            class="form-input rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                                            type="date" wire:model="fechaCertificacion" min="{{ $minDate }}"
+                                            max="{{ $maxDate }}">
                                         <x-jet-input-error for="fechaCertificacion" />
                                     </div>
-                                    <div class="w-full md:w-2/6 flex justify-center items-center">                                        
-                                        <x-jet-input type="checkbox" wire:model="serviexterno" class="w-4 h-4 text-indigo-600 bg-white border-gray-300 rounded outline-none hover:cursor-pointer focus:ring-indigo-600  focus:ring-1 dark:bg-gray-600 dark:border-gray-500" />
-                                        <x-jet-label value="Externo" class="py-2 ml-2 text-sm font-medium text-gray-900 select-none hover:cursor-pointer " />
+                                    <div class="w-full md:w-2/6 flex justify-center items-center">
+                                        <x-jet-input type="checkbox" wire:model="serviexterno"
+                                            class="w-4 h-4 text-indigo-600 bg-white border-gray-300 rounded outline-none hover:cursor-pointer focus:ring-indigo-600  focus:ring-1 dark:bg-gray-600 dark:border-gray-500" />
+                                        <x-jet-label value="Externo"
+                                            class="py-2 ml-2 text-sm font-medium text-gray-900 select-none hover:cursor-pointer " />
                                         <x-jet-input-error for="serviexterno" />
                                     </div>
                                     <div>
@@ -339,7 +347,7 @@
                             </div>
 
                             <div class="max-w-5xl m-auto bg-white rounded-lg shadow-md my-4 py-4">
-                                <div class="my-2 flex flex-col md:flex-row justify-evenly items-center">                                    
+                                <div class="my-2 flex flex-col md:flex-row justify-evenly items-center">
                                     <div>
                                         {{--
                                         <select wire:model="tallerAuto"
@@ -352,7 +360,8 @@
                                             @endforeach
                                         </select>
                                         --}}
-                                        <select wire:model="tallerAuto" class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full">
+                                        <select wire:model="tallerAuto"
+                                            class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full">
                                             <option value="">Seleccione Taller Autorizado</option>
                                             @foreach ($talleres as $taller2)
                                                 @if ($taller2->autorizado_glp == 1)
@@ -364,13 +373,17 @@
                                     </div>
                                 </div>
                                 <div class="my-2 flex flex-col md:flex-row justify-evenly items-center">
-                                    <div >
-                                        <x-jet-input type="date" class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full " wire:model="fechaCertificacion" />
+                                    <div>
+                                        <x-jet-input type="date"
+                                            class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full "
+                                            wire:model="fechaCertificacion" />
                                         <x-jet-input-error for="fechaCertificacion" />
                                     </div>
-                                    <div class="w-full md:w-2/6 flex justify-center items-center">                                        
-                                        <x-jet-input type="checkbox" wire:model="serviexterno" class="w-4 h-4 text-indigo-600 bg-white border-gray-300 rounded outline-none hover:cursor-pointer focus:ring-indigo-600  focus:ring-1 dark:bg-gray-600 dark:border-gray-500" />
-                                        <x-jet-label value="Externo" class="py-2 ml-2 text-sm font-medium text-gray-900 select-none hover:cursor-pointer " />
+                                    <div class="w-full md:w-2/6 flex justify-center items-center">
+                                        <x-jet-input type="checkbox" wire:model="serviexterno"
+                                            class="w-4 h-4 text-indigo-600 bg-white border-gray-300 rounded outline-none hover:cursor-pointer focus:ring-indigo-600  focus:ring-1 dark:bg-gray-600 dark:border-gray-500" />
+                                        <x-jet-label value="Externo"
+                                            class="py-2 ml-2 text-sm font-medium text-gray-900 select-none hover:cursor-pointer " />
                                         <x-jet-input-error for="serviexterno" />
                                     </div>
                                     <div class="my-2 flex flex-row justify-evenly items-center">
@@ -506,7 +519,7 @@
                                 <x-jet-input-error for="imagenes" />
                             </div>
                             <div class="max-w-5xl m-auto bg-white rounded-lg shadow-md my-4 py-4">
-                                <div class="my-2 flex flex-col md:flex-row justify-evenly items-center">                                    
+                                <div class="my-2 flex flex-col md:flex-row justify-evenly items-center">
                                     <div>
                                         {{--
                                         <select wire:model="tallerAuto" 
@@ -517,8 +530,9 @@
                                                     <option value="{{ $taller2->id }}">{{ $taller2->nombre }}</option>
                                                 @endif
                                             @endforeach
-                                        </select>--}}
-                                        <select wire:model="tallerAuto" class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full">
+                                        </select> --}}
+                                        <select wire:model="tallerAuto"
+                                            class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full">
                                             <option value="">Seleccione Taller Autorizado</option>
                                             @foreach ($talleres as $taller2)
                                                 @if ($taller2->autorizado_glp == 1)
@@ -530,13 +544,17 @@
                                     </div>
                                 </div>
                                 <div class="my-2 flex flex-col md:flex-row justify-evenly items-center">
-                                    <div >
-                                        <x-jet-input type="date" class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full " wire:model="fechaCertificacion" />
+                                    <div>
+                                        <x-jet-input type="date"
+                                            class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full "
+                                            wire:model="fechaCertificacion" />
                                         <x-jet-input-error for="fechaCertificacion" />
                                     </div>
-                                    <div class="w-full md:w-2/6 flex justify-center items-center">                                        
-                                        <x-jet-input type="checkbox" wire:model="serviexterno" class="w-4 h-4 text-indigo-600 bg-white border-gray-300 rounded outline-none hover:cursor-pointer focus:ring-indigo-600  focus:ring-1 dark:bg-gray-600 dark:border-gray-500" />
-                                        <x-jet-label value="Externo" class="py-2 ml-2 text-sm font-medium text-gray-900 select-none hover:cursor-pointer " />
+                                    <div class="w-full md:w-2/6 flex justify-center items-center">
+                                        <x-jet-input type="checkbox" wire:model="serviexterno"
+                                            class="w-4 h-4 text-indigo-600 bg-white border-gray-300 rounded outline-none hover:cursor-pointer focus:ring-indigo-600  focus:ring-1 dark:bg-gray-600 dark:border-gray-500" />
+                                        <x-jet-label value="Externo"
+                                            class="py-2 ml-2 text-sm font-medium text-gray-900 select-none hover:cursor-pointer " />
                                         <x-jet-input-error for="serviexterno" />
                                     </div>
                                     <div>
@@ -677,9 +695,11 @@
                                         <x-jet-input type="date" class="" wire:model="fechaCertificacion" />
                                         <x-jet-input-error for="fechaCertificacion" />
                                     </div>
-                                    <div class="w-full md:w-2/6 flex justify-center items-center">                                        
-                                        <x-jet-input type="checkbox" wire:model="serviexterno" class="w-4 h-4 text-indigo-600 bg-white border-gray-300 rounded outline-none hover:cursor-pointer focus:ring-indigo-600  focus:ring-1 dark:bg-gray-600 dark:border-gray-500" />
-                                        <x-jet-label value="Externo" class="py-2 ml-2 text-sm font-medium text-gray-900 select-none hover:cursor-pointer " />
+                                    <div class="w-full md:w-2/6 flex justify-center items-center">
+                                        <x-jet-input type="checkbox" wire:model="serviexterno"
+                                            class="w-4 h-4 text-indigo-600 bg-white border-gray-300 rounded outline-none hover:cursor-pointer focus:ring-indigo-600  focus:ring-1 dark:bg-gray-600 dark:border-gray-500" />
+                                        <x-jet-label value="Externo"
+                                            class="py-2 ml-2 text-sm font-medium text-gray-900 select-none hover:cursor-pointer " />
                                         <x-jet-input-error for="serviexterno" />
                                     </div>
                                     <div>
@@ -878,6 +898,7 @@
                         </div>
                     @endif
                 @endif
+
                 @if ($estado)
                     @switch($estado)
                         @case('esperando')
@@ -894,17 +915,19 @@
                             --}}
                             <div class="max-w-5xl m-auto bg-white rounded-lg shadow-md my-4 py-4">
                                 <div class="my-2 flex flex-col md:flex-row justify-evenly items-center">
-                                    <div class="w-full md:w-2/6 flex justify-center items-center">                                        
-                                        <x-jet-input type="checkbox" wire:model="serviexterno" class="w-4 h-4 text-indigo-600 bg-white border-gray-300 rounded outline-none hover:cursor-pointer focus:ring-indigo-600  focus:ring-1 dark:bg-gray-600 dark:border-gray-500" />
-                                        <x-jet-label value="Externo" class="py-2 ml-2 text-sm font-medium text-gray-900 select-none hover:cursor-pointer " />
+                                    <div class="w-full md:w-2/6 flex justify-center items-center">
+                                        <x-jet-input type="checkbox" wire:model="serviexterno"
+                                            class="w-4 h-4 text-indigo-600 bg-white border-gray-300 rounded outline-none hover:cursor-pointer focus:ring-indigo-600  focus:ring-1 dark:bg-gray-600 dark:border-gray-500" />
+                                        <x-jet-label value="Externo"
+                                            class="py-2 ml-2 text-sm font-medium text-gray-900 select-none hover:cursor-pointer " />
                                         <x-jet-input-error for="serviexterno" />
                                     </div>
                                     <div>
                                         <a wire:click="duplicarCertificado"
-                                        class="hover:cursor-pointer border border-indigo-500 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 sm:mt-0 inline-flex items-center justify-center px-6 py-3 bg-indigo-400 hover:bg-indigo-500 focus:outline-none rounded">
-                                        <p class="text-sm font-medium leading-none text-white"><i class="far fa-copy"></i>
-                                            &nbsp;Duplicar</p>
-                                    </a>
+                                            class="hover:cursor-pointer border border-indigo-500 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 sm:mt-0 inline-flex items-center justify-center px-6 py-3 bg-indigo-400 hover:bg-indigo-500 focus:outline-none rounded">
+                                            <p class="text-sm font-medium leading-none text-white"><i class="far fa-copy"></i>
+                                                &nbsp;Duplicar</p>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -939,12 +962,201 @@
             @break
 
             @case(9)
-                <div
-                    class="max-w-5xl m-auto bg-indigo-300 rounded-lg shadow-md my-4 py-4 px-8 flex flex-row justify-center items-center">
-                    <div class="items-center">
-                        <h1 class="font-bold">Este servicio aún no esta disponible pero estamos trabajando en ello. 🤝</h1>
-                    </div>
+            <div class="max-w-5xl m-auto bg-indigo-300 rounded-lg shadow-md my-4 py-4 px-8 flex flex-row justify-center items-center">
+                <div class="items-center">
+                    <h1 class="font-bold">Este servicio aún no esta disponible pero estamos trabajando en ello. 🤝</h1>
                 </div>
+            </div>
+            {{-- 
+                <x-formato-sugerido />
+                @if (!$certificado)
+                    <div class="max-w-5xl m-auto bg-white rounded-lg shadow-md my-4 py-4 px-8 flex flex-row justify-center items-center"
+                        id="1215488">
+                        <div class="w-4/6 block justify-center items-center space-x-2 md:flex">
+                            @if (!$externo)
+                                <div class="flex items-center justify-center space-x-2 ">
+                                    <x-jet-label value="Placa:" for="placa" />
+                                    <x-jet-input type="text" maxlength="7" wire:model="placa"
+                                        wire:keydown.enter="buscarCertificacionGLP" />
+                                    <x-jet-input-error for="placa" />
+                                </div>
+                                <div class="pt-2 md:pt-0 flex m-auto w-full justify-center">
+                                    <button wire:click="buscarCertificacionGLP" wire:loading.attr="disabled"
+                                        wire:target="externo"
+                                        class="p-2 bg-indigo-400 rounded-lg border m-auto border-indigo-300 hover:bg-indigo-500 text-white hover:text-gray-200 shadow-lg">
+                                        <i class="fas fa-search"></i> Buscar
+                                    </button>
+                                </div>
+                                <div class="md:pt-2 w-full">
+                                    <x-jet-input-error for="placa" />
+                                </div>
+                            @endif
+                            <div class="flex items-center">
+                                <input id="checkbox-2" wire:model="externo" type="checkbox"
+                                    class="accent-pink-300 border-indigo-300 focus:ring-3 focus:ring-indigo-300 h-4 w-4 rounded" />
+                                <label for="checkbox-2" class="text-sm ml-3 font-medium text-gray-900">Dupl.Externo</label>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+                @if ($externo)
+                    @livewire('vehiculo.create-vehiculo-glp', ['tipoServicio' => $tipoServicio])
+                    <div class="max-w-5xl m-auto bg-white rounded-lg shadow-md my-4 py-4 px-8 flex flex-row justify-center items-center ">
+                        <div class="w-full block justify-center items-center space-x-2 md:flex">
+
+                            <div class="flex items-center w-full mb-0 sm: mb-2 ">
+                                <x-jet-label value="Servicio:" for="servicioExterno" />
+                                <select wire:model="servicioExterno"
+                                    class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full -mr-2">
+                                    <option value="0">Seleccione</option>
+                                    <option value="3">Conversión a GLP</option>
+                                    <option value="4">Inspeccion anual GLP</option>
+                                </select>
+
+                            </div>
+                            <div class="flex items-center w-full mb-0 sm: mb-2 ">
+                                <x-jet-label value="Taller:" for="tallerExterno" />
+                                <x-jet-input type="text" wire:model="tallerExterno" class="w-full" />
+
+                            </div>
+                            <div class="flex items-center w-full mb-0 sm: mb-2">
+                                <x-jet-label value="Fecha:" for="fecha" />
+                                <x-jet-input type="date" wire:model="fechaExterno" class="w-full" />
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="w-full block items-center text-center">
+                        <x-jet-input-error for="servicioExterno" />
+                        <x-jet-input-error for="tallerExterno" />
+                        <x-jet-input-error for="fechaExterno" />
+                    </div>
+                @else
+                    @if ($certificado)
+                        <div class="max-w-5xl m-auto bg-white rounded-lg shadow-md my-4">
+                            <div class="c-card block bg-white shadow-md rounded-lg overflow-hidden">
+                                <div class="p-4">
+                                    <span
+                                        class="inline-block px-2 py-1 leading-none bg-amber-200 text-amber-800 rounded-full font-semibold  tracking-wide text-xs">
+                                        {{ $certificado->Servicio->tipoServicio->descripcion }}
+                                    </span>
+                                    <h2>
+                                        <i class="fa-sharp fa-solid fa-id-card"></i> &nbsp;{{ $certificado->Vehiculo->propietario ?? 'NE' }}
+                                    </h2>
+
+                                    <div class="my-2 flex flex row justify-between pr-4">
+                                        <h2 class=" font-bold">
+                                            <i class="fas fa-car"></i> &nbsp; <span
+                                                class="text-indigo-600">{{ $certificado->Vehiculo->placa }}</span>
+                                        </h2>
+                                        <p class=" font-bold">
+                                            <i class="fas fa-file"></i>&nbsp;
+                                            <span class="text-red-500 font-bold">{{ $certificado->serieFormatoGLP }} -
+                                                {{ $certificado->Hoja->añoActivo }}</span>
+                                        </p>
+                                    </div>
+                                    <div class="my-2 flex flex row justify-between pr-4">
+                                        <h3>
+                                            <i class="my-2 fas fa-warehouse"></i> &nbsp;{{ 'Taller: ' . $certificado->Taller->nombre }}
+                                        </h3>
+                                        <h3>
+                                            <i class="my-2 fas fa-warehouse"></i> &nbsp;{{ 'Autorizado: ' . $certificado->TallerAuto->nombre }}
+                                        </h3>
+                                    </div>
+                                    
+
+                                </div>
+                                <div class="p-4 border-t  text-xs text-gray-700">
+                                    <span class="flex items-center">
+                                        <i class="far fa-address-card fa-fw text-gray-900 mr-2"></i>
+                                        {{ $certificado->Inspector->name }}
+                                    </span>
+                                    <span class="flex items-center mb-1">
+                                        <i class="far fa-clock fa-fw mr-2 text-gray-900"></i>
+                                        @if (isset($fechaCerti))
+                                            @if ($fechaCerti > 1)
+                                                certificado hace {{ $fechaCerti }} días.
+                                            @else
+                                                certificado hace {{ $fechaCerti }} día.
+                                            @endif
+                                        @endif
+                                    </span>
+
+                                </div>
+                                <div class="p-2 border-t flex items-center justify-center ">
+                                    <i class="fas fa-times-circle fa-2x hover:cursor-pointer hover: shadow-lg rounded-full text-red-400 hover:text-red-500 hover:shadow-sm hover:shadow-red-500"
+                                        wire:click="reseteaBusquedaCert"></i>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                @endif
+
+                @if ($estado)
+                    @switch($estado)
+                        @case('esperando')
+                            <div class="max-w-5xl m-auto bg-white rounded-lg shadow-md my-4 py-4">
+                                <div class="my-2 flex flex-col md:flex-row justify-evenly items-center">
+                                    @if ($externo)
+                                        <div>
+                                            <select wire:model="tallerAuto"
+                                                class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full">
+                                                <option value="">Seleccione Taller Autorizado</option>
+                                                @foreach ($talleres as $taller2)
+                                                    @if ($taller2->autorizado_glp == 1)
+                                                        <option value="{{ $taller2->id }}">{{ $taller2->nombre }}</option>
+                                                    @endif
+                                                @endforeach
+                                            </select>
+                                            <x-jet-input-error for="tallerAuto" />
+                                        </div>
+                                    @endif
+                                    <div class="w-full md:w-2/6 flex justify-center items-center">
+                                        <x-jet-input type="checkbox" wire:model="serviexterno"
+                                            class="w-4 h-4 text-indigo-600 bg-white border-gray-300 rounded outline-none hover:cursor-pointer focus:ring-indigo-600  focus:ring-1 dark:bg-gray-600 dark:border-gray-500" />
+                                        <x-jet-label value="Externo"
+                                            class="py-2 ml-2 text-sm font-medium text-gray-900 select-none hover:cursor-pointer " />
+                                        <x-jet-input-error for="serviexterno" />
+                                    </div>
+                                    <div>
+                                        <a wire:click="duplicarCertificadoGLP"
+                                            class="hover:cursor-pointer border border-indigo-500 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 sm:mt-0 inline-flex items-center justify-center px-6 py-3 bg-indigo-400 hover:bg-indigo-500 focus:outline-none rounded">
+                                            <p class="text-sm font-medium leading-none text-white"><i class="far fa-copy"></i>
+                                                &nbsp;Duplicar</p>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        @break
+
+                        @case('certificado')
+                            @if ($certificacion)
+                                <div class="max-w-5xl m-auto bg-white rounded-lg shadow-md my-4 py-4">
+                                    <div class="my-2 flex flex-row justify-evenly items-center">
+                                        <a href="{{ $certificacion->rutaVistaCertificado }}" target="__blank"
+                                            rel="noopener noreferrer"
+                                            class="hover:cursor-pointer border border-indigo-500 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 sm:mt-0 inline-flex items-center justify-center px-6 py-3 bg-indigo-400 hover:bg-indigo-500 focus:outline-none rounded">
+                                            <p class="text-sm font-medium leading-none text-white"><i class="far fa-eye"></i>
+                                                &nbsp;Ver Certificado</p>
+                                        </a>
+                                        <a href="{{ route('servicio') }}"
+                                            class="hover:cursor-pointer focus:ring-2 focus:ring-offset-2 focus:ring-amber-600 sm:mt-0 inline-flex items-center justify-center px-6 py-3 bg-red-400 hover:bg-red-500 focus:outline-none rounded">
+                                            <p class="text-sm font-medium leading-none text-white">
+                                                <i class="fas fa-archive"></i>&nbsp;Finalizar
+                                            </p>
+                                        </a>
+                                    </div>
+                                </div>
+                            @endif
+                        @break
+
+                        @default
+                    @endswitch
+                @endif
+            --}}
             @break
 
             @case(10)
@@ -980,23 +1192,25 @@
                             --}}
                             <div class="max-w-5xl m-auto bg-white rounded-lg shadow-md my-4 py-4">
                                 <div class="my-2 flex flex-col md:flex-row justify-evenly items-center">
-                                    <div class="w-full md:w-2/6 flex justify-center items-center">                                        
-                                        <x-jet-input type="checkbox" wire:model="serviexterno" class="w-4 h-4 text-indigo-600 bg-white border-gray-300 rounded outline-none hover:cursor-pointer focus:ring-indigo-600  focus:ring-1 dark:bg-gray-600 dark:border-gray-500" />
-                                        <x-jet-label value="Externo" class="py-2 ml-2 text-sm font-medium text-gray-900 select-none hover:cursor-pointer " />
+                                    <div class="w-full md:w-2/6 flex justify-center items-center">
+                                        <x-jet-input type="checkbox" wire:model="serviexterno"
+                                            class="w-4 h-4 text-indigo-600 bg-white border-gray-300 rounded outline-none hover:cursor-pointer focus:ring-indigo-600  focus:ring-1 dark:bg-gray-600 dark:border-gray-500" />
+                                        <x-jet-label value="Externo"
+                                            class="py-2 ml-2 text-sm font-medium text-gray-900 select-none hover:cursor-pointer " />
                                         <x-jet-input-error for="serviexterno" />
                                     </div>
                                     <div>
                                         <button wire:click="certificarConChip" wire:loading.attr="disabled"
-                                        wire.target="certificarConChip"
-                                        class="hover:cursor-pointer border border-indigo-500 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 sm:mt-0 inline-flex items-center justify-center px-6 py-3 bg-indigo-400 hover:bg-indigo-500 focus:outline-none rounded">
-                                        <p class="text-sm font-medium leading-none text-white">
-                                            <span wire:loading wire:target="certificar">
-                                                <i class="fas fa-spinner animate-spin"></i>
-                                                &nbsp;
-                                            </span>
-                                            &nbsp;Certificar
-                                        </p>
-                                    </button>
+                                            wire.target="certificarConChip"
+                                            class="hover:cursor-pointer border border-indigo-500 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 sm:mt-0 inline-flex items-center justify-center px-6 py-3 bg-indigo-400 hover:bg-indigo-500 focus:outline-none rounded">
+                                            <p class="text-sm font-medium leading-none text-white">
+                                                <span wire:loading wire:target="certificar">
+                                                    <i class="fas fa-spinner animate-spin"></i>
+                                                    &nbsp;
+                                                </span>
+                                                &nbsp;Certificar
+                                            </p>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -1206,9 +1420,11 @@
                                         <x-jet-input type="date" class="" wire:model="fechaCertificacion" />
                                         <x-jet-input-error for="fechaCertificacion" />
                                     </div>
-                                    <div class="w-full md:w-2/6 flex justify-center items-center">                                        
-                                        <x-jet-input type="checkbox" wire:model="serviexterno" class="w-4 h-4 text-indigo-600 bg-white border-gray-300 rounded outline-none hover:cursor-pointer focus:ring-indigo-600  focus:ring-1 dark:bg-gray-600 dark:border-gray-500" />
-                                        <x-jet-label value="Externo" class="py-2 ml-2 text-sm font-medium text-gray-900 select-none hover:cursor-pointer " />
+                                    <div class="w-full md:w-2/6 flex justify-center items-center">
+                                        <x-jet-input type="checkbox" wire:model="serviexterno"
+                                            class="w-4 h-4 text-indigo-600 bg-white border-gray-300 rounded outline-none hover:cursor-pointer focus:ring-indigo-600  focus:ring-1 dark:bg-gray-600 dark:border-gray-500" />
+                                        <x-jet-label value="Externo"
+                                            class="py-2 ml-2 text-sm font-medium text-gray-900 select-none hover:cursor-pointer " />
                                         <x-jet-input-error for="serviexterno" />
                                     </div>
                                     <div class="my-2 flex flex-row justify-evenly items-center">
@@ -1318,7 +1534,7 @@
                 @if ($estado)
                     @switch($estado)
                         @case('esperando')
-                        {{--
+                            {{--
                             <div class="max-w-5xl m-auto bg-white rounded-lg shadow-md my-4 py-4">
                                 <div class="my-2 flex flex-row justify-evenly items-center">
                                     <div>
@@ -1345,7 +1561,7 @@
                             </div>
                         --}}
                             <div class="max-w-5xl m-auto bg-white rounded-lg shadow-md my-4 py-4">
-                                <div class="my-2 flex flex-col md:flex-row justify-evenly items-center">                                    
+                                <div class="my-2 flex flex-col md:flex-row justify-evenly items-center">
                                     <div>
                                         {{-- 
                                         <select wire:model="tallerAuto"
@@ -1358,29 +1574,35 @@
                                             @endforeach
                                         </select>
                                         --}}
-                                        <select wire:model="tallerAuto" class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full">
+                                        <select wire:model="tallerAuto"
+                                            class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full">
                                             <option value="">Seleccione Taller Autorizado</option>
                                             @foreach ($talleres as $taller2)
                                                 @if ($taller2->autorizado_glp == 1)
                                                     <option value="{{ $taller2->id }}">{{ $taller2->nombre }}</option>
                                                 @endif
                                             @endforeach
-                                        </select>                                        
+                                        </select>
                                         <x-jet-input-error for="tallerAuto" />
                                     </div>
                                 </div>
                                 <div class="my-2 flex flex-col md:flex-row justify-evenly items-center">
-                                    <div >
-                                        <x-jet-input type="date" class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full " wire:model="fechaCertificacion" />
+                                    <div>
+                                        <x-jet-input type="date"
+                                            class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full "
+                                            wire:model="fechaCertificacion" />
                                         <x-jet-input-error for="fechaCertificacion" />
                                     </div>
-                                    <div class="w-full md:w-2/6 flex justify-center items-center">                                        
-                                        <x-jet-input type="checkbox" wire:model="serviexterno" class="w-4 h-4 text-indigo-600 bg-white border-gray-300 rounded outline-none hover:cursor-pointer focus:ring-indigo-600  focus:ring-1 dark:bg-gray-600 dark:border-gray-500" />
-                                        <x-jet-label value="Externo" class="py-2 ml-2 text-sm font-medium text-gray-900 select-none hover:cursor-pointer " />
+                                    <div class="w-full md:w-2/6 flex justify-center items-center">
+                                        <x-jet-input type="checkbox" wire:model="serviexterno"
+                                            class="w-4 h-4 text-indigo-600 bg-white border-gray-300 rounded outline-none hover:cursor-pointer focus:ring-indigo-600  focus:ring-1 dark:bg-gray-600 dark:border-gray-500" />
+                                        <x-jet-label value="Externo"
+                                            class="py-2 ml-2 text-sm font-medium text-gray-900 select-none hover:cursor-pointer " />
                                         <x-jet-input-error for="serviexterno" />
                                     </div>
                                     <div class="my-2 flex flex-row justify-evenly items-center">
-                                        <button wire:click="certificarPreconverGlp" wire:loading.attr="disabled" wire.target="certificarPreconverGlp"
+                                        <button wire:click="certificarPreconverGlp" wire:loading.attr="disabled"
+                                            wire.target="certificarPreconverGlp"
                                             class="hover:cursor-pointer border border-indigo-500 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 sm:mt-0 inline-flex items-center justify-center px-6 py-3 bg-indigo-400 hover:bg-indigo-500 focus:outline-none rounded">
                                             <p class="text-sm font-medium leading-none text-white">
                                                 <span wire:loading wire:target="certificarPreconverGlp">

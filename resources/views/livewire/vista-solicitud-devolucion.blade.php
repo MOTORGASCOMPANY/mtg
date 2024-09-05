@@ -74,7 +74,7 @@
 
 
                     <div class="flex items-center justify-center mt-4" role="none">
-                        @if ($materialDetails->contains('estado', 3))
+                        @if ($materialDetails->contains('devuelto', null))
                             <button wire:click="$emit('actualizarMateriales')"
                                 class="p-3 bg-indigo-500 rounded-xl text-white text-sm hover:font-bold hover:bg-indigo-700"
                                 title="Anular servicio">

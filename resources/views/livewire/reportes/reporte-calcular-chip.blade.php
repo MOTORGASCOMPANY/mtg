@@ -96,6 +96,7 @@
                     </div>
                 </div>
 
+                {{-- 
                 <div class="flex bg-white items-center p-2 w-80 rounded-md mb-4 ">
                     <span class="mr-1">Servicio: </span>
                     <select wire:model="servicio"
@@ -108,6 +109,7 @@
                         @endisset
                     </select>
                 </div>
+                --}}
 
                 <div class="flex bg-white items-center p-2 w-48 rounded-md mb-4 ">
                     <span>Desde: </span>
@@ -121,9 +123,13 @@
                         class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full truncate" />
                 </div>
 
-                <button wire:click="procesar()"
+                <button wire:click="procesar"
                     class="bg-green-400 px-6 py-4 w-full md:w-auto rounded-md text-white font-semibold tracking-wide cursor-pointer mb-4">
                     <p class="truncate"> Generar reporte </p>
+                </button>
+                <button wire:click="resumen"
+                    class="bg-indigo-400 px-6 py-4 w-full md:w-auto rounded-md text-white font-semibold tracking-wide cursor-pointer mb-4">
+                    <p class="truncate"> Resumen </p>
                 </button>
             </div>
             <div class="w-auto my-4">
@@ -140,7 +146,7 @@
         </div>
 
         {{-- Tabla taller --}}
-        @if (isset($tabla))
+        @if ($mostrarTablaTaller)
             <div wire.model="resultados">
                 <div class="m-auto flex justify-center items-center bg-gray-300 rounded-md w-full p-4 mt-4">
                     <button wire:click="$emit('exportaData')"
@@ -376,6 +382,35 @@
 
             </div>
         @endif
+
+        {{-- Tabla resumen --}}
+        @if ($mostrarTablaResumen)
+            <div class="bg-gray-200 px-8 py-4 rounded-xl w-full mt-4">
+                <table class="min-w-full border text-center text-sm font-light dark:border-neutral-500">
+                    <thead class="border-b font-medium dark:border-neutral-500">
+                        <tr class="bg-indigo-200">
+                            <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">#</th>
+                            <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">TALLER</th>
+                            <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">FAC O BOLT</th>
+                            <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">OBSERVACIONES</th>
+                            <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">TOTAL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($resumenData as $key => $data)
+                            <tr class="border-b dark:border-neutral-500 bg-orange-200">
+                                <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">{{ $key + 1 }}</td>
+                                <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">{{ $data['taller'] }}</td>
+                                <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500"></td>
+                                <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500"></td>
+                                <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">S/{{ number_format($data['total'], 2) }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @endif
+
 
     </div>
     @push('js')

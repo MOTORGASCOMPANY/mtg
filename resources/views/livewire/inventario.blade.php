@@ -1,10 +1,37 @@
 <div class="flex  w-full pt-12 justify-center">
     <section class="bg-white dark:bg-gray-900 mt-2 border rounded-md shadow-lg">
-        <div class="container px-6 py-10 mx-auto">
-            <h1 class="text-3xl font-bold text-center text-gray-800  lg:text-4xl dark:text-white">
-                Inventario de
-                <span class="text-indigo-500">Materiales</span>
-            </h1>
+        <div class="container px-6 py-5 mx-auto">
+            <div class="relative">
+                <h1 class="text-3xl font-bold text-center text-gray-800 lg:text-4xl dark:text-white">
+                    Inventario de
+                    <span class="text-indigo-500">Materiales</span>
+                </h1>
+                <div class="absolute right-0 top-0 flex flex-col items-end">
+                    <button class="p-3 bg-indigo-500 rounded-xl text-white text-sm hover:font-bold hover:bg-indigo-700"
+                        wire:click="procesarDevolucion">
+                        <i class="fa-solid fa-right-left"></i>
+                        Devolución Materiales
+                    </button>
+                    @if ($mostrarDoc)
+                        <div class="flex flex-col ml-4 space-y-2">
+                            @foreach ($certificacion->groupBy('cart_id') as $group)
+                                <a href="{{ $group->first()->RutaVistaCertificado }}" target="__blank"
+                                    rel="noopener noreferrer"
+                                    class="block px-4 py-2 text-sm text-indigo-700 hover:bg-slate-600 hover:text-white rounded-md hover:cursor-pointer">
+                                    <i class="fas fa-eye"></i>
+                                    <span>Ver Cargo.</span>
+                                </a>
+                            @endforeach
+                            <a href="{{ route('inventario') }}"
+                                class="block px-4 py-2 text-sm text-white bg-red-400 hover:bg-red-500 rounded-md focus:outline-none">
+                                <p class="text-sm font-medium leading-none">
+                                    <i class="fas fa-archive"></i>&nbsp;Finalizar
+                                </p>
+                            </a>
+                        </div>
+                    @endif
+                </div>
+            </div>
 
             <div class="grid grid-cols-1 gap-6 mt-6 xl:mt-5 xl:gap-10 md:grid-cols-2 xl:grid-cols-4">
 
@@ -13,7 +40,8 @@
                     class="w-full border border-indigo-400 max-w-sm px-4 py-3 bg-white rounded-md shadow-md dark:bg-gray-800 dark:shadow-indigo-400">
                     <div class="flex items-center justify-between">
                         <span class="text-sm text-indigo-800 dark:text-gray-400 font-bold"><i
-                                class="fas fa-file"></i>&nbsp; FORMATOS GNV</span>
+                                class="fas fa-file"></i>&nbsp;
+                            FORMATOS GNV</span>
                         <span
                             class="px-3 py-1 text-sm text-green-800 uppercase bg-green-200 rounded-full dark:bg-blue-300 dark:text-blue-900"><i
                                 class="fa-solid fa-clipboard-check"></i></span>
@@ -141,7 +169,8 @@
                     class="border border-indigo-400 w-full max-w-sm px-4 py-3 bg-white rounded-md shadow-md dark:bg-gray-800 dark:shadow-indigo-400">
                     <div class="flex items-center justify-between">
                         <span class="text-sm text-indigo-800 dark:text-gray-400 font-bold"> <i
-                                class="fas fa-microchip"></i> CHIPS</span>
+                                class="fas fa-microchip"></i>
+                            CHIPS</span>
                         <span
                             class="px-3 py-1 text-sm text-green-800 uppercase bg-green-200 rounded-full dark:bg-blue-300 dark:text-blue-900"><i
                                 class="fa-solid fa-clipboard-check"></i></span>
@@ -264,7 +293,7 @@
             </div>
         </div>
 
-        <div class="flex items-center justify-center mt-4 space-x-4 py-3">
+        <div class="flex items-center justify-center space-x-4 py-5">
             <div>
                 <x-jet-label value="Tipo Material:" for="Tipo Material" />
                 <select wire:model="tipoMaterial"
@@ -321,6 +350,11 @@
                                 <th scope="col" class="px-6 py-3 bg-indigo-300 sticky top-0 z-10">
                                     Ubicación
                                 </th>
+                                @if ($estado == 5)
+                                    <th scope="col" class="px-6 py-3 bg-indigo-300 sticky top-0 z-10">
+                                        Entregado
+                                    </th>
+                                @endif
                                 <th scope="col" class="px-6 py-3 bg-indigo-300 sticky top-0 z-10">
                                     Ultima act.
                                 </th>
@@ -379,6 +413,14 @@
                                     <td class="px-6 py-4 ">
                                         {{ $item->ubicacion }}
                                     </td>
+                                    @if ($estado == 5)
+                                        <td class="pl-12">
+                                            <div class="flex items-center">
+                                                <x-jet-checkbox class="h-4 w-4 text-indigo-600 rounded-lg" disabled
+                                                    :checked="$item->devuelto" />
+                                            </div>
+                                        </td>
+                                    @endif
                                     <td class="px-6 py-4 ">
                                         {{ $item->updated_at->format('d-m-Y H:i:s a') }}
                                     </td>

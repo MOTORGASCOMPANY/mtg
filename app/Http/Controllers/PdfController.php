@@ -1714,5 +1714,195 @@ class PdfController extends Controller
         return $pdf->stream('cargo_anulacion_' . $cart_id . '.pdf');
     }
 
+    
+    //vista y descarga de DUPLICADOS ANUALES GLP
+    public function generaDuplicadoAnualGlp($id)
+    {
+        if (Certificacion::findOrFail($id)) {
+            $duplicado = Certificacion::find($id);
+            $antiguo = Certificacion::find($duplicado->Duplicado->idAnterior);
+            if ($duplicado->Servicio->tipoServicio->id) {
+                if ($antiguo->Servicio->tipoServicio->id == 4) {
+                    $meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+                    $fechaCert = $duplicado->created_at;
+                    $fechaAntiguo = $antiguo->created_at;
+                    $fecha = $fechaCert->format('d') . ' días del mes de ' . $meses[$fechaCert->format('m') - 1] . ' del ' . $fechaCert->format('Y') . '.';
+                    $hoja = $duplicado->Hoja;
+                    $hojaAntiguo = $antiguo->Hoja;
+                    // Genera el código QR
+                    $urlDelDocumento = 'www.motorgasperu.com' . route('verPdfAnualDupliGlp', $id, false); // cambiar la ruta para QR
+                    $qrCode = QrCode::size(70)->generate($urlDelDocumento);
+
+                    $equipos = $duplicado->Vehiculo->Equipos->where("idTipoEquipo", ">", 3)->sortBy("idTipoEquipo");
+                    $cargaUtil = $this->calculaCargaUtil($duplicado->Vehiculo->pesoBruto, $duplicado->Vehiculo->pesoNeto);
+                    $data = [
+                        "fecha" => $fecha,
+                        "cargaUtil" => $cargaUtil,
+                        "empresa" => "MOTORGAS COMPANY S.A.",
+                        "carro" => $duplicado->Vehiculo,
+                        "taller" => $duplicado->Taller,
+                        "tallerauto" => $duplicado->TallerAuto,
+                        "hoja" => $hoja,
+                        "fechaCert" => $fechaCert,
+                        "fechaAntiguo" => $fechaAntiguo,
+                        "hojaAntiguo" => $hojaAntiguo,
+                        "equipos" => $equipos,
+                        "largo" => $this->devuelveDatoParseado($duplicado->Vehiculo->largo),
+                        "ancho" => $this->devuelveDatoParseado($duplicado->Vehiculo->ancho),
+                        "altura" => $this->devuelveDatoParseado($duplicado->Vehiculo->altura),
+                        "qrCode" => $qrCode,
+                    ];
+                    $pdf = App::make('dompdf.wrapper');
+                    $pdf->loadView('duplicadoAnualGlp', $data); //CAMBIAR LA VISTA PLANTILLA
+                    return $pdf->stream($duplicado->Vehiculo->placa . '-' . $hoja->numSerie . '-duplicado-anual-glp.pdf');
+                }
+                return abort(404);
+            }
+        } else {
+            return abort(404);
+        }
+    }
+
+    //vista y descarga de DUPLICADOS INICIALES GLP
+    public function generaDuplicadoInicialGlp($id)
+    {
+        if (Certificacion::findOrFail($id)) {
+            $duplicado = Certificacion::find($id);
+            $antiguo = Certificacion::find($duplicado->Duplicado->idAnterior);
+            if ($antiguo->Servicio->tipoServicio->id) {
+                if ($antiguo->Servicio->tipoServicio->id == 3) {
+                    $meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+                    $fechaCert = $duplicado->created_at;
+                    $fechaAntiguo = $antiguo->created_at;
+                    $fecha = $fechaCert->format('d') . ' días del mes de ' . $meses[$fechaCert->format('m') - 1] . ' del ' . $fechaCert->format('Y') . '.';
+                    $equipos = $duplicado->vehiculo->Equipos->where("idTipoEquipo", "!=", 3)->sortBy("idTipoEquipo");
+                    $cargaUtil = $this->calculaCargaUtil($duplicado->Vehiculo->pesoBruto, $duplicado->Vehiculo->pesoNeto);
+                    //dd($equipos);
+                    $hoja = $duplicado->Hoja;
+                    $hojaAntiguo = $antiguo->Hoja;
+                    // Genera el código QR
+                    $urlDelDocumento = 'www.motorgasperu.com' . route('verPdfInicialDupliGlp', $id, false); // cambiar la ruta para QR
+                    $qrCode = QrCode::size(70)->generate($urlDelDocumento);
+
+                    $data = [
+                        "fecha" => $fecha,
+                        "cargaUtil" => $cargaUtil,
+                        "empresa" => "MOTORGAS COMPANY S.A.",
+                        "carro" => $duplicado->Vehiculo,
+                        "taller" => $duplicado->Taller,
+                        "tallerauto" => $duplicado->TallerAuto,
+                        "hoja" => $hoja,
+                        "equipos" => $equipos,
+                        "fechaCert" => $fechaCert, //para fecha cert
+                        "fechaAntiguo" => $fechaAntiguo,
+                        "hojaAntiguo" => $hojaAntiguo,
+                        "pesos" => $antiguo->calculaPesos,
+                        "largo" => $this->devuelveDatoParseado($duplicado->Vehiculo->largo),
+                        "ancho" => $this->devuelveDatoParseado($duplicado->Vehiculo->ancho),
+                        "altura" => $this->devuelveDatoParseado($duplicado->Vehiculo->altura),
+                        "qrCode" => $qrCode,
+                    ];
+                    $pdf = App::make('dompdf.wrapper');
+                    $pdf->loadView('duplicadoInicialGLP', $data);
+                    //return $pdf->stream($id.'-'.date('d-m-Y').'-cargo.pdf');
+                    return  $pdf->stream($duplicado->Vehiculo->placa . '-' . $hoja->numSerie . '-duplicado-inicial-glp.pdf');
+                }
+                return abort(404);
+            }
+        } else {
+            return abort(404);
+        }
+    }
+
+    //vista y descarga de DUPLICADOS EXTERNOS ANUALES GNV
+    public function generaDuplicadoExternoAnualGlp($id)
+    {
+        if (Certificacion::findOrFail($id)) {
+            $duplicado = Certificacion::find($id);
+            $dupli = Duplicado::find($duplicado->idDuplicado);
+            if ($dupli->servicio == 4) {
+                $meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+                $fechaCert = $duplicado->created_at;
+                $fecha = $fechaCert->format('d') . ' días del mes de ' . $meses[$fechaCert->format('m') - 1] . ' del ' . $fechaCert->format('Y') . '.';
+                $hoja = $duplicado->Hoja;
+                // Genera el código QR
+                $urlDelDocumento = 'www.motorgasperu.com' . route('verPdfAnualDupliExtGlp', $id, false); // cambiar la ruta para QR
+                $qrCode = QrCode::size(70)->generate($urlDelDocumento);
+                $equipos = $duplicado->Vehiculo->Equipos->where("idTipoEquipo", ">", 3)->sortBy("idTipoEquipo");
+                $cargaUtil = $this->calculaCargaUtil($duplicado->Vehiculo->pesoBruto, $duplicado->Vehiculo->pesoNeto);
+
+                $data = [
+                    "fecha" => $fecha,
+                    "cargaUtil" => $cargaUtil,
+                    "empresa" => "MOTORGAS COMPANY S.A.",
+                    "carro" => $duplicado->Vehiculo,
+                    "taller" => $duplicado->Duplicado->taller,
+                    "tallerauto" => $duplicado->TallerAuto,
+                    "hoja" => $hoja,
+                    "fechaCert" => $fechaCert,
+                    "fechaAntiguo" => Carbon::parse($dupli->fecha),
+                    "equipos" => $equipos,
+                    "largo" => $this->devuelveDatoParseado($duplicado->Vehiculo->largo),
+                    "ancho" => $this->devuelveDatoParseado($duplicado->Vehiculo->ancho),
+                    "altura" => $this->devuelveDatoParseado($duplicado->Vehiculo->altura),
+                    "qrCode" => $qrCode,
+                ];
+                $pdf = App::make('dompdf.wrapper');
+                $pdf->loadView('duplicadoExternoAnualGlp', $data);
+                return $pdf->stream($duplicado->Vehiculo->placa . '-' . $hoja->numSerie . '-duplicadoEx-anual-glp.pdf');
+            }
+            return abort(404);
+        } else {
+            return abort(404);
+        }
+    }
+    //vista y descarga de DUPLICADOS EXTERNOS INICIALES GNV
+    public function generaDuplicadoExternoInicialGlp($id)
+    {
+        if (Certificacion::findOrFail($id)) {
+            $duplicado = Certificacion::find($id);
+            $dupli = Duplicado::find($duplicado->idDuplicado);
+            if ($dupli->servicio == 3) {
+                $meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+                $fechaCert = $duplicado->created_at;
+                $fecha = $fechaCert->format('d') . ' días del mes de ' . $meses[$fechaCert->format('m') - 1] . ' del ' . $fechaCert->format('Y') . '.';
+                $equipos = $duplicado->vehiculo->Equipos->where("idTipoEquipo", "!=", 3)->sortBy("idTipoEquipo");                
+                $cargaUtil = $this->calculaCargaUtil($duplicado->Vehiculo->pesoBruto, $duplicado->Vehiculo->pesoNeto);
+                //dd($equipos);
+                $hoja = $duplicado->Hoja;
+                // Genera el código QR
+                $urlDelDocumento = 'www.motorgasperu.com' . route('verPdfInicialDupliExtGlp', $id, false);
+                $qrCode = QrCode::size(70)->generate($urlDelDocumento);
+
+                $data = [
+                    "fecha" => $fecha,
+                    "cargaUtil" => $cargaUtil,
+                    "empresa" => "MOTORGAS COMPANY S.A.",
+                    "carro" => $duplicado->Vehiculo,
+                    "taller" => $duplicado->Duplicado->taller,
+                    "tallerauto" => $duplicado->TallerAuto,
+                    "hoja" => $hoja,
+                    "fechaCert" => $fechaCert,
+                    "fechaAntiguo" => Carbon::parse($dupli->fecha),
+                    "equipos" => $equipos,
+                    "largo" => $this->devuelveDatoParseado($duplicado->Vehiculo->largo),
+                    "ancho" => $this->devuelveDatoParseado($duplicado->Vehiculo->ancho),
+                    "altura" => $this->devuelveDatoParseado($duplicado->Vehiculo->altura),
+                    "pesos" => $duplicado->calculaPesos,
+                    "qrCode" => $qrCode,
+                ];
+                $pdf = App::make('dompdf.wrapper');
+                $pdf->loadView('duplicadoExternoInicialGlp', $data);
+                //return $pdf->stream($id.'-'.date('d-m-Y').'-cargo.pdf');
+                return  $pdf->stream($duplicado->Vehiculo->placa . '-' . $hoja->numSerie . '-duplicadoEx-inicial-glp.pdf');
+            }
+            return abort(404);
+        } else {
+            return abort(404);
+        }
+    }
+
+
+
 
 }

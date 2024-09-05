@@ -21,6 +21,7 @@ class Anulacion extends Model
         'numSerieHasta',
         'cart_id',
         'anioActivo',
+        'numSeries',
     ];
 
     public function usuario()

@@ -31,6 +31,13 @@ class ReporteCalcularChip extends Component
     public $boletas, $grupoboletas;
     public $boleta, $idBoleta;
 
+    //variables para resumen
+    public $resumenData;
+
+    public $mostrarTablaTaller = false;
+    public $mostrarTablaResumen = false;
+
+
     protected $listeners = ['exportarExcel'];
 
     protected $rules = [
@@ -87,7 +94,44 @@ class ReporteCalcularChip extends Component
             return $key;
         });
         $this->generarInspectoresPorTaller();
+        $this->mostrarTablaTaller = true;
+        $this->mostrarTablaResumen = false;
     }
+
+    public function resumen()
+    {
+        $this->validate();
+        // Verificar si $this->tabla2 no es null
+        if (is_null($this->tabla2)) {
+            // Si $this->tabla2 es null, ejecutar procesar() para asegurarse de que los datos estén disponibles
+            $this->procesar();
+        }
+        /*
+         // Asegurarse de que $this->tabla2 tenga datos antes de continuar
+         if (!$this->tabla2 || $this->tabla2->isEmpty()) {
+            // Manejar el caso en que no hay datos en la tabla
+            $this->resumenData = collect(); // Evitar errores y retornar una colección vacía
+            return;
+         } 
+        */
+        
+        $resumen = $this->tabla2->groupBy('taller')->map(function ($items, $taller) {
+            $total = $items->filter(function ($item) {
+                return !($item['tipo_modelo'] === 'App\Models\Certificacion' && $item['estado'] == 2);
+            })->sum('precio'); 
+
+            return [
+                'taller' => $taller,
+                'total' => $total,
+            ];
+        })->values(); // Obtener solo los valores para que el resumen sea una colección indexada
+        $this->resumenData = $resumen;
+        //dd($this->resumenData);
+        $this->mostrarTablaResumen = true;
+        $this->mostrarTablaTaller = false;
+    }
+
+
 
     public function generarInspectoresPorTaller()
     {
@@ -114,9 +158,9 @@ class ReporteCalcularChip extends Component
             ->IdInspectores($this->ins)
             ->IdTipoServicio($this->servicio)
             // Excluir al inspector con id = 201 
-            ->whereHas('Inspector', function ($query) {
+            /*->whereHas('Inspector', function ($query) {
                 $query->whereNotIn('id', [37, 117, 201]);
-            })
+            })*/
             ->rangoFecha($this->fechaInicio, $this->fechaFin)
             ->where('pagado', 0)
             //->whereIn('estado', [3, 1])
@@ -125,9 +169,9 @@ class ReporteCalcularChip extends Component
         //TODO CER-PENDIENTES:
         $cerPendiente = CertificacionPendiente::idTalleres($this->taller)
             ->IdInspectores($this->ins)
-            ->whereHas('Inspector', function ($query) {
+            /*->whereHas('Inspector', function ($query) {
                 $query->whereNotIn('id', [37, 117, 201]);
-            })
+            })*/
             ->IdTipoServicios($this->servicio)
             ->rangoFecha($this->fechaInicio, $this->fechaFin)
             //->where('estado', 1)
@@ -137,9 +181,9 @@ class ReporteCalcularChip extends Component
         //TODO DESMONTES:
         $desmontes = Desmontes::idTalleres($this->taller)
             ->IdInspectores($this->ins)
-            ->whereHas('Inspector', function ($query) {
+            /*->whereHas('Inspector', function ($query) {
                 $query->whereNotIn('id', [37, 117, 201]);
-            })
+            })*/
             ->IdTipoServicios($this->servicio)
             ->rangoFecha($this->fechaInicio, $this->fechaFin)
             ->get();

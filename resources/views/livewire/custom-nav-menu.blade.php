@@ -150,7 +150,7 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                                     }
                                                 @endphp
                                             <li>                                                
-                                                {{ $tipoMaterial }} ({{ $anulacion['num_serie_desde'] }} - {{ $anulacion['num_serie_hasta'] }})
+                                                {{ $tipoMaterial }}
                                             </li>
                                         @endforeach
                                     </ol>

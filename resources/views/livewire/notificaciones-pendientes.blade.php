@@ -119,7 +119,16 @@
                                             <i class="far fa-check-circle fa-lg" style="color: forestgreen;"></i>
                                         @endif
                                     @elseif($notificacion->type === 'App\Notifications\SolicitudDevolucion')
-                                        @if ($notificacion->material == 4 || $notificacion->material == 5)
+                                        @php
+                                            $allMaterialsReturned = true;
+                                            foreach ($notificacion->material as $mat) {
+                                                if ($mat['devuelto'] == null) {
+                                                    $allMaterialsReturned = false;
+                                                    break;
+                                                }
+                                            }
+                                        @endphp
+                                        @if ($allMaterialsReturned)
                                             <i class="far fa-check-circle fa-lg" style="color: forestgreen;"></i>
                                         @else
                                             <i class="far fa-times-circle fa-lg" style="color: red;"></i>

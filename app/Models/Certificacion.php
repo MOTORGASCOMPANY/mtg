@@ -224,6 +224,19 @@ class Certificacion extends Model
         return $serie;
     }
 
+    public function getserieFormatoGLPAttribute()
+    {
+        $serie = null;
+
+        $material = $this->Materiales->where('idTipoMaterial', 3)->first();
+
+        if ($material) {
+            $serie = $material->numSerie;
+        }
+
+        return $serie;
+    }
+
     public function getHojaAttribute()
     {
         $idServicio = $this->Servicio->tipoServicio->id;
@@ -339,6 +352,14 @@ class Certificacion extends Model
                     $ruta = null;
                 }
                 break;
+            case 9: //tipo servicio = DUPLICADO GLP
+                $dupli = Duplicado::find($this->attributes["idDuplicado"]);
+                if ($dupli) {
+                    $ruta = $this->generaRutaDuplicado($dupli);
+                } else {
+                    $ruta = null;
+                }
+                break;
             case 10: //tipo servicio = inicial gnv + chip
                 $ruta = route('certificadoInicialGnv', ['id' => $this->attributes['id']]);
                 break;
@@ -379,6 +400,14 @@ class Certificacion extends Model
                 break;
 
             case 8: //tipo servicio = anual gnv
+                $dupli = Duplicado::find($this->attributes["idDuplicado"]);
+                if ($dupli) {
+                    $ruta = $this->generaRutaDescargaDuplicado($dupli);
+                } else {
+                    $ruta = null;
+                }
+                break;
+            case 9: //tipo servicio = DUPLICADO GLP
                 $dupli = Duplicado::find($this->attributes["idDuplicado"]);
                 if ($dupli) {
                     $ruta = $this->generaRutaDescargaDuplicado($dupli);
@@ -487,6 +516,13 @@ class Certificacion extends Model
                     case 2:
                         $ruta = route('duplicadoAnualGnv', ['id' => $this->attributes['id']]);
                         break;
+                    //AGREGAR CASE 3 Y 4 PARA GLPS
+                    case 3:
+                        $ruta = route('duplicadoInicialGlp', ['id' => $this->attributes['id']]);
+                        break;
+                    case 4:
+                        $ruta = route('duplicadoAnualGlp', ['id' => $this->attributes['id']]);
+                        break;
                 }
                 break;
             case 1:
@@ -497,6 +533,13 @@ class Certificacion extends Model
                         break;
                     case 2:
                         $ruta = route('duplicadoExternoAnualGnv', ['id' => $this->attributes['id']]);
+                        break;
+                    //AGREGAR CASE 3 Y 4 PARA GLPS
+                    case 3:
+                        $ruta = route('duplicadoExternoInicialGlp', ['id' => $this->attributes['id']]);
+                        break;
+                    case 4:
+                        $ruta = route('duplicadoExternoAnualGlp', ['id' => $this->attributes['id']]);
                         break;
                 }
 
@@ -524,6 +567,7 @@ class Certificacion extends Model
                     case 2:
                         $ruta = route('descargarDuplicadoAnualGnv', ['id' => $this->attributes['id']]);
                         break;
+                        //AGREGAR CASE 3 Y 4 PARA GLPS
                 }
                 break;
             case 1:
@@ -535,6 +579,7 @@ class Certificacion extends Model
                     case 2:
                         $ruta = route('descargarDuplicadoExternoAnualGnv', ['id' => $this->attributes['id']]);
                         break;
+                        //AGREGAR CASE 3 Y 4 PARA GLPS
                 }
 
                 break;
@@ -1073,6 +1118,51 @@ class Certificacion extends Model
         }
     }
 
+    public static function duplicarCertificadoExternoGlp(User $inspector, Vehiculo $vehiculo, Servicio $servicio, Taller $taller, Material $hoja, Duplicado $duplicado, $externoValue)
+    {
+        //Condicion para jalar el precio de la tabla servicios o precios_inspector
+        if ($externoValue == 0) {
+            $precio = $servicio->precio;
+        } elseif ($externoValue == 1) {
+            $precio = PrecioInspector::where([
+                ['idServicio', $servicio->TipoServicio->id],
+                ['idUsers', $inspector->id]
+            ])->first();
+    
+            if ($precio) {
+                $precio = $precio->precio;
+            } else {
+                $precio = 0;
+            }
+        }
+
+        $cert = Certificacion::create([
+            "idVehiculo" => $vehiculo->id,
+            "idTaller" => $taller->id,
+            "idInspector" => $inspector->id,
+            "idServicio" => $servicio->id,
+            "estado" => 1,
+            "precio" => $precio,
+            "pagado" => 0,
+            "idDuplicado" => $duplicado->id,
+            //"idTallerAuto" => $tallerAuto->id, //Para taller autorizado
+            "externo" => $externoValue, //agregamos el nuevo campo externo
+        ]);
+        if ($cert) {
+            //cambia el estado de la hoja a consumido
+            $hoja->update(["estado" => 4, "ubicacion" => "En poder del cliente"]);
+            //crea y guarda el servicio y material usado en esta certificacion
+            $servM = ServicioMaterial::create([
+                "idMaterial" => $hoja->id,
+                "idCertificacion" => $cert->id
+            ]);
+            //retorna el certificado
+            return $cert;
+        } else {
+            return null;
+        }
+    }
+
     public static function duplicarCertificadoGnv(Duplicado $duplicado, Taller $taller, User $inspector, Servicio $servicio, Material $hoja, $externoValue)
     {
         //Condicion para jalar el precio de la tabla servicios o precios_inspector
@@ -1120,8 +1210,25 @@ class Certificacion extends Model
         }
     }
 
-    public static function duplicarCertificadoGlp(Duplicado $duplicado, Taller $taller, User $inspector, Servicio $servicio, Material $hoja)
+    public static function duplicarCertificadoGlp(Duplicado $duplicado, Taller $taller, User $inspector, Servicio $servicio, Material $hoja, $externoValue)
     {
+
+        //Condicion para jalar el precio de la tabla servicios o precios_inspector
+        if ($externoValue == 0) {
+            $precio = $servicio->precio;
+        } elseif ($externoValue == 1) {
+            $precio = PrecioInspector::where([
+                ['idServicio', $servicio->TipoServicio->id],
+                ['idUsers', $inspector->id]
+            ])->first();
+    
+            if ($precio) {
+                $precio = $precio->precio;
+            } else {
+                $precio = 0;
+            }
+        }
+
         $anterior = Certificacion::find($duplicado->idAnterior);
         $cert = Certificacion::create([
             "idVehiculo" => $anterior->Vehiculo->id,
@@ -1131,7 +1238,9 @@ class Certificacion extends Model
             "estado" => 1,
             "precio" => $servicio->precio,
             "pagado" => 0,
-            "idDuplicado" => $duplicado->id
+            "idDuplicado" => $duplicado->id,
+            "idTallerAuto" => $anterior->idTallerAuto, //Para taller autorizado
+            "externo" => $externoValue, //agregamos el nuevo campo externo
         ]);
 
         if ($cert) {

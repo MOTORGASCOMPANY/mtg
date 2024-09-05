@@ -71,7 +71,7 @@ class VistaSolicitudDevolucion extends Component
     public function actualizar()
     {
         // Actualizar el estado de todos los materiales a 5
-        Material::whereIn('id', $this->material->toArray())->update(['estado' => 5]);
+        Material::whereIn('id', $this->material->toArray())->update(['devuelto' => 1]);
 
         // Opcional: refrescar la lista de materiales
         $this->materialDetails = Material::whereIn('id', $this->material->toArray())->get();

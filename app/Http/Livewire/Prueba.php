@@ -205,7 +205,11 @@ class Prueba extends Component
                 $hoja = Material::where([['numSerie', $serie], ['idTipoMaterial', 1], ['estado', 3], ['idUsuario', Auth::id()]])->first();
                 return $hoja;
                 break;
-
+                //Para duplicado glp
+            case 9:
+                $hoja = Material::where([['numSerie', $serie], ['idTipoMaterial', 3], ['estado', 3], ['idUsuario', Auth::id()]])->first();
+                return $hoja;
+                break;
             case 10:
                 $hoja = Material::where([['numSerie', $serie], ['idTipoMaterial', 1], ['estado', 3], ['idUsuario', Auth::id()]])->first();
                 return $hoja;
@@ -693,6 +697,26 @@ class Prueba extends Component
         }
     }
 
+    // Busca certificacion Glp
+    public function buscarCertificacionGLP()
+    {
+        $this->validate(['placa' => 'required|min:3|max:7']);
+
+        //implementar un switch o if else segun el servicio
+        $certis = Certificacion::PlacaVehiculo($this->placa)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $certs = $certis->whereBetween("tipo_servicio", [3, 4]);
+
+        if ($certs->count() > 0) {
+            $this->busquedaCert = true;
+            $this->certificaciones = $certs;
+        } else {
+            $this->emit("minAlert", ["titulo" => "AVISO DEL SISTEMA", "mensaje" => "No se encontro ningúna certificación con la placa ingresada", "icono" => "warning"]);
+        }
+    }
+
     public function duplicarCertificado()
     {
         $taller = Taller::findOrFail($this->taller);
@@ -766,4 +790,48 @@ class Prueba extends Component
 
         return $dupli;
     }
+
+    //Funciones para duplicado GLP
+    public function duplicarCertificadoGLP()
+    {
+        $taller = Taller::findOrFail($this->taller);
+        //$tallerAuto = Taller::findOrFail($this->tallerAuto);
+        $servicio = Servicio::find($this->servicio);
+        $hoja = $this->procesaFormato($this->numSugerido, $servicio->tipoServicio->id);
+
+
+        if ($hoja != null) {
+            if ($this->externo) {
+                if (isset($this->vehiculo)) {
+                    if ($this->vehiculo->esCertificableGlp) {
+                        $servicio = Servicio::find($this->servicio);
+
+                        $duplicado = $this->creaDuplicadoExterno();
+                        $certi = Certificacion::duplicarCertificadoExternoGlp(Auth::user(), $this->vehiculo, $servicio, $taller, $hoja, $duplicado, $this->serviexterno);
+                        $this->estado = "certificado";
+                        $this->certificacion = $certi;
+                        $this->emit("minAlert", ["titulo" => "¡EXCELENTE TRABAJO!", "mensaje" => "Tu certificado N°: " . $certi->Hoja->numSerie . " esta listo.", "icono" => "success"]);
+                    } else {
+                        $this->emit("minAlert", ["titulo" => "AVISO DEL SISTEMA", "mensaje" => "Debes completar los datos de los equipos para poder certificar", "icono" => "warning"]);
+                    }
+                } else {
+                    $this->emit("minAlert", ["titulo" => "AVISO DEL SISTEMA", "mensaje" => "Debes ingresar un vehículo valido para poder certificar", "icono" => "warning"]);
+                }
+            } else {
+
+                if ($this->certificado && $servicio) {
+                    $dupli = $this->creaDuplicado($this->certificado);
+                    $certi = Certificacion::duplicarCertificadoGlp($dupli, $taller, Auth::user(), $servicio, $hoja, $this->serviexterno);
+                    $this->estado = "certificado";
+                    $this->certificacion = $certi;
+                    $this->emit("minAlert", ["titulo" => "¡EXCELENTE TRABAJO!", "mensaje" => "Tu certificado N°: " . $certi->Hoja->numSerie . " esta listo.", "icono" => "success"]);
+                } else {
+                    $this->emit("minAlert", ["titulo" => "AVISO DEL SISTEMA", "mensaje" => "Debes buscar una certificacion para poder duplicar.", "icono" => "warning"]);
+                }
+            }
+        }
+    }
+
+
+    
 }

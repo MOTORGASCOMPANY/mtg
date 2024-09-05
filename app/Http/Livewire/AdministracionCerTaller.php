@@ -84,6 +84,7 @@ class AdministracionCerTaller extends Component
         } elseif ($this->modelo === 'pendientes') {
             $pendientes = CertificacionPendiente::idInspector($this->ins)
                 ->IdTalleres($this->ta)
+                ->PlacaVehiculo($this->search) // Agregando búsqueda por placa
                 //->idTipoServicios($this->serv)
                 ->RangoFecha($this->fecIni, $this->fecFin)
                 ->orderBy($this->sort, $this->direction)

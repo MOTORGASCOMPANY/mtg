@@ -193,7 +193,7 @@
                                             @case(9)
                                                 <p
                                                     class="text-sm leading-none text-gray-600 ml-2 p-2 bg-orange-200 rounded-full">
-                                                    Duplicado GNV
+                                                    Duplicado GLP
                                                 </p>
                                             @break
 
@@ -326,7 +326,7 @@
                                                     <span>Ver Certificado.</span>
                                                 </a>
 
-                                                @if ($certificacion->Servicio->tipoServicio->id != 8)
+                                                @if ($certificacion->Servicio->tipoServicio->id != 8 && $certificacion->Servicio->tipoServicio->id != 9)
                                                     <a href="{{ $certificacion->rutaDescargaCertificado }}"
                                                         target="__blank" rel="noopener noreferrer"
                                                         class="flex px-4 py-2 text-sm text-indigo-700 hover:bg-slate-600 hover:text-white justify-between items-center hover:cursor-pointer">
@@ -346,7 +346,7 @@
                                                         <span>Ver Preconversion.</span>
                                                     </a>
                                                 @endif
-                                                @if ($certificacion->Servicio->tipoServicio->id != 8)
+                                                @if ($certificacion->Servicio->tipoServicio->id != 8 && $certificacion->Servicio->tipoServicio->id != 9)
                                                     <a href="{{ $certificacion->rutaVistaFt }}" target="__blank"
                                                         rel="noopener noreferrer"
                                                         class="flex px-4 py-2 text-sm text-indigo-700 hover:bg-slate-600 hover:text-white justify-between items-center hover:cursor-pointer">

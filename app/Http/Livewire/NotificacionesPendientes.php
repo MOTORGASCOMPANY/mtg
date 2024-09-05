@@ -64,11 +64,15 @@ class NotificacionesPendientes extends Component
             // Obtener material
             $material = [];
             if (isset($data['materiales'])) {
-                // Aplanar el array de IDs de materiales
                 $mateIds = array_column($data['materiales'], 'id');
                 $materiales = Material::whereIn('id', $mateIds)->get();
                 foreach ($materiales as $mate) {
-                    $material[] = $mate->estado;
+                    // Guardar ID y estado del material
+                    $material[] = [
+                        'id' => $mate->id,
+                        'estado' => $mate->estado,
+                        'devuelto' => $mate->devuelto,
+                    ];
                 }
             }
 

@@ -67,8 +67,7 @@ class SolicitudDevolucion extends Notification
                 return [
                     'id' => $anulacion->id,
                     'tipo_material' => $anulacion->idTipoMaterial,
-                    'num_serie_desde' => $anulacion->numSerieDesde,
-                    'num_serie_hasta' => $anulacion->numSerieHasta,
+                    'anio' => $anulacion->anioActivo,
                     'motivo' => $anulacion->motivo,
                 ];
             }),

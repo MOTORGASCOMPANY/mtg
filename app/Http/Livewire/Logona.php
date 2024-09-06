@@ -51,13 +51,10 @@ class Logona extends Component
         });
         // Agrupamos por taller y sumamos los precios
         $this->aux = $this->tabla2->groupBy('taller')->map(function ($items) {
-            $total = $items->filter(function ($item) {
-                return !($item['tipo_modelo'] === 'App\Models\Certificacion' && $item['estado'] == 2);
-            })->sum('precio');
             return [
                 'taller' => $items->first()['taller'],
                 'encargado' => $items->first()['representante'],
-                'total' => $total, 
+                'total' => $items->sum('precio'), 
             ];
         })->sortBy('taller');
         ($this->aux);
@@ -72,6 +69,7 @@ class Logona extends Component
             ->IdTipoServicio($this->servicio)
             ->rangoFecha($this->fechaInicio, $this->fechaFin)
             ->where('pagado', 0)
+            ->whereIn('estado', [3, 1])
             ->get();
 
         //TODO CER-PENDIENTES:

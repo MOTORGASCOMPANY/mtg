@@ -2,182 +2,220 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Anulacion;
-use Livewire\Component;
-use App\Models\Material;
-use App\Models\TipoMaterial;
-use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Certificacion;
+use App\Models\CertificacionPendiente;
+use App\Models\Desmontes;
+use App\Models\ServiciosImportados;
+use App\Models\Taller;
 use App\Models\User;
-use App\Notifications\SolicitudDevolucion as NotificationsSolicitudDevolucion;
+use Illuminate\Support\Collection;
+use Livewire\Component;
 
 class Logona extends Component
 {
-    public $inspector, $tipoMaterial;
-    public $desde, $hasta, $anioActivo;
-    public $resultado;
-    public $estado = false;
-    public $certificacion;
-    public $carrito = [];
-    public $cart_id;
+    public $fechaInicio, $fechaFin, $talleres, $inspectores, $servicio;
+    public $ins = [], $taller = [];
+    public $tabla, $diferencias, $importados, $aux;
+    public $tabla2;
+
+    protected $rules = [
+        "fechaInicio" => 'required|date',
+        "fechaFin" => 'required|date',
+    ];
 
     public function mount()
     {
-        $this->inspector = Auth::id();
-        $this->cart_id = uniqid();
-    }
-
-    public function updated($property)
-    {
-        if ($this->tipoMaterial && $this->anioActivo) {
-            $this->estado = true;
-        } else {
-            $this->estado = false;
-        }
-    }
-
-
-    public function agregarAlCarrito()
-    {
-        $this->validate([
-            'desde' => 'required',
-            'hasta' => 'required',
-            'tipoMaterial' => 'required',
-            'anioActivo' => 'required',
-        ]);
-
-        $seriesValidas = Material::where('idUsuario', $this->inspector)
-            ->where('idTipoMaterial', $this->tipoMaterial)
-            ->where('estado', 3)
-            ->where('añoActivo', $this->anioActivo)
-            ->whereBetween('numSerie', [$this->desde, $this->hasta])
-            ->get();
-        //dd($seriesValidas);
-        $totalSeriesEsperadas = $this->hasta - $this->desde + 1;
-        //dd($totalSeriesEsperadas, $seriesValidas);
-        if ($seriesValidas->count() !== $totalSeriesEsperadas) { //$seriesValidas !== $totalSeriesEsperadas
-            $this->emit("minAlert", ["titulo" => "ERROR", "mensaje" => "Revisa en tu inventario el estado de formatos a devolver, (Menu-Materiales-Inventario).", "icono" => "warning"]);
-        } else {
-            // Obtener el nombre del tipo de material
-            $nombreTipoMaterial = TipoMaterial::find($this->tipoMaterial)->descripcion;
-            // Agregar al carrito
-            $this->carrito[] = [
-                'idTipoMaterial' => $this->tipoMaterial,
-                'nombreTipo' => $nombreTipoMaterial,
-                'numSerieDesde' => $this->desde,
-                'numSerieHasta' => $this->hasta,
-                'anioActivo' => $this->anioActivo,
-                'motivo' => 'devolucion', // Motivo por defecto
-                'cart_id' => $this->cart_id,
-            ];
-            $this->emit("minAlert", ["titulo" => "¡EXCELENTE!", "mensaje" => "Formatos agregados al carrito.", "icono" => "success"]);
-            $this->reset(['desde', 'hasta']);
-            //$this->reset(['tipoMaterial', 'anioActivo', 'desde', 'hasta']);
-        }
-    }
-
-    public function aceptar()
-    {
-        // Crear registros de anulación
-        foreach ($this->carrito as $item) {
-            //dd($item);
-            Anulacion::create([
-                'idUsuario' => $this->inspector,
-                'idTipoMaterial' => $item['idTipoMaterial'],
-                'numSerieDesde' => $item['numSerieDesde'],
-                'numSerieHasta' => $item['numSerieHasta'],
-                'anioActivo' => $item['anioActivo'],
-                'motivo' => $item['motivo'],
-                'cart_id' => $item['cart_id'],
-            ]);
-        }
-
-        //$this->certificacion = $this->carrito;
-        // Obtener certificaciones basadas en el cart_id
-        $this->certificacion = Anulacion::where('cart_id', $this->cart_id)->get();
-        $this->carrito = []; // Vaciar el carrito después de guardar
-        $this->cart_id = uniqid();
-        $this->emit("minAlert", ["titulo" => "¡EXCELENTE TRABAJO!", "mensaje" => "Los Formatos fueron guardadas correctamente.", "icono" => "success"]);
-
-        // Obtener las anulaciones
-        $anulaciones = Anulacion::where('cart_id', $this->certificacion->first()->cart_id)->get();
-        //dd($anulaciones);
-
-        //Obtener los materiales
-        /*$materiales = Material::where('idUsuario', $this->inspector)
-            ->whereIn('idTipoMaterial', $anulaciones->pluck('idTipoMaterial'))
-            ->where('estado', 3)
-            ->where('añoActivo', $this->anioActivo)
-            ->whereBetween('numSerie', [$anulaciones->min('numSerieDesde'), $anulaciones->max('numSerieHasta')])
-            ->get();*/
-        $materiales = Material:://where('idUsuario', $this->inspector)
-            //->where('estado', 3)
-            //->where('añoActivo', $this->anioActivo)
-            where(function ($query) use ($anulaciones) {
-                foreach ($anulaciones as $anulacion) {
-                    $query->orWhere(function ($q) use ($anulacion) {
-                        $q->where('idTipoMaterial', $anulacion->idTipoMaterial)
-                            ->where('añoActivo', $anulacion->anioActivo)
-                            ->whereBetween('numSerie', [$anulacion->numSerieDesde, $anulacion->numSerieHasta]);
-                    });
-                }
-            })
-            /*->where(function ($query) use ($anulaciones) {
-                foreach ($anulaciones as $anulacion) {
-                    $query->orWhereBetween('numSerie', [$anulacion->numSerieDesde, $anulacion->numSerieHasta])
-                          ->where('idTipoMaterial', $anulacion->idTipoMaterial);
-                }
-            })*/
-            ->get();
-        //dd($materiales);
-        $usuarios = User::role(['administrador'])->get();
-        foreach ($usuarios as $usuario) {
-            Notification::send($usuario, new NotificationsSolicitudDevolucion($anulaciones, $materiales, Auth::user()));
-        }
+        $this->inspectores = User::role(['inspector', 'supervisor'])->orderBy('name')->get();
+        $this->talleres = Taller::orderBy('nombre')->get();
     }
 
     public function render()
     {
-        return view('livewire.logona', [
-            'materiales' => $this->resultado,
-            'certificacion' => $this->certificacion,
-            'carrito' => $this->carrito,
-        ]);
+        return view('livewire.logona');
+    }
+
+    public function procesar()
+    {
+        $this->validate();
+        $this->tabla = $this->generaData();
+        $this->importados = $this->cargaServiciosGasolution();
+        $this->diferencias = $this->encontrarDiferenciaPorPlaca($this->importados, $this->tabla);
+        //Merge para combinar tabla y diferencias -  strtolower para ignorar Mayusculas y Minusculas 
+        $this->tabla2 = $this->tabla->merge($this->diferencias, function ($item1, $item2) {
+            $inspector1 = strtolower($item1['inspector']);
+            $inspector2 = strtolower($item2['inspector']);
+            $taller1 = strtolower($item1['taller']);
+            $taller2 = strtolower($item2['taller']);
+            $comparison = strcasecmp($inspector1 . $taller1, $inspector2 . $taller2);
+            return $comparison;
+        });
+        // Agrupamos por taller y sumamos los precios
+        $this->aux = $this->tabla2->groupBy('taller')->map(function ($items) {
+            $total = $items->filter(function ($item) {
+                return !($item['tipo_modelo'] === 'App\Models\Certificacion' && $item['estado'] == 2);
+            })->sum('precio');
+            return [
+                'taller' => $items->first()['taller'],
+                'encargado' => $items->first()['representante'],
+                'total' => $total, 
+            ];
+        })->sortBy('taller');
+        ($this->aux);
+    }
+
+    public function generaData()
+    {
+        $tabla = new Collection();
+        //TODO CERTIFICACIONES:
+        $certificaciones = Certificacion::idTalleres($this->taller)
+            ->IdInspectores($this->ins)
+            ->IdTipoServicio($this->servicio)
+            ->rangoFecha($this->fechaInicio, $this->fechaFin)
+            ->where('pagado', 0)
+            ->get();
+
+        //TODO CER-PENDIENTES:
+        $cerPendiente = CertificacionPendiente::idTalleres($this->taller)
+            ->IdInspectores($this->ins)
+            ->IdTipoServicios($this->servicio)
+            ->rangoFecha($this->fechaInicio, $this->fechaFin)
+            ->get();
+
+        //TODO DESMONTES:
+        $desmontes = Desmontes::idTalleres($this->taller)
+            ->IdInspectores($this->ins)
+            ->IdTipoServicios($this->servicio)
+            ->rangoFecha($this->fechaInicio, $this->fechaFin)
+            ->get();
+
+        //unificando certificaciones     
+        foreach ($certificaciones as $certi) {
+            $data = [
+                "id" => $certi->id,
+                "placa" => $certi->Vehiculo->placa,
+                "taller" => $certi->Taller->nombre,
+                "representante" => $certi->Taller->representante,
+                "inspector" => $certi->Inspector->name,
+                "servicio" => $certi->Servicio->tipoServicio->descripcion,
+                "num_hoja" => $certi->NumHoja,
+                "ubi_hoja" => $certi->UbicacionHoja,
+                "precio" => $certi->precio,
+                "pagado" => $certi->pagado,
+                "estado" => $certi->estado,
+                "externo" => $certi->externo,
+                "tipo_modelo" => $certi::class,
+                "fecha" => $certi->created_at,
+
+            ];
+            $tabla->push($data);
+        }
+
+        foreach ($cerPendiente as $cert_pend) {
+            //modelo preliminar
+            $data = [
+                "id" => $cert_pend->id,
+                "placa" => $cert_pend->Vehiculo->placa,
+                "taller" => $cert_pend->Taller->nombre,
+                "representante" => $cert_pend->Taller->representante,
+                "inspector" => $cert_pend->Inspector->name,
+                "servicio" => 'Activación de chip (Anual)',
+                "num_hoja" => Null,
+                "ubi_hoja" => Null,
+                "precio" => $cert_pend->precio,
+                "pagado" => $cert_pend->pagado,
+                "estado" => $cert_pend->estado,
+                "externo" => $cert_pend->externo,
+                "tipo_modelo" => $cert_pend::class,
+                "fecha" => $cert_pend->created_at,
+            ];
+            $tabla->push($data);
+        }
+
+        foreach ($desmontes as $des) {
+            $data = [
+                "id" => $des->id,
+                "placa" => $des->placa,
+                "taller" => $des->Taller->nombre,
+                "representante" => $des->Taller->representante,
+                "inspector" => $des->Inspector->name,
+                "servicio" => $des->Servicio->tipoServicio->descripcion,
+                "num_hoja" => Null,
+                "ubi_hoja" => Null,
+                "precio" => $des->precio,
+                "pagado" => $des->pagado,
+                "estado" => $des->estado,
+                "externo" => $des->externo,
+                "tipo_modelo" => $des::class,
+                "fecha" => $des->created_at,
+            ];
+            $tabla->push($data);
+        }
+        return $tabla;
+    }
+
+    public function encontrarDiferenciaPorPlaca($lista1, $lista2)
+    {
+        $diferencias = [];
+
+        foreach ($lista1 as $elemento1) {
+            $placa1 = $elemento1['placa'];
+            $inspector1 = $elemento1['inspector'];
+            $servicio1 = $elemento1['servicio'];
+            $encontrado = false;
+            // Excluir el servicio 'Revisión anual GNV' para que no muestre como discrepancia 'Activación de chip (Anual)'
+            foreach ($lista2 as $elemento2) {
+                $placa2 = $elemento2['placa'];
+                $inspector2 = $elemento2['inspector'];
+                $servicio2 = $elemento2['servicio'];
+                if ($placa1 === $placa2 && $inspector1 === $inspector2) {
+                    if (
+                        ($elemento2['tipo_modelo'] == 'App\Models\CertificacionPendiente' && $servicio1 == 'Revisión anual GNV') ||
+                        ($servicio2 == 'Conversión a GNV + Chip' && $servicio1 == 'Conversión a GNV')
+                    ) {
+                        $encontrado = true;
+                        break;
+                    } else if ($servicio1 === $servicio2) {
+                        $encontrado = true;
+                        break;
+                    }
+                }
+            }
+            if (!$encontrado) {
+                $diferencias[] = $elemento1;
+            }
+        }
+        return $diferencias;
     }
 
 
-    /*public function aceptar()
+    public function cargaServiciosGasolution()
     {
-        $this->validate([
-            'desde' => 'required',
-            'hasta' => 'required',
-            'tipoMaterial' => 'required',
-            'anioActivo' => 'required',
-        ]);
+        $disc = new Collection();
+        $dis = ServiciosImportados::Talleres($this->taller)
+            ->Inspectores($this->ins)
+            ->TipoServicio($this->servicio)
+            ->RangoFecha($this->fechaInicio, $this->fechaFin)
+            ->get();
 
-        $seriesValidas = Material::where('idUsuario', $this->inspector)
-            ->where('idTipoMaterial', $this->tipoMaterial)
-            ->where('estado', 3)
-            ->where('añoActivo', $this->anioActivo)
-            ->whereBetween('numSerie', [$this->desde, $this->hasta])
-            ->count();
-
-        // Verificamos si el número de registros encontrados es igual al rango de números
-        $totalSeriesEsperadas = $this->hasta - $this->desde + 1;
-
-        if ($seriesValidas !== $totalSeriesEsperadas) {
-            $this->emit("minAlert", ["titulo" => "ERROR", "mensaje" => "Algunas de las series no cumplen con el estado requerido.", "icono" => "warning"]);
-        } else {
-            $anulacion = Anulacion::create([
-                'idUsuario' => $this->inspector,
-                'idTipoMaterial' => $this->tipoMaterial,
-                'numSerieDesde' => $this->desde,
-                'numSerieHasta' => $this->hasta,
-                'motivo' => 'devolucion', // devolucion por defecto
-
-            ]);
-            $this->certificacion = $anulacion;
-            $this->emit("minAlert", ["titulo" => "¡EXCELENTE TRABAJO!", "mensaje" => "Las series fueron encontradas correctamente.", "icono" => "success"]);
+        foreach ($dis as $registro) {
+            $data = [
+                "id" => $registro->id,
+                "placa" => $registro->placa,
+                "taller" => $registro->taller,
+                "representante" => $registro->representante,
+                "inspector" => $registro->certificador,
+                "servicio" => $registro->TipoServicio->descripcion,
+                "num_hoja" => Null,
+                "ubi_hoja" => Null,
+                "precio" => $registro->precio,
+                "pagado" => $registro->pagado,
+                "estado" => $registro->estado,
+                "externo" => Null,
+                "tipo_modelo" => $registro::class,
+                "fecha" => $registro->fecha,
+            ];
+            $disc->push($data);
         }
-    }*/
+        return $disc;
+    }
 }

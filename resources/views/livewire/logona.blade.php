@@ -1,172 +1,199 @@
 <div>
-    <div class="container block justify-center m-auto py-12">
-        <div class="flex justify-between items-center">
-            <h1 class="text-2xl text-center font-bold text-indigo-500 uppercase flex-grow">Devolucion Formatos Dañados </h1>
-        </div>
-        <div class="rounded-xl m-4 bg-white p-8 mx-auto max-w-max shadow-lg">
-            <div class="flex flex-row gap-2">
-                <div class="w-full">
-                    <x-jet-label value="Tipo Material:" for="Tipo Material" />
-                    <select wire:model="tipoMaterial"
-                        class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full ">
-                        <option value="">Seleccione</option>
-                        <option value="1">Formato GNV</option>
-                        {{--<option value="2">CHIP</option>--}}
-                        <option value="3">Formato GLP</option>
-                        <option value="4">Modificación</option>
-                    </select>
-                    <x-jet-input-error for="tipoMaterial" />
-                </div>
-                <div class="w-full">
-                    <x-jet-label value="Año Activo:" for="Año Activo" />
-                    <select wire:model="anioActivo"
-                        class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full ">
-                        <option value="">Seleccione</option>
-                        <option value="2023">2023</option>
-                        <option value="2024">2024</option>
-                    </select>
-                    <x-jet-input-error for="anioActivo" />
-                </div>
+    <div class="sm:px-6 w-full pt-12 pb-4">
 
-                <div class="pt-7">
-                    <a wire:click="agregarAlCarrito"
-                        class="ml-6 bg-amber-500 px-6 py-3  mt-4 rounded-md text-white font-semibold tracking-wide hover:cursor-pointer">
-                        <i class="fas fa-plus"></i>
-                    </a>
-                </div>
+        <div class="bg-gray-200 px-8 py-4 rounded-xl w-full">
+            <div class="p-2 w-64 my-4 md:w-full">
+                <h2 class="text-indigo-600 font-bold text-3xl">
+                    <i class="fa-solid fa-square-poll-vertical fa-xl"></i>
+                    &nbsp;REPORTE GENERAL TALLER RESUMEN
+                </h2>
             </div>
-        </div>
-
-
-        @if ($estado)
-            <div class="rounded-xl m-4 bg-white p-8 mx-auto max-w-max shadow-lg">
-                <div class="flex flex-row gap-2">
-                    <div class="w-full">
-                        <!-- Campo Desde -->
-                        <x-jet-label value=" Serie Desde:" />
-                        <input class="bg-gray-50 outline-none block rounded-md border-indigo-500 w-full "
-                            wire:model="desde" placeholder="Desde...">
-                        <x-jet-input-error for="desde" />
-                    </div>
-                    <div class="w-full">
-                        <!-- Campo Hasta -->
-                        <x-jet-label value=" Serie Hasta:" />
-                        <input class="bg-gray-50 outline-none block rounded-md border-indigo-500 w-full "
-                            wire:model="hasta" placeholder="Hasta...">
-                        <x-jet-input-error for="hasta" />
-                    </div>
-                </div>
-
-                @if (count($carrito) > 0)
-                    <div class="flex flex-col justify-center items-center text-center mt-4">
-                        <h2 class="text-lg font-bold mb-2">
-                            <span class="text-indigo-500">Materiales</span>
-                        </h2>
-                        {{-- 
-                         <ul>
-                            @foreach ($carrito as $index => $item)
-                                <li class="mb-2">
-                                    {{ $item['idTipoMaterial'] }} - ({{ $item['numSerieDesde'] }} -
-                                    {{ $item['numSerieHasta'] }})
-                                </li>
-                            @endforeach
-                         </ul>
-                        --}}
-                        <div class="flex flex-col">
-                            <div class="overflow-x-auto sm:mx-0.5">
-                                <div class="py-2 inline-block min-w-full ">
-                                    <div class="overflow-hidden">
-                                        <table class="min-w-full">
-                                            <thead class="bg-indigo-300 border-b">
-                                                <tr>
-                                                    <th scope="col"
-                                                        class="text-sm font-medium font-semibold text-gray-900 px-6 py-4 text-left">
-                                                        #
-                                                    </th>
-                                                    <th scope="col"
-                                                        class="text-sm font-medium font-semibold text-gray-900 px-6 py-4 text-left">
-                                                        Tipo
-                                                        de Material</th>
-                                                    <th scope="col"
-                                                        class="text-sm font-medium font-semibold text-gray-900 px-6 py-4 text-left">
-                                                        Serie Desde</th>
-                                                    <th scope="col"
-                                                        class="text-sm font-medium font-semibold text-gray-900 px-6 py-4 text-left">
-                                                        Serie Hasta</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($carrito as $index => $item)
-                                                    <tr class="bg-gray-100 border-b">
-                                                        <td
-                                                            class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                            {{ $index + 1 }}</td>
-                                                        <td
-                                                            class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                            {{ $item['nombreTipo'] }}
-                                                        </td>
-                                                        <td
-                                                            class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                            {{ $item['numSerieDesde'] }}</td>
-                                                        <td
-                                                            class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                            {{ $item['numSerieHasta'] }}</td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
+            <div class="flex flex-wrap items-center space-x-2">
+                <div x-data="tallerFilter" class="flex bg-white items-center p-2 rounded-md mb-4">
+                    <span class="mr-1">Taller: </span>
+                    <div class="relative">
+                        <div x-on:click="isOpen = !isOpen" class="cursor-pointer">
+                            <input wire:model="taller" type="text" placeholder="Seleccione" readonly
+                                class="bg-gray-50 border-indigo-500 rounded-md outline-none px-4 py-2 w-full md:w-80">
+                        </div>
+                        <div x-show="isOpen" x-on:click.away="isOpen = false"
+                            class="absolute z-10 mt-2 bg-white border rounded-md shadow-md max-h-96 overflow-y-auto w-full md:w-80">
+                            <input x-model="search" type="text" placeholder="Buscar Taller..."
+                                class="w-full px-4 py-2 bg-gray-50 border-indigo-500 rounded-md outline-none">
+                            <template x-for="taller in filteredTalleres" :key="taller.id">
+                                <label :for="'taller_' + taller.id" class="block px-4 py-2 cursor-pointer">
+                                    <input :id="'taller_' + taller.id" type="checkbox" :value="taller.id"
+                                        @change="toggleTaller(taller.id)" class="mr-2">
+                                    <span x-text="taller.nombre"></span>
+                                </label>
+                            </template>
                         </div>
                     </div>
-                    <!-- Botón Aceptar -->
-                    <div class="flex justify-center">
-                        <button wire:click="aceptar" wire:loading.attr="disabled" wire.target="aceptar"
-                            class="hover:cursor-pointer border border-indigo-500 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 inline-flex items-center justify-center px-6 py-3 bg-indigo-400 hover:bg-indigo-500 focus:outline-none rounded">
-                            <p class="text-sm font-medium leading-none text-white">
-                                <span wire:loading wire:target="aceptar">
-                                    <i class="fas fa-spinner animate-spin"></i>
-                                    &nbsp;
-                                </span>
-                                &nbsp;Registrar Devolución
-                            </p>
-                        </button>
+                </div>
+                <div x-data="inspectorFilter" class="flex bg-white items-center p-2 rounded-md mb-4">
+                    <span class="mr-1">Inspector: </span>
+                    <div class="relative">
+                        <div x-on:click="isOpen = !isOpen" class="cursor-pointer">
+                            <input wire:model="ins" type="text" placeholder="Seleccione" readonly
+                                class="bg-gray-50 border-indigo-500 rounded-md outline-none px-4 py-2 w-full md:w-80">
+                        </div>
+                        <div x-show="isOpen" x-on:click.away="isOpen = false"
+                            class="absolute z-10 mt-2 bg-white border rounded-md shadow-md max-h-96 overflow-y-auto w-full md:w-80">
+                            <input x-model="search" type="text" placeholder="Buscar Inspector..."
+                                class="w-full px-4 py-2 bg-gray-50 border-indigo-500 rounded-md outline-none">
+                            <template x-for="inspector in filteredInspectores" :key="inspector.id">
+                                <label :for="'inspector_' + inspector.id" class="block px-4 py-2 cursor-pointer">
+                                    <input :id="'inspector_' + inspector.id" type="checkbox" :value="inspector.id"
+                                        @change="toggleInspector(inspector.id)" class="mr-2">
+                                    <span x-text="inspector.name"></span>
+                                </label>
+                            </template>
+                        </div>
                     </div>
-                @endif
+                </div>
+                <div class="flex bg-white items-center p-2 w-48 rounded-md mb-4 ">
+                    <span>Desde: </span>
+                    <x-date-picker wire:model="fechaInicio" placeholder="Fecha de inicio"
+                        class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full truncate" />
+                </div>
+
+                <div class="flex bg-white items-center p-2 w-48 rounded-md mb-4 ">
+                    <span>Hasta: </span>
+                    <x-date-picker wire:model="fechaFin" placeholder="Fecha de Fin"
+                        class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full truncate" />
+                </div>
+
+                <button wire:click="procesar"
+                    class="bg-green-400 px-6 py-4 w-full md:w-auto rounded-md text-white font-semibold tracking-wide cursor-pointer mb-4">
+                    <p class="truncate"> Generar reporte </p>
+                </button>
+            </div>
+            <div class="w-auto my-4">
+                <x-jet-input-error for="taller" />
+                <x-jet-input-error for="ins" />
+                <x-jet-input-error for="fechaInicio" />
+                <x-jet-input-error for="fechaFin" />
+            </div>
+            <div class="w-full text-center font-semibold text-gray-100 p-4 mb-4 border rounded-md bg-indigo-400 shadow-lg"
+                wire:loading>
+                CARGANDO <i class="fa-solid fa-spinner animate-spin"></i>
+            </div>
+
+        </div>
+
+        {{-- Tabla resumen --}}
+        @if (isset($aux))
+            <div class="bg-gray-200 px-8 py-4 rounded-xl w-full mt-4">
+                <table class="min-w-full border text-center text-sm font-light dark:border-neutral-500">
+                    <thead class="border-b font-medium dark:border-neutral-500">
+                        <tr class="bg-indigo-200">
+                            <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">#</th>
+                            <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">TALLERES</th>
+                            <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">ENCARGADOS</th>
+                            <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500"></th>
+                            <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">FAC O BOLT</th>
+                            <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">OBSERVACIONES</th>
+                            <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">TOTAL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($aux as $data)
+                            <tr class="border-b dark:border-neutral-500 bg-orange-200">
+                                <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
+                                    {{ $loop->iteration }}
+                                </td>
+                                <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
+                                    {{ $data['taller'] }}
+                                </td>
+                                <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
+                                    {{ $data['encargado'] ?? 'NA' }}
+                                </td>
+                                <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
+                                    TALLER
+                                </td>
+                                <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500"></td>
+                                <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500"></td>
+                                <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
+                                    {{ number_format($data['total'], 2) }}
+                                </td>
+                            </tr>
+                        @endforeach
+                        <tr class="border-b dark:border-neutral-500 bg-green-200">
+                            <td colspan="6"
+                                class="border-r px-6 py-3 dark:border-neutral-500 font-bold text-right">
+                                Total:
+                            </td>
+                            <td class="border-r px-6 py-3 dark:border-neutral-500 font-bold">
+                                S/{{ number_format(collect($aux)->sum('total'), 2) }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         @endif
 
-        @if ($certificacion)
-            <div class="max-w-lg m-auto bg-white rounded-lg shadow-md my-4 py-4">
-                <div class="my-2 flex flex-row justify-evenly items-center" x-data="{ menu: false }">
-                    <button type="button" x-on:click="menu = ! menu" id="menu-button" aria-expanded="true"
-                        aria-haspopup="true" data-te-ripple-init data-te-ripple-color="light"
-                        class="hover:cursor-pointer border border-indigo-500 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 sm:mt-0 inline-flex items-center justify-center px-6 py-2 bg-indigo-400 text-white hover:bg-indigo-500 focus:outline-none rounded">
-                        Documentos &nbsp; <i class="fas fa-angle-down"></i>
-                    </button>
-                    <div x-show="menu" x-on:click.away="menu = false"
-                        class="dropdown-menu transition-all duration-300 transform origin-top-right -translate-y-2 scale-95 absolute  dropdown-content bg-white shadow w-56 z-30 mt-6 border border-slate-800 rounded-md"
-                        role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
-                        <div class="" role="none">
-                            @foreach ($certificacion->groupBy('cart_id') as $group)
-                                <a href="{{ $group->first()->RutaVistaCertificado }}" target="__blank"
-                                    rel="noopener noreferrer"
-                                    class="flex px-4 py-2 text-sm text-indigo-700 hover:bg-slate-600 hover:text-white justify-between items-center rounded-t-md hover:cursor-pointer">
-                                    <i class="fas fa-eye"></i>
-                                    <span>Ver Cargo.</span>
-                                </a>
-                            @endforeach
-                        </div>
-                    </div>
-                    <a href="{{ route('Devolucion') }}"
-                        class="hover:cursor-pointer focus:ring-2 focus:ring-offset-2 focus:ring-amber-600 sm:mt-0 inline-flex items-center justify-center px-6 py-3 bg-red-400 hover:bg-red-500 focus:outline-none rounded">
-                        <p class="text-sm font-medium leading-none text-white">
-                            <i class="fas fa-archive"></i>&nbsp;Finalizar
-                        </p>
-                    </a>
-                </div>
-            </div>
-        @endif
+
     </div>
+    @push('js')
+        <script>
+            Livewire.on('exportaData', () => {
+                // Obtener los datos de la tabla
+                data = document.getElementById('data_1').innerHTML;
+                console.log(data);
+                // Emitir el evento exportarExcel con los datos de la tabla
+                Livewire.emit('exportarExcel', data);
+            });
+        </script>
+        <script>
+            document.addEventListener('alpine:init', () => {
+                Alpine.data('inspectorFilter', () => ({
+                    isOpen: false,
+                    search: '',
+                    inspectores: @json($inspectores),
+                    selectedInspectores: @entangle('ins').defer,
+                    get filteredInspectores() {
+                        if (this.search === '') {
+                            return this.inspectores;
+                        }
+                        return this.inspectores.filter(inspector =>
+                            inspector.name.toLowerCase().includes(this.search.toLowerCase())
+                        );
+                    },
+                    toggleInspector(id) {
+                        if (this.selectedInspectores.includes(id)) {
+                            this.selectedInspectores = this.selectedInspectores.filter(inspectorId =>
+                                inspectorId !== id);
+                        } else {
+                            this.selectedInspectores.push(id);
+                        }
+                        this.$wire.set('ins', this.selectedInspectores);
+                    }
+                }));
+
+                Alpine.data('tallerFilter', () => ({
+                    isOpen: false,
+                    search: '',
+                    talleres: @json($talleres),
+                    selectedTalleres: @entangle('taller').defer,
+                    get filteredTalleres() {
+                        if (this.search === '') {
+                            return this.talleres;
+                        }
+                        return this.talleres.filter(taller =>
+                            taller.nombre.toLowerCase().includes(this.search.toLowerCase())
+                        );
+                    },
+                    toggleTaller(id) {
+                        if (this.selectedTalleres.includes(id)) {
+                            this.selectedTalleres = this.selectedTalleres.filter(tallerId =>
+                                tallerId !== id);
+                        } else {
+                            this.selectedTalleres.push(id);
+                        }
+                        this.$wire.set('taller', this.selectedTalleres);
+                    }
+                }));
+            });
+        </script>
+    @endpush
 </div>

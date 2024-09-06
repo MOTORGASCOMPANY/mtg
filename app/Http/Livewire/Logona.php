@@ -65,8 +65,6 @@ class Logona extends Component
         $tabla = new Collection();
         //TODO CERTIFICACIONES:
         $certificaciones = Certificacion::idTalleres($this->taller)
-            ->IdInspectores($this->ins)
-            ->IdTipoServicio($this->servicio)
             ->rangoFecha($this->fechaInicio, $this->fechaFin)
             ->where('pagado', 0)
             ->whereIn('estado', [3, 1])
@@ -74,15 +72,13 @@ class Logona extends Component
 
         //TODO CER-PENDIENTES:
         $cerPendiente = CertificacionPendiente::idTalleres($this->taller)
-            ->IdInspectores($this->ins)
-            ->IdTipoServicios($this->servicio)
             ->rangoFecha($this->fechaInicio, $this->fechaFin)
+            ->where('estado', 1)
+            ->whereNull('idCertificacion')            
             ->get();
 
         //TODO DESMONTES:
         $desmontes = Desmontes::idTalleres($this->taller)
-            ->IdInspectores($this->ins)
-            ->IdTipoServicios($this->servicio)
             ->rangoFecha($this->fechaInicio, $this->fechaFin)
             ->get();
 
@@ -190,8 +186,6 @@ class Logona extends Component
     {
         $disc = new Collection();
         $dis = ServiciosImportados::Talleres($this->taller)
-            ->Inspectores($this->ins)
-            ->TipoServicio($this->servicio)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
             ->get();
 

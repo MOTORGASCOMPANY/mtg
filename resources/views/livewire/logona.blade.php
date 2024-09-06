@@ -30,27 +30,6 @@
                         </div>
                     </div>
                 </div>
-                <div x-data="inspectorFilter" class="flex bg-white items-center p-2 rounded-md mb-4">
-                    <span class="mr-1">Inspector: </span>
-                    <div class="relative">
-                        <div x-on:click="isOpen = !isOpen" class="cursor-pointer">
-                            <input wire:model="ins" type="text" placeholder="Seleccione" readonly
-                                class="bg-gray-50 border-indigo-500 rounded-md outline-none px-4 py-2 w-full md:w-80">
-                        </div>
-                        <div x-show="isOpen" x-on:click.away="isOpen = false"
-                            class="absolute z-10 mt-2 bg-white border rounded-md shadow-md max-h-96 overflow-y-auto w-full md:w-80">
-                            <input x-model="search" type="text" placeholder="Buscar Inspector..."
-                                class="w-full px-4 py-2 bg-gray-50 border-indigo-500 rounded-md outline-none">
-                            <template x-for="inspector in filteredInspectores" :key="inspector.id">
-                                <label :for="'inspector_' + inspector.id" class="block px-4 py-2 cursor-pointer">
-                                    <input :id="'inspector_' + inspector.id" type="checkbox" :value="inspector.id"
-                                        @change="toggleInspector(inspector.id)" class="mr-2">
-                                    <span x-text="inspector.name"></span>
-                                </label>
-                            </template>
-                        </div>
-                    </div>
-                </div>
                 <div class="flex bg-white items-center p-2 w-48 rounded-md mb-4 ">
                     <span>Desde: </span>
                     <x-date-picker wire:model="fechaInicio" placeholder="Fecha de inicio"
@@ -70,7 +49,6 @@
             </div>
             <div class="w-auto my-4">
                 <x-jet-input-error for="taller" />
-                <x-jet-input-error for="ins" />
                 <x-jet-input-error for="fechaInicio" />
                 <x-jet-input-error for="fechaFin" />
             </div>
@@ -136,40 +114,7 @@
     </div>
     @push('js')
         <script>
-            Livewire.on('exportaData', () => {
-                // Obtener los datos de la tabla
-                data = document.getElementById('data_1').innerHTML;
-                console.log(data);
-                // Emitir el evento exportarExcel con los datos de la tabla
-                Livewire.emit('exportarExcel', data);
-            });
-        </script>
-        <script>
             document.addEventListener('alpine:init', () => {
-                Alpine.data('inspectorFilter', () => ({
-                    isOpen: false,
-                    search: '',
-                    inspectores: @json($inspectores),
-                    selectedInspectores: @entangle('ins').defer,
-                    get filteredInspectores() {
-                        if (this.search === '') {
-                            return this.inspectores;
-                        }
-                        return this.inspectores.filter(inspector =>
-                            inspector.name.toLowerCase().includes(this.search.toLowerCase())
-                        );
-                    },
-                    toggleInspector(id) {
-                        if (this.selectedInspectores.includes(id)) {
-                            this.selectedInspectores = this.selectedInspectores.filter(inspectorId =>
-                                inspectorId !== id);
-                        } else {
-                            this.selectedInspectores.push(id);
-                        }
-                        this.$wire.set('ins', this.selectedInspectores);
-                    }
-                }));
-
                 Alpine.data('tallerFilter', () => ({
                     isOpen: false,
                     search: '',

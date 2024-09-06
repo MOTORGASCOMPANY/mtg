@@ -60,7 +60,7 @@
         </div>
 
         {{-- Tabla resumen --}}
-        @if (isset($aux))
+        @if ($tabla)
             <div class="bg-gray-200 px-8 py-4 rounded-xl w-full mt-4">
                 <table class="min-w-full border text-center text-sm font-light dark:border-neutral-500">
                     <thead class="border-b font-medium dark:border-neutral-500">

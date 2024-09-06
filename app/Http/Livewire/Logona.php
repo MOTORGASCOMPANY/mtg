@@ -39,6 +39,18 @@ class Logona extends Component
         $this->validate();
         $this->tabla = $this->generaData();
         $this->importados = $this->cargaServiciosGasolution();
+        $this->tabla = $this->tabla->map(function ($item) {
+            $item['placa'] = trim($item['placa']);
+            $item['inspector'] = trim($item['inspector']);
+            $item['taller'] = trim($item['taller']);
+            return $item;
+        });
+        $this->importados = $this->importados->map(function ($item) {
+            $item['placa'] = trim($item['placa']);
+            $item['inspector'] = trim($item['inspector']);
+            $item['taller'] = trim($item['taller']);
+            return $item;
+        });
         $this->diferencias = $this->encontrarDiferenciaPorPlaca($this->importados, $this->tabla);
         //Merge para combinar tabla y diferencias -  strtolower para ignorar Mayusculas y Minusculas 
         $this->tabla2 = $this->tabla->merge($this->diferencias, function ($item1, $item2) {
@@ -57,7 +69,6 @@ class Logona extends Component
                 'total' => $items->sum('precio'), 
             ];
         })->sortBy('taller');
-        ($this->aux);
     }
 
     public function generaData()

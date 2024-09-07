@@ -51,8 +51,9 @@ class Logona extends Component
             $item['taller'] = trim($item['taller']);
             return $item;
         });
-        $this->diferencias = $this->encontrarDiferenciaPorPlaca($this->importados, $this->tabla);
-        //Merge para combinar tabla y diferencias -  strtolower para ignorar Mayusculas y Minusculas 
+        //$this->diferencias = $this->encontrarDiferenciaPorPlaca($this->importados, $this->tabla);
+        $this->diferencias = collect($this->encontrarDiferenciaPorPlaca($this->importados, $this->tabla));
+        /*Merge para combinar tabla y diferencias -  strtolower para ignorar Mayusculas y Minusculas 
         $this->tabla2 = $this->tabla->merge($this->diferencias, function ($item1, $item2) {
             $inspector1 = strtolower($item1['inspector']);
             $inspector2 = strtolower($item2['inspector']);
@@ -60,13 +61,49 @@ class Logona extends Component
             $taller2 = strtolower($item2['taller']);
             $comparison = strcasecmp($inspector1 . $taller1, $inspector2 . $taller2);
             return $comparison;
+        });*/
+
+        // Fusión manual ignorando mayúsculas y minúsculas
+        $this->tabla2 = $this->tabla->map(function ($item1) {
+            $inspector1 = strtolower($item1['inspector']);
+            $taller1 = strtolower($item1['taller']);
+
+            // Buscar coincidencias en las diferencias
+            $coincidencia = $this->diferencias->first(function ($item2) use ($inspector1, $taller1) {
+                $inspector2 = strtolower($item2['inspector']);
+                $taller2 = strtolower($item2['taller']);
+                return $inspector1 === $inspector2 && $taller1 === $taller2;
+            });
+
+            // Si hay coincidencia, combinamos los datos
+            if ($coincidencia) {
+                $item1 = array_merge($item1, $coincidencia->toArray());
+            }
+
+            return $item1;
         });
+
+        // Agregar las diferencias que no se fusionaron a la tabla2
+        $this->tabla2 = $this->tabla2->concat($this->diferencias->filter(function ($item2) {
+            $inspector2 = strtolower($item2['inspector']);
+            $taller2 = strtolower($item2['taller']);
+
+            // Verificar si ya está en tabla2
+            $encontrado = $this->tabla2->first(function ($item1) use ($inspector2, $taller2) {
+                $inspector1 = strtolower($item1['inspector']);
+                $taller1 = strtolower($item1['taller']);
+                return $inspector1 === $inspector2 && $taller1 === $taller2;
+            });
+
+            return !$encontrado;
+        }));
+
         // Agrupamos por taller y sumamos los precios
         $this->aux = $this->tabla2->groupBy('taller')->map(function ($items) {
             return [
                 'taller' => $items->first()['taller'],
                 'encargado' => $items->first()['representante'],
-                'total' => $items->sum('precio'), 
+                'total' => $items->sum('precio'),
             ];
         })->sortBy('taller');
     }
@@ -78,14 +115,14 @@ class Logona extends Component
         $certificaciones = Certificacion::IdTalleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
             ->where('pagado', 0)
-            ->whereNotIn('estado', [2]) 
+            ->whereNotIn('estado', [2])
             ->get();
 
         //TODO CER-PENDIENTES:
         $cerPendiente = CertificacionPendiente::IdTalleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
             ->where('estado', 1)
-            ->whereNull('idCertificacion')            
+            ->whereNull('idCertificacion')
             ->get();
 
         //TODO DESMONTES:
@@ -191,7 +228,6 @@ class Logona extends Component
         }
         return $diferencias;
     }
-
 
     public function cargaServiciosGasolution()
     {

@@ -75,22 +75,22 @@ class Logona extends Component
     {
         $tabla = new Collection();
         //TODO CERTIFICACIONES:
-        $certificaciones = Certificacion::idTalleres($this->taller)
-            ->rangoFecha($this->fechaInicio, $this->fechaFin)
+        $certificaciones = Certificacion::IdTalleres($this->taller)
+            ->RangoFecha($this->fechaInicio, $this->fechaFin)
             ->where('pagado', 0)
-            ->whereIn('estado', [3, 1])
+            ->whereNotIn('estado', [2]) 
             ->get();
 
         //TODO CER-PENDIENTES:
-        $cerPendiente = CertificacionPendiente::idTalleres($this->taller)
-            ->rangoFecha($this->fechaInicio, $this->fechaFin)
+        $cerPendiente = CertificacionPendiente::IdTalleres($this->taller)
+            ->RangoFecha($this->fechaInicio, $this->fechaFin)
             ->where('estado', 1)
             ->whereNull('idCertificacion')            
             ->get();
 
         //TODO DESMONTES:
-        $desmontes = Desmontes::idTalleres($this->taller)
-            ->rangoFecha($this->fechaInicio, $this->fechaFin)
+        $desmontes = Desmontes::IdTalleres($this->taller)
+            ->RangoFecha($this->fechaInicio, $this->fechaFin)
             ->get();
 
         //unificando certificaciones     

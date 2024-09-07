@@ -87,7 +87,7 @@ class CertificacionPendiente extends Model
     public function scopeRangoFecha(Builder $query, string $desde, string $hasta): void
     {
         if ($desde && $hasta) {
-            $query->whereBetween('created_at', [$desde . ' 00:00', $hasta . ' 23:59']);
+            $query->whereBetween('created_at', [$desde . ' 00:00:00', $hasta . ' 23:59:59']);
         }
     }
 

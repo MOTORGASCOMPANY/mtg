@@ -88,7 +88,7 @@ class Logona extends Component
         //TODO CER-PENDIENTES:
         $cerPendiente = CertificacionPendiente::IdTalleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
-            ->where('estado', 1)
+            //->where('estado', 1)
             //->whereNull('idCertificacion')
             ->get();
 

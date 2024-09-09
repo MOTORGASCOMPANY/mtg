@@ -242,6 +242,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         //RUTAS PARA VER LOS REPORTES DE SERVICIOS  
         Route::get('/ReporteCalcular', ReporteCalcularGasol::class)->middleware('can:reportes.reporteCalcularGasol')->name('reportes.reporteCalcularGasol'); //1 Reporte externo
         Route::get('/ReporteCalcular-taller', ReporteCalcularChip::class)->middleware('can:reportes.reporteCalcularChip')->name('reportes.reporteCalcularChip'); //2 Reporte taller mejorar diseño excell
+        Route::get('/Reporte-taller-resumen', Logona::class)->name('reportes.reporteTallerResumen');
         Route::get('/Reporte-semanal', ReporteCalcular::class)->middleware('can:reportes.reporteCalcular')->name('reportes.reporteCalcular'); //3 Reporte Semanal
         Route::get('/Reporte-MTG', ReportesMtg::class)->middleware('can:reportes.reporteMTG')->name('reportes.reporteMTG'); //4 Reporte detallado MTG mejorar descarga excell
         Route::get('/Reporte-Gasol', ReportesGasolution::class)->middleware('can:reportes.reporteGasol')->name('reportes.reporteGasol'); //5 Reporte detallado Gasol
@@ -277,9 +278,6 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         //Ruta para adminsitracion de tablas
         Route::get('/Tablas/TiposDeServicios', Tiposservicios::class)->name('table.tiposServicio');
         Route::get('/documentosTaller', PruebaDocumentosTaller::class)->name('documentosTaller');
-
-        //Ruta para los logos
-        Route::get('/Resumen', Logona::class)->name('Devolucion');//->middleware('can:Devolucion')
 
         //RUTAS PARA MANUAL DE FUNCIONES SEGUN SU ROL
         Route::get('/ManualFunciones', ManualFunciones::class)->middleware('can:ManualFunciones')->name('ManualFunciones');

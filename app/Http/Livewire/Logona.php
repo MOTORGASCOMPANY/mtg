@@ -63,7 +63,7 @@ class Logona extends Component
             return $comparison;
         });
 
-        dd($this->tabla2);
+        //dd($this->tabla2);
         // Agrupamos por taller y sumamos los precios
         $this->aux = $this->tabla2->groupBy('taller')->map(function ($items) {
             return [
@@ -71,7 +71,12 @@ class Logona extends Component
                 'encargado' => $items->first()['representante'],
                 'total' => $items->sum('precio'),
             ];
-        })->sortBy('taller');
+        })
+        // Filtrar talleres cuyo total sea mayor que 0
+        ->filter(function ($data) {
+            return $data['total'] > 0;
+        })
+        ->sortBy('taller');
         //dd($this->aux);
     }
 

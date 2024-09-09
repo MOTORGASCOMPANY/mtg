@@ -167,18 +167,28 @@
                     <h4></h4>
                     <h4></h4>
                     <h4></h4>
-                    <h4></h4>
                     <h4>_________________________</h4>
                     <h4><strong>{{$inspector}}</strong></ul>
                     <h4 style="text-align: left; margin-left: 50px;">Recibí Conforme</h4>
                     <h4 style="text-align: left; margin-left: 50px;">Dni :</h4>
                 </td>
-                
                 <td style="text-align: center;">
+                    <p style="text-align: center;">
+                        <img src="{{ public_path('/images/firmaAdm.jpg') }}" height="73" />
+                    </p>
+                    <h4>_________________________</h4>
+                    <h4><strong>Gerente General</strong></ul>
+                    <h4></h4>
+                    <h4></h4>
+                    <h4></h4>
+                    <h4></h4>
+                </td>
+                
+                <!--td style="text-align: center;">
                     <p style="text-align: center;">
                         <img src="{{ public_path('/images/firmLesly.jfif') }}" width="250" height="112" />
                     </p>
-                </td>
+                </td-->
                 
             </tr>
         </table>

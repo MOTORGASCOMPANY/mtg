@@ -97,8 +97,7 @@
                             </tr>
                         @endforeach
                         <tr class="border-b dark:border-neutral-500 bg-green-200">
-                            <td colspan="6"
-                                class="border-r px-6 py-3 dark:border-neutral-500 font-bold text-right">
+                            <td colspan="6" class="border-r px-6 py-3 dark:border-neutral-500 font-bold text-right">
                                 Total:
                             </td>
                             <td class="border-r px-6 py-3 dark:border-neutral-500 font-bold">

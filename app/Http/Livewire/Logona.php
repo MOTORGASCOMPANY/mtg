@@ -63,7 +63,7 @@ class Logona extends Component
             return $comparison;
         });
 
-        dd($this->tabla2);
+        //dd($this->tabla2);
         // Agrupamos por taller y sumamos los precios
         $this->aux = $this->tabla2->groupBy('taller')->map(function ($items) {
             return [
@@ -86,6 +86,9 @@ class Logona extends Component
         //TODO CERTIFICACIONES:
         $certificaciones = Certificacion::IdTalleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
+            ->whereHas('Inspector', function ($query) {
+                $query->whereNotIn('id', [37, 117, 201]);
+            })
             ->where('pagado', 0)
             ->whereNotIn('estado', [2])
             ->get();
@@ -93,6 +96,9 @@ class Logona extends Component
         //TODO CER-PENDIENTES:
         $cerPendiente = CertificacionPendiente::IdTalleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
+            ->whereHas('Inspector', function ($query) {
+                $query->whereNotIn('id', [37, 117, 201]);
+            })
             //->where('estado', 1)
             //->whereNull('idCertificacion')
             ->get();
@@ -100,6 +106,9 @@ class Logona extends Component
         //TODO DESMONTES:
         $desmontes = Desmontes::IdTalleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
+            ->whereHas('Inspector', function ($query) {
+                $query->whereNotIn('id', [37, 117, 201]);
+            })
             ->get();
 
         //unificando certificaciones     

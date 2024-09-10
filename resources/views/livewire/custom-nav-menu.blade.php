@@ -685,10 +685,12 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                                 Motorgas Taller
                                             </x-jet-responsive-nav-link>
                                         @endcan
+                                        @can('reportes.reporteTallerResumen')
                                             <x-jet-responsive-nav-link class="text-sm truncate"
                                                 href="{{ route('reportes.reporteTallerResumen') }}" :active="request()->routeIs('reportes.reporteTallerResumen')">
                                                 Motorgas TallerRes.
                                             </x-jet-responsive-nav-link>
+                                        @endcan
                                         @can('reportes.reporteCalcular')
                                             <x-jet-responsive-nav-link class="text-sm truncate"
                                                 href="{{ route('reportes.reporteCalcular') }}" :active="request()->routeIs('reportes.reporteCalcular')">

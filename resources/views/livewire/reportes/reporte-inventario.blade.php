@@ -67,11 +67,11 @@
             <div class="w-auto my-4">
                 <x-jet-input-error for="inspector" />
                 <x-jet-input-error for="tipoMaterial" />
-                <x-jet-input-error for="estado" />                
+                <x-jet-input-error for="estado" />
                 <x-jet-input-error for="fechaInicio" />
                 <x-jet-input-error for="fechaFin" />
             </div>
-            
+
             <div class="w-full text-center font-semibold text-gray-100 p-4 mb-4 border rounded-md bg-indigo-400 shadow-lg"
                 wire:loading>
                 CARGANDO <i class="fa-solid fa-spinner animate-spin"></i>
@@ -88,37 +88,37 @@
                     </button>
                 </div>
                 <div class="bg-gray-200  px-8 py-4 rounded-xl w-full mt-4 text-center">
-                        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-x-6 lg:gap-x-0 items-center">
-                            <div class="mb-12 lg:mb-0 relative">
-                                <i class="fa-solid fa-cubes fa-3x text-amber-600 mx-auto mb-6"></i>
-                                <h5 class="text-lg font-medium text-blue-600 font-bold mb-4">{{ $resultado->count() }}
-                                </h5>
-                                <h6 class="font-medium text-gray-500">Total</h6>
-                                <hr class="absolute right-0 top-0 w-px bg-gray-200 h-full hidden lg:block" />
-                            </div>
+                    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-x-6 lg:gap-x-0 items-center">
+                        <div class="mb-12 lg:mb-0 relative">
+                            <i class="fa-solid fa-cubes fa-3x text-amber-600 mx-auto mb-6"></i>
+                            <h5 class="text-lg font-medium text-blue-600 font-bold mb-4">{{ $resultado->count() }}
+                            </h5>
+                            <h6 class="font-medium text-gray-500">Total</h6>
+                            <hr class="absolute right-0 top-0 w-px bg-gray-200 h-full hidden lg:block" />
+                        </div>
 
 
-                            <div class="mb-12 md:mb-0 relative">
-                                <i class="fa-solid fa-circle-check fa-3x text-green-600 mx-auto mb-6"></i>
-                                <h5 class="text-lg font-medium text-blue-600 font-bold mb-4">
-                                    {{ $resultado->where('estado', 3)->count() }}</h5>
-                                <h6 class="font-medium text-gray-500">Disponibles</h6>
-                                <hr class="absolute right-0 top-0 w-px bg-gray-200 h-full hidden lg:block" />
-                            </div>
+                        <div class="mb-12 md:mb-0 relative">
+                            <i class="fa-solid fa-circle-check fa-3x text-green-600 mx-auto mb-6"></i>
+                            <h5 class="text-lg font-medium text-blue-600 font-bold mb-4">
+                                {{ $resultado->where('estado', 3)->count() }}</h5>
+                            <h6 class="font-medium text-gray-500">Disponibles</h6>
+                            <hr class="absolute right-0 top-0 w-px bg-gray-200 h-full hidden lg:block" />
+                        </div>
 
-                            <div class="relative">
-                                <i class="fa-solid fa-ticket fa-3x text-gray-600 font-bold mb-4"></i>
-                                <h5 class="text-lg font-medium text-blue-600 font-bold mb-4">
-                                    {{ $resultado->where('estado', 4)->count() }}</h5>
-                                <h6 class="font-medium text-gray-500 mb-0">Cosumidos</h6>
-                                <hr class="absolute right-0 top-0 w-px bg-gray-200 h-full hidden lg:block" />
-                            </div>
-                            <div class="mb-12 lg:mb-0 relative">
-                                <i class="fa-solid fa-circle-xmark text-red-600 fa-3x mx-auto mb-6"></i>
-                                <h5 class="text-lg font-medium text-blue-600 font-bold mb-4">
-                                    {{ $resultado->where('estado', 5)->count() }}</h5>
-                                <h6 class="font-medium text-gray-500">Anulados</h6>
-                            </div>
+                        <div class="relative">
+                            <i class="fa-solid fa-ticket fa-3x text-gray-600 font-bold mb-4"></i>
+                            <h5 class="text-lg font-medium text-blue-600 font-bold mb-4">
+                                {{ $resultado->where('estado', 4)->count() }}</h5>
+                            <h6 class="font-medium text-gray-500 mb-0">Cosumidos</h6>
+                            <hr class="absolute right-0 top-0 w-px bg-gray-200 h-full hidden lg:block" />
+                        </div>
+                        <div class="mb-12 lg:mb-0 relative">
+                            <i class="fa-solid fa-circle-xmark text-red-600 fa-3x mx-auto mb-6"></i>
+                            <h5 class="text-lg font-medium text-blue-600 font-bold mb-4">
+                                {{ $resultado->where('estado', 5)->count() }}</h5>
+                            <h6 class="font-medium text-gray-500">Anulados</h6>
+                        </div>
                     </div>
                 </div>
 
@@ -149,6 +149,11 @@
                                                 Fecha
                                             </th>
                                             --}}
+                                            @if ($estado == 5)
+                                                <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
+                                                    Entregado
+                                                </th>
+                                            @endif
                                             <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
                                                 Ultima act.
                                             </th>
@@ -196,6 +201,13 @@
                                                             </span>
                                                         @break
 
+                                                        @case(5)
+                                                            <span
+                                                                class="inline-block whitespace-nowrap rounded-full bg-gray-100 px-[0.65em] pb-[0.25em] pt-[0.35em] text-center align-baseline text-[0.75em] font-bold leading-none text-red-800">
+                                                                Anulado
+                                                            </span>
+                                                        @break
+
                                                         @default
                                                     @endswitch
                                                 </td>
@@ -207,6 +219,12 @@
                                                     {{ $resul->created_at->format('d-m-Y') }}
                                                 </td>
                                                 --}}
+                                                @if ($estado == 5)
+                                                    <td  class="border-r px-6 py-4 dark:border-neutral-500">
+                                                        <x-jet-checkbox class="h-4 w-4 text-indigo-600 rounded-lg"
+                                                            disabled :checked="$resul->devuelto" />
+                                                    </td>
+                                                @endif
                                                 <td class="border-r px-6 py-4 dark:border-neutral-500">
                                                     {{ $resul->updated_at->format('d-m-Y') }}
                                                 </td>
@@ -221,7 +239,7 @@
             </div>
         @else
             <div class="text-center mt-4 text-gray-600">
-                
+
             </div>
         @endif
     </div>

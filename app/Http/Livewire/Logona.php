@@ -87,7 +87,7 @@ class Logona extends Component
         $certificaciones = Certificacion::IdTalleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
             ->whereHas('Inspector', function ($query) {
-                $query->whereNotIn('id', [37, 117, 201]);
+                $query->whereNotIn('id', [37, 117, 201, 59, 55, 261, 61, 78]);
             })
             ->where('pagado', 0)
             ->whereNotIn('estado', [2])
@@ -97,7 +97,7 @@ class Logona extends Component
         $cerPendiente = CertificacionPendiente::IdTalleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
             ->whereHas('Inspector', function ($query) {
-                $query->whereNotIn('id', [37, 117, 201]);
+                $query->whereNotIn('id', [37, 117, 201, 59, 55, 261, 61, 78]);
             })
             //->where('estado', 1)
             //->whereNull('idCertificacion')
@@ -107,7 +107,7 @@ class Logona extends Component
         $desmontes = Desmontes::IdTalleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
             ->whereHas('Inspector', function ($query) {
-                $query->whereNotIn('id', [37, 117, 201]);
+                $query->whereNotIn('id', [37, 117, 201, 59, 55, 261, 61, 78]);
             })
             ->get();
 

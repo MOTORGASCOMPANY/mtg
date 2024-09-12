@@ -132,13 +132,19 @@ class CreateBoletaArchivo extends Component
             foreach ($this->documentos as $index => $documento) {
                 $nombreInput = $this->nombres[$index];
 
-                // Determinar el nombre basado en la lógica proporcionada
+                /* Determinar el nombre basado en la lógica proporcionada
                 if ($boleta->taller == null) {
                     $nombre2 = $boleta->certificador;
                 } elseif ($boleta->certificador == null) {
                     $nombre2 = $boleta->taller;
                 } else {
                     $nombre2 = '';
+                }*/
+
+                if ($boleta->taller == null) {
+                    $nombre2 = $boleta->Certificador->name;
+                } else {
+                    $nombre2 = $boleta->Taller->nombre;
                 }
 
                 // Construir el nombre antes de agregar el nuevo nombre del input

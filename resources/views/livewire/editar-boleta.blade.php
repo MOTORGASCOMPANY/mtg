@@ -2,19 +2,16 @@
     <div class="flex flex-row  justify-between items-center">
         <h2 class="mt-8 font-bold text-lg text-indigo-600"> Comprobantes de
             @if ($boleta->taller == null)
-                {{ $boleta->certificador }}
-            @elseif ($boleta->certificador == null)
-                taller {{ $boleta->taller }}
+                {{ $boleta->Certificador->name }}
             @else
+                taller {{ $boleta->Taller->nombre }}
             @endif
             desde {{ $boleta->fechaInicio }} hasta {{ $boleta->fechaFin }}
-            con el monto  {{ 'S/' . $boleta->monto ?? null}}
-        </h2>        
+            con el monto {{ 'S/' . $boleta->monto ?? null }}
+        </h2>
 
         <div class="flex space-x-2">
-            @hasanyrole('administrador|Administrador del sistema')
-                @livewire('create-boleta-archivo', ['idBoleta' => $boleta->id])
-            @endhasanyrole
+            @livewire('create-boleta-archivo', ['idBoleta' => $boleta->id])
             <a href="{{ route('generaPdfBoleta', ['id' => $boleta->id]) }}" target="_blank"
                 class="group flex py-4 px-4 text-center rounded-md bg-indigo-300 font-bold text-white cursor-pointer hover:bg-indigo-400 hover:animate-pulse">
                 <i class="fa-solid fa-file-pdf"></i>
@@ -33,9 +30,11 @@
                 </span>
              </button>
             --}}
-            <div class="w-full ml-0 md:w-2/6 flex justify-start items-center">                                        
-                <x-jet-label value="¿Completo?" class="py-2 ml-2 mr-2 text-sm font-medium text-gray-900 select-none hover:cursor-pointer" />
-                <x-jet-input type="checkbox" wire:model="auditoria" class="w-6 h-6 text-indigo-600 bg-white border-gray-300 rounded outline-none hover:cursor-pointer focus:ring-indigo-600  focus:ring-1 dark:bg-gray-600 dark:border-gray-500 ml-2" />                    
+            <div class="w-full ml-0 md:w-2/6 flex justify-start items-center">
+                <x-jet-label value="¿Completo?"
+                    class="py-2 ml-2 mr-2 text-sm font-medium text-gray-900 select-none hover:cursor-pointer" />
+                <x-jet-input type="checkbox" wire:model="auditoria"
+                    class="w-6 h-6 text-indigo-600 bg-white border-gray-300 rounded outline-none hover:cursor-pointer focus:ring-indigo-600  focus:ring-1 dark:bg-gray-600 dark:border-gray-500 ml-2" />
                 <x-jet-input-error for="auditoria" />
             </div>
 

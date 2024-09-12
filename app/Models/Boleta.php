@@ -34,6 +34,17 @@ class Boleta extends Model
         return $this->belongsTo(Taller::class, 'idTaller');
     }*/
 
+    public function Taller()
+    {
+        return $this->belongsTo(Taller::class, 'taller');
+    }
+
+    public function Certificador()
+    {
+        return $this->belongsTo(User::class, 'certificador');
+    }
+
+
     public function boletaarchivo()
     {
         return $this->hasMany(BoletaArchivo::class, 'boleta_id', 'id');

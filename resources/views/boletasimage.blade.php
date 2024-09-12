@@ -45,10 +45,11 @@
         <p>
             {{ $documentos->first()->boleta->identificador . ') ' }}
             @if ($documentos->first()->boleta->taller == null)
-                {{ $documentos->first()->boleta->certificador }}
-            @elseif ($documentos->first()->boleta->certificador == null)
-                taller {{ $documentos->first()->boleta->taller }}
+                {{ $documentos->first()->boleta->Certificador->name }}
+            @else
+                taller {{ $documentos->first()->boleta->Taller->nombre }}
             @endif
+
             desde
             {{ $documentos->first()->boleta->fechaInicio ?? '' }}
             hasta
@@ -73,9 +74,9 @@
     <h5>
         {{ $boleta->identificador . ') ' }}
         @if ($boleta->taller == null)
-            {{ 'Inspector ' . $boleta->certificador }}
-        @elseif ($boleta->certificador == null)
-            {{ 'Taller ' . $boleta->taller }}
+            {{ 'Inspector ' . $boleta->Certificador->name }}
+        @else
+            {{ 'Taller ' . $boleta->Taller->nombre }}
         @endif
     </h5>
 </body>

@@ -96,13 +96,11 @@
                             #
                         </th>
                         <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left">
-                            Taller / Inspector
+                            Taller
                         </th>
-                        {{-- 
                         <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left">
                             Inspector
                         </th>
-                        --}}
                         <th scope="col" class="text-sm font-medium font-semibold text-white px-6 py-4 text-left">
                             F. Inicio
                         </th>
@@ -153,19 +151,21 @@
                             <td class="pl-2">
                                 <div class="flex items-center">
                                     <p class="text-sm leading-none text-gray-600 ml-2">
-                                        {{ $bol->identificador ?? null}}
+                                        {{ $bol->identificador ?? null }}
                                     </p>
                                 </div>
                             </td>
                             <td class="pl-2">
                                 <div class="flex items-center">
                                     <p class="text-sm leading-none text-gray-600 ml-2">
-                                        @if ($bol->taller == null)
-                                            {{ $bol->certificador ?? 'NE' }}
-                                        @elseif($bol->certificador == null)
-                                            {{ $bol->taller ?? 'NE' }}
-                                        @else
-                                        @endif
+                                        {{ $bol->Taller->nombre ?? 'NE' }}
+                                    </p>
+                                </div>
+                            </td>
+                            <td class="pl-2">
+                                <div class="flex items-center">
+                                    <p class="text-sm leading-none text-gray-600 ml-2">
+                                        {{ $bol->Certificador->name ?? 'NE' }}
                                     </p>
                                 </div>
                             </td>
@@ -226,9 +226,11 @@
                                         @case(0)
                                             <i class="far fa-times-circle fa-lg" style="color: red;"></i>
                                         @break
+
                                         @case(1)
                                             <i class="far fa-check-circle fa-lg" style="color: forestgreen;"></i>
-                                        @break                                        
+                                        @break
+
                                         @default
                                     @endswitch
                                 </div>
@@ -263,12 +265,12 @@
                                     --}}
                                     <a href="Boletas/{{ $bol->id }}" target="_blank"
                                         class="group flex py-2 px-2 text-center items-center rounded-md bg-indigo-300 font-bold text-white cursor-pointer hover:bg-indigo-400 hover:animate-pulse">
-                                         <i class="fas fa-folder-plus"></i>
-                                         <span
-                                             class="group-hover:opacity-100 transition-opacity bg-gray-800 px-1 text-sm text-gray-100 rounded-md absolute left-1/2-translate-x-1/2 translate-y-full opacity-0 m-4 mx-auto z-100">
-                                             Bol/Vau
-                                         </span>
-                                     </a>                                     
+                                        <i class="fas fa-folder-plus"></i>
+                                        <span
+                                            class="group-hover:opacity-100 transition-opacity bg-gray-800 px-1 text-sm text-gray-100 rounded-md absolute left-1/2-translate-x-1/2 translate-y-full opacity-0 m-4 mx-auto z-100">
+                                            Bol/Vau
+                                        </span>
+                                    </a>
                                     @hasanyrole('administrador|Administrador del sistema')
                                         <button wire:click="abrirModal({{ $bol->id }})"
                                             class="group flex py-2 px-2 text-center items-center rounded-md bg-amber-300 font-bold text-white cursor-pointer hover:bg-amber-400 hover:animate-pulse">
@@ -311,25 +313,44 @@
                 <h1 class="text-xl font-bold">Editando documento</h1>
             </x-slot>
             <x-slot name="content">
-                @if ($boleta->certificador == null)
-                    <div>
-                        <x-jet-label value="Taller:" />
-                        <x-jet-input type="text"
-                            class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full"
-                            wire:model="boleta.taller" />
-                        <x-jet-input-error for="boleta.taller" />
-                    </div>
-                @elseif ($boleta->taller == null)
+                @if ($boleta->taller == null)
                     <div>
                         <x-jet-label value="Certificador:" />
-                        <x-jet-input type="text"
-                            class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full"
-                            wire:model="boleta.certificador" />
+                        <select wire:model="boleta.certificador"
+                            class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full">
+                            <option value="">Seleccione Taller Autorizado</option>
+                            @foreach ($inspectores as $ins)
+                                <option value="{{ $ins->id }}">{{ $ins->name }}</option>
+                            @endforeach
+                        </select>
                         <x-jet-input-error for="boleta.certificador" />
                     </div>
                 @else
+                    <div class="grid grid-cols-2 gap-4 py-2">
+                        <div>
+                            <x-jet-label value="Taller:" />
+                            <select wire:model="boleta.taller"
+                                class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full">
+                                <option value="">Seleccione Taller Autorizado</option>
+                                @foreach ($talleres as $taller2)
+                                    <option value="{{ $taller2->id }}">{{ $taller2->nombre }}</option>
+                                @endforeach
+                            </select>
+                            <x-jet-input-error for="boleta.taller" />
+                        </div>
+                        <div>
+                            <x-jet-label value="Certificador:" />
+                            <select wire:model="boleta.certificador"
+                                class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full">
+                                <option value="">Seleccione Taller Autorizado</option>
+                                @foreach ($inspectores as $ins)
+                                    <option value="{{ $ins->id }}">{{ $ins->name }}</option>
+                                @endforeach
+                            </select>
+                            <x-jet-input-error for="boleta.certificador" />
+                        </div>
+                    </div>
                 @endif
-
 
                 <div class="grid grid-cols-3 gap-4 py-2">
                     <div>

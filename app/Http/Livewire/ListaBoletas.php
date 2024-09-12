@@ -7,6 +7,7 @@ use App\Models\Taller;
 use App\Models\User;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 
 class ListaBoletas extends Component
@@ -18,6 +19,9 @@ class ListaBoletas extends Component
     //para filtros
     public $inspectores, $talleres, $ins, $ta;
     protected $listeners = ['render', 'eliminarBoleta'];
+
+    //para autenticados
+    public $user;
 
     protected $rules = [
         "boleta.taller" => "nullable",
@@ -40,6 +44,9 @@ class ListaBoletas extends Component
         //Para filtros
         $this->inspectores = User::role(['inspector', 'supervisor'])->orderBy('name')->get();
         $this->talleres = Taller::all()->sortBy('nombre');
+
+        //Para autenticados
+        $this->user = Auth::user();
     }
 
     public function order($sort)
@@ -52,7 +59,7 @@ class ListaBoletas extends Component
         }
     }
 
-    public function render()
+    /*public function render()
     {
         $query = Boleta::query();
 
@@ -79,8 +86,52 @@ class ListaBoletas extends Component
         $boletas = $query->orderBy($this->sort, $this->direction)->paginate($this->cant);
 
         return view('livewire.lista-boletas', compact('boletas'));
-    }
+    }*/
 
+    public function render()
+    {
+        // Iniciar la consulta
+        $query = Boleta::query();
+
+        // Si el usuario es inspector, filtrar por su ID
+        if ($this->user->hasRole('inspector')) {
+            $query->where('certificador', $this->user->id);
+        }
+
+        // Si el usuario es administrador de taller, filtrar por el taller asignado al usuario
+        if ($this->user->hasRole('Administrador taller') && $this->user->taller) {
+            $query->where('taller', $this->user->taller); // Filtra las boletas por el taller asignado
+        }
+
+        // Aplicar filtros de taller e inspector si están presentes
+        if (!empty($this->ta)) {
+            $query->Talleres($this->ta);
+        }
+        if (!empty($this->ins)) {
+            $query->Inspectores($this->ins);
+        }
+
+        // Verificar si las fechas no son nulas
+        if ($this->fechaInicio && $this->fechaFin) {
+            $query->RangoFecha($this->fechaInicio, $this->fechaFin);
+        }
+
+        // Buscar por texto en taller o certificador
+        if (!empty($this->search)) {
+            $query->where(function ($q) {
+                $q->whereHas('taller', function ($q2) {
+                    $q2->where('nombre', 'like', '%' . $this->search . '%');
+                })->orWhereHas('certificador', function ($q3) {
+                    $q3->where('name', 'like', '%' . $this->search . '%');
+                });
+            });
+        }
+
+        // Ordenar y paginar los resultados
+        $boletas = $query->orderBy($this->sort, $this->direction)->paginate($this->cant);
+
+        return view('livewire.lista-boletas', compact('boletas'));
+    }
 
     public function abrirModal($id)
     {

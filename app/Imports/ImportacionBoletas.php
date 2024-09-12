@@ -3,6 +3,8 @@
 namespace App\Imports;
 
 use App\Models\Boleta;
+use App\Models\Taller;
+use App\Models\User;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
@@ -14,10 +16,16 @@ class ImportacionBoletas implements ToModel, WithHeadingRow
         $fechaInicio = Date::excelToDateTimeObject($row['fechainicio']);
         $fechaFin = Date::excelToDateTimeObject($row['fechafin']);
 
+         // Buscar el ID del taller ignorando mayúsculas, minúsculas y espacios en blanco
+         $tallerId = Taller::whereRaw('LOWER(REPLACE(nombre, " ", "")) = ?', [strtolower(str_replace(' ', '', $row['taller']))])->value('id');
+
+         // Buscar el ID del certificador ignorando mayúsculas, minúsculas y espacios en blanco
+         $certificadorId = User::whereRaw('LOWER(REPLACE(name, " ", "")) = ?', [strtolower(str_replace(' ', '', $row['certificador']))])->value('id');
+
         // Verificar si la boleta ya existe
         $boleta = Boleta::where([
-            ['taller', $row['taller']],
-            ['certificador', $row['certificador']],
+            ['taller', $tallerId], //$row['taller']]
+            ['certificador', $certificadorId], //$row['certificador']]
             ['fechaInicio', $fechaInicio],
             ['fechaFin', $fechaFin]
         ])->first();
@@ -40,8 +48,8 @@ class ImportacionBoletas implements ToModel, WithHeadingRow
         // Crear un nuevo registro si no existe
         return new Boleta([
             "identificador" => $row['identificador'],
-            "taller" => $row['taller'],
-            "certificador" => $row['certificador'],
+            "taller" => $tallerId, //$row['taller']
+            "certificador" => $certificadorId, //$row['certificador']
             "fechaInicio" => $fechaInicio,
             "fechaFin" => $fechaFin,
             "anual" => $row['anual'],

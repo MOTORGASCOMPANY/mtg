@@ -33,11 +33,11 @@ class ServiciosImportados extends Model
         return $this->belongsTo(TipoServicio::class,'tipoServicio');
     }
 
-    //Para rpta tallere resumen excluya a inspectores servicios importados
+    /*Para rpta tallere resumen excluya a inspectores servicios importados
     public function Inspector()
     {
         return $this->belongsTo(User::class, 'certificador');
-    }
+    }*/
 
     public function Precio(){
         $precio=0;

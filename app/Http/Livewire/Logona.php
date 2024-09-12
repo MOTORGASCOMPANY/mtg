@@ -72,11 +72,11 @@ class Logona extends Component
                 'total' => $items->sum('precio'),
             ];
         })
-        // Filtrar talleres cuyo total sea mayor que 0
-        ->filter(function ($data) {
-            return $data['total'] > 0;
-        })
-        ->sortBy('taller');
+            // Filtrar talleres cuyo total sea mayor que 0
+            ->filter(function ($data) {
+                return $data['total'] > 0;
+            })
+            ->sortBy('taller');
         //dd($this->aux);
     }
 
@@ -213,11 +213,19 @@ class Logona extends Component
     public function cargaServiciosGasolution()
     {
         $disc = new Collection();
+        // Nombres de los certificadores a excluir
+        $certificadoresExcluidos = [
+            'Inspector Prueba 2',
+            'Inspector Prueba',
+            'YERSON JAIRO CAICEDO MORI',
+            'Beaker Javier Yzaguirre Herrera',
+            'Hector Guillermo Burga Cordova',
+            'Elvis Obregon Espinoza',
+            'Noe Fernandez Salazar'
+        ];
         $dis = ServiciosImportados::Talleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
-            ->whereHas('Inspector', function ($query) {
-                $query->whereNotIn('id', [37, 117, 201, 59, 55, 61, 78]);
-            })
+            ->whereNotIn('certificador', $certificadoresExcluidos)
             ->get();
 
         foreach ($dis as $registro) {

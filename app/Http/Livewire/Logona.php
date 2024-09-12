@@ -63,7 +63,7 @@ class Logona extends Component
             return $comparison;
         });
 
-        dd($this->tabla2);
+        //dd($this->tabla2);
         // Agrupamos por taller y sumamos los precios
         $this->aux = $this->tabla2->groupBy('taller')->map(function ($items) {
             return [
@@ -215,6 +215,9 @@ class Logona extends Component
         $disc = new Collection();
         $dis = ServiciosImportados::Talleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
+            ->whereHas('Inspector', function ($query) {
+                $query->whereNotIn('id', [37, 117, 201, 59, 55, 261, 61, 78]);
+            })
             ->get();
 
         foreach ($dis as $registro) {

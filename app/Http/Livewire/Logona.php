@@ -63,7 +63,7 @@ class Logona extends Component
             return $comparison;
         });
 
-        //dd($this->tabla2);
+        dd($this->tabla2);
         // Agrupamos por taller y sumamos los precios
         $this->aux = $this->tabla2->groupBy('taller')->map(function ($items) {
             return [

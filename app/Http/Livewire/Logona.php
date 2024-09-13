@@ -63,7 +63,7 @@ class Logona extends Component
             return $comparison;
         });
 
-        dd($this->tabla2);
+        //dd($this->tabla2);
         // Agrupamos por taller y sumamos los precios
         $this->aux = $this->tabla2->groupBy('taller')->map(function ($items) {
             return [
@@ -88,11 +88,15 @@ class Logona extends Component
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
             //excluir inspectores
             ->whereHas('Inspector', function ($query) {
-                $query->whereNotIn('id', [37, 117, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62, 166, 124]);
+                $query->whereNotIn('id', [117, 37, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62, 166, 124]);
             })
-            //excluir para taller con id = 13 (GASCAR CONVERSIONES S.A.C)
-            ->when($this->taller == 13, function ($query) {                
-                return $query->where('externo', '!=', 1);
+            // Si es el taller de prueba (ID 13 GASCAR), excluye los registros con externo = 1
+            ->whereHas('Taller', function ($query) {
+                // Excluir registros del taller con id = 13 GASCAR donde externo = 1
+                $query->where(function ($query) {
+                    $query->where('id', '!=', 13)
+                          ->orWhere('externo', '!=', 1);
+                });
             })
             ->where('pagado', 0)
             ->whereNotIn('estado', [2])
@@ -102,10 +106,13 @@ class Logona extends Component
         $cerPendiente = CertificacionPendiente::IdTalleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
             ->whereHas('Inspector', function ($query) {
-                $query->whereNotIn('id', [37, 117, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62, 166, 124]);
+                $query->whereNotIn('id', [117, 37, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62, 166, 124]);
             })
-            ->when($this->taller == 13, function ($query) {                
-                return $query->where('externo', '!=', 1);
+            ->whereHas('Taller', function ($query) {
+                $query->where(function ($query) {
+                    $query->where('id', '!=', 13)
+                          ->orWhere('externo', '!=', 1);
+                });
             })
             //->where('estado', 1)
             //->whereNull('idCertificacion')
@@ -115,7 +122,7 @@ class Logona extends Component
         $desmontes = Desmontes::IdTalleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
             ->whereHas('Inspector', function ($query) {
-                $query->whereNotIn('id', [37, 117, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62, 166, 124]);
+                $query->whereNotIn('id', [117, 37, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62, 166, 124]);
             })
             ->get();
 
@@ -198,6 +205,7 @@ class Logona extends Component
                 $placa2 = $elemento2['placa'];
                 $inspector2 = $elemento2['inspector'];
                 $servicio2 = $elemento2['servicio'];
+
                 if ($placa1 === $placa2 && $inspector1 === $inspector2) {
                     if (
                         ($elemento2['tipo_modelo'] == 'App\Models\CertificacionPendiente' && $servicio1 == 'Revisión anual GNV') ||
@@ -211,6 +219,7 @@ class Logona extends Component
                     }
                 }
             }
+
             if (!$encontrado) {
                 $diferencias[] = $elemento1;
             }
@@ -222,7 +231,7 @@ class Logona extends Component
     {
         $disc = new Collection();
         // Nombres de los certificadores a excluir
-        $certificadoresExcluidos = [
+        $certExcluidos = [
             'Inspector Prueba 2',
             'Inspector Prueba',
             'YERSON JAIRO CAICEDO MORI',
@@ -235,15 +244,24 @@ class Logona extends Component
             'Jose Antonio Quispe De la Cruz',
             'Victor Hugo Quispe Zapana',
             'Raul Llata Pacheco',
-            'Elmer Alvarado Ramos',
-            'Elvis Alexander Matto Perez', //pendiente elvis de gascar para externos            
+            'Elmer Alvarado Ramos',      
             'Carlos Rojas Cule',
             'Jhossimar Andrew Apolaya Hong'
-
         ];
+        // Nombres de los certificadores a excluir para tipos de servicio 1 y 2
+        $certTipoServicio = [
+            'Elvis Alexander Matto Perez',
+        ];
+
         $dis = ServiciosImportados::Talleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
-            ->whereNotIn('certificador', $certificadoresExcluidos)
+            ->whereNotIn('certificador', $certExcluidos)
+            ->where(function($query) use ($certTipoServicio) {
+                $query->where(function($subQuery) use ($certTipoServicio) {
+                    $subQuery->whereNotIn('certificador', $certTipoServicio)
+                             ->orWhereNotIn('tipoServicio', [1, 2]);
+                });
+            })
             ->get();
 
         foreach ($dis as $registro) {

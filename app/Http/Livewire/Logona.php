@@ -86,8 +86,13 @@ class Logona extends Component
         //TODO CERTIFICACIONES:
         $certificaciones = Certificacion::IdTalleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
+            //excluir inspectores
             ->whereHas('Inspector', function ($query) {
-                $query->whereNotIn('id', [37, 117, 201, 59, 55, 61, 78]);
+                $query->whereNotIn('id', [37, 117, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62]);
+            })
+            //excluir para taller con id = 13 (GASCAR CONVERSIONES S.A.C)
+            ->when($this->taller == 13, function ($query) {                
+                return $query->where('externo', '!=', 1);
             })
             ->where('pagado', 0)
             ->whereNotIn('estado', [2])
@@ -97,7 +102,10 @@ class Logona extends Component
         $cerPendiente = CertificacionPendiente::IdTalleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
             ->whereHas('Inspector', function ($query) {
-                $query->whereNotIn('id', [37, 117, 201, 59, 55, 61, 78]);
+                $query->whereNotIn('id', [37, 117, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62]);
+            })
+            ->when($this->taller == 13, function ($query) {                
+                return $query->where('externo', '!=', 1);
             })
             //->where('estado', 1)
             //->whereNull('idCertificacion')
@@ -107,7 +115,7 @@ class Logona extends Component
         $desmontes = Desmontes::IdTalleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
             ->whereHas('Inspector', function ($query) {
-                $query->whereNotIn('id', [37, 117, 201, 59, 55, 61, 78]);
+                $query->whereNotIn('id', [37, 117, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62]);
             })
             ->get();
 
@@ -221,7 +229,15 @@ class Logona extends Component
             'Beaker Javier Yzaguirre Herrera',
             'Hector Guillermo Burga Cordova',
             'Elvis Obregon Espinoza',
-            'Noe Fernandez Salazar'
+            'Noe Fernandez Salazar',
+            'Carlos Julca Pusma',
+            'Jose Ricarte Guevara Maluquis',
+            'Jose Antonio Quispe De la Cruz',
+            'Victor Hugo Quispe Zapana',
+            'Raul Llata Pacheco',
+            'Elmer Alvarado Ramos',
+            //pendiente elvis de gascar para externos
+
         ];
         $dis = ServiciosImportados::Talleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)

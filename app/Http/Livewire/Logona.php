@@ -88,7 +88,7 @@ class Logona extends Component
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
             //excluir inspectores
             ->whereHas('Inspector', function ($query) {
-                $query->whereNotIn('id', [37, 117, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62]);
+                $query->whereNotIn('id', [37, 117, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62, 166, 124]);
             })
             //excluir para taller con id = 13 (GASCAR CONVERSIONES S.A.C)
             ->when($this->taller == 13, function ($query) {                
@@ -102,7 +102,7 @@ class Logona extends Component
         $cerPendiente = CertificacionPendiente::IdTalleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
             ->whereHas('Inspector', function ($query) {
-                $query->whereNotIn('id', [37, 117, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62]);
+                $query->whereNotIn('id', [37, 117, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62, 166, 124]);
             })
             ->when($this->taller == 13, function ($query) {                
                 return $query->where('externo', '!=', 1);
@@ -115,7 +115,7 @@ class Logona extends Component
         $desmontes = Desmontes::IdTalleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
             ->whereHas('Inspector', function ($query) {
-                $query->whereNotIn('id', [37, 117, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62]);
+                $query->whereNotIn('id', [37, 117, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62, 166, 124]);
             })
             ->get();
 
@@ -236,7 +236,9 @@ class Logona extends Component
             'Victor Hugo Quispe Zapana',
             'Raul Llata Pacheco',
             'Elmer Alvarado Ramos',
-            //pendiente elvis de gascar para externos
+            'Elvis Alexander Matto Perez', //pendiente elvis de gascar para externos            
+            'Carlos Rojas Cule',
+            'Jhossimar Andrew Apolaya Hong'
 
         ];
         $dis = ServiciosImportados::Talleres($this->taller)

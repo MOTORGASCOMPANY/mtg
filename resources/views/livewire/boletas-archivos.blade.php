@@ -44,25 +44,23 @@
                                     ver
                                 </span>
                             </a>
-                            @hasanyrole('administrador|Administrador del sistema')
-                                <button wire:click="abrirModal({{ $doc->id }})"
-                                    class="group flex py-2 px-2 text-center items-center rounded-md bg-amber-300 font-bold text-white cursor-pointer hover:bg-amber-400 hover:animate-pulse">
-                                    <i class="fas fa-pen"></i>
-                                    <span
-                                        class="group-hover:opacity-100 transition-opacity bg-gray-800 px-1 text-sm text-gray-100 rounded-md absolute left-1/2-translate-x-1/2 translate-y-full opacity-0 m-4 mx-auto z-50">
-                                        Editar
-                                    </span>
-                                </button>
 
-                                <button wire:click="$emit('deleteDocumento',{{ $doc->id }})"
-                                    class="group flex py-2 px-2 text-center items-center rounded-md bg-red-500 font-bold text-white cursor-pointer hover:bg-red-700 hover:animate-pulse">
-                                    <i class="fas fa-times-circle"></i>
-                                    <span
-                                        class="group-hover:opacity-100 transition-opacity bg-gray-800 px-1 text-sm text-gray-100 rounded-md absolute  translate-y-full opacity-0 m-4 mx-auto z-50">
-                                        Eliminar
-                                    </span>
-                                </button>
-                            @endhasanyrole
+                            <button wire:click="abrirModal({{ $doc->id }})"
+                                class="group flex py-2 px-2 text-center items-center rounded-md bg-amber-300 font-bold text-white cursor-pointer hover:bg-amber-400 hover:animate-pulse">
+                                <i class="fas fa-pen"></i>
+                                <span
+                                    class="group-hover:opacity-100 transition-opacity bg-gray-800 px-1 text-sm text-gray-100 rounded-md absolute left-1/2-translate-x-1/2 translate-y-full opacity-0 m-4 mx-auto z-50">
+                                    Editar
+                                </span>
+                            </button>
+                            <button wire:click="$emit('deleteDocumento',{{ $doc->id }})"
+                                class="group flex py-2 px-2 text-center items-center rounded-md bg-red-500 font-bold text-white cursor-pointer hover:bg-red-700 hover:animate-pulse">
+                                <i class="fas fa-times-circle"></i>
+                                <span
+                                    class="group-hover:opacity-100 transition-opacity bg-gray-800 px-1 text-sm text-gray-100 rounded-md absolute  translate-y-full opacity-0 m-4 mx-auto z-50">
+                                    Eliminar
+                                </span>
+                            </button>
 
                         </div>
                     </div>

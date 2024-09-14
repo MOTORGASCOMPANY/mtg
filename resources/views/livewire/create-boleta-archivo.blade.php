@@ -30,16 +30,17 @@
                 <x-jet-input-error for="documento" />
             </div>
             --}}
-
-            <div class="mb-4">
-                <x-jet-label for="idBoletas" value="IDs de Boletas (separados por comas)" />
-                <x-jet-input id="idBoletas" type="text" wire:model="idBoletas" class="mt-1 block w-full" />
-                <x-jet-input-error for="idBoletas" class="mt-2" />
-            </div>
+            @hasanyrole('administrador|Administrador del sistema')
+                <div class="mb-4">
+                    <x-jet-label for="idBoletas" value="IDs de Boletas (separados por comas)" />
+                    <x-jet-input id="idBoletas" type="text" wire:model="idBoletas" class="mt-1 block w-full" />
+                    <x-jet-input-error for="idBoletas" class="mt-2" />
+                </div>
+            @endhasanyrole
 
             <div class="mb-4">
                 <x-jet-label for="documentos" value="Seleccionar Comprobantes:" class="font-bold" />
-                <x-file-pond name="documentos"  id="documentos"  wire:model="documentos"  multiple 
+                <x-file-pond name="documentos" id="documentos" wire:model="documentos" multiple
                     class="mt-1 block w-full" accepted-file-types="['image/*']" allow-multiple="true" />
                 <x-jet-input-error for="documentos.*" />
             </div>
@@ -48,7 +49,8 @@
                 <div class="mb-4">
                     <x-jet-label for="nombres[{{ $index }}]" value="Nombre del Documento {{ $index + 1 }}:"
                         class="font-bold" />
-                    <x-jet-input type="text" class="mt-1 block w-full" wire:model="nombres.{{ $index }}" list="items"/>
+                    <x-jet-input type="text" class="mt-1 block w-full" wire:model="nombres.{{ $index }}"
+                        list="items" />
                     <datalist id="items">
                         <option value="comprobante">comprobante</option>
                         <option value="estado de cuenta">estado de cuenta</option>

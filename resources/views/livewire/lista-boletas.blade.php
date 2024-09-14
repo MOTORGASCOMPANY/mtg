@@ -271,15 +271,16 @@
                                             Bol/Vau
                                         </span>
                                     </a>
+
+                                    <button wire:click="abrirModal({{ $bol->id }})"
+                                        class="group flex py-2 px-2 text-center items-center rounded-md bg-amber-300 font-bold text-white cursor-pointer hover:bg-amber-400 hover:animate-pulse">
+                                        <i class="fas fa-pen"></i>
+                                        <span
+                                            class="group-hover:opacity-100 transition-opacity bg-gray-800 px-1 text-sm text-gray-100 rounded-md absolute left-1/2-translate-x-1/2 translate-y-full opacity-0 m-4 mx-auto z-50">
+                                            Editar
+                                        </span>
+                                    </button>
                                     @hasanyrole('administrador|Administrador del sistema')
-                                        <button wire:click="abrirModal({{ $bol->id }})"
-                                            class="group flex py-2 px-2 text-center items-center rounded-md bg-amber-300 font-bold text-white cursor-pointer hover:bg-amber-400 hover:animate-pulse">
-                                            <i class="fas fa-pen"></i>
-                                            <span
-                                                class="group-hover:opacity-100 transition-opacity bg-gray-800 px-1 text-sm text-gray-100 rounded-md absolute left-1/2-translate-x-1/2 translate-y-full opacity-0 m-4 mx-auto z-50">
-                                                Editar
-                                            </span>
-                                        </button>
                                         <button wire:click="$emit('deleteBoleta',{{ $bol->id }})"
                                             class="group flex py-2 px-2 text-center items-center rounded-md bg-red-500 font-bold text-white cursor-pointer hover:bg-red-700 hover:animate-pulse">
                                             <i class="fas fa-times-circle"></i>
@@ -313,31 +314,8 @@
                 <h1 class="text-xl font-bold">Editando documento</h1>
             </x-slot>
             <x-slot name="content">
-                @if ($boleta->taller == null)
-                    <div>
-                        <x-jet-label value="Certificador:" />
-                        <select wire:model="boleta.certificador"
-                            class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full">
-                            <option value="">Seleccione Taller Autorizado</option>
-                            @foreach ($inspectores as $ins)
-                                <option value="{{ $ins->id }}">{{ $ins->name }}</option>
-                            @endforeach
-                        </select>
-                        <x-jet-input-error for="boleta.certificador" />
-                    </div>
-                @else
-                    <div class="grid grid-cols-2 gap-4 py-2">
-                        <div>
-                            <x-jet-label value="Taller:" />
-                            <select wire:model="boleta.taller"
-                                class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full">
-                                <option value="">Seleccione Taller Autorizado</option>
-                                @foreach ($talleres as $taller2)
-                                    <option value="{{ $taller2->id }}">{{ $taller2->nombre }}</option>
-                                @endforeach
-                            </select>
-                            <x-jet-input-error for="boleta.taller" />
-                        </div>
+                @hasanyrole('administrador|Administrador del sistema')
+                    @if ($boleta->taller == null)
                         <div>
                             <x-jet-label value="Certificador:" />
                             <select wire:model="boleta.certificador"
@@ -349,8 +327,33 @@
                             </select>
                             <x-jet-input-error for="boleta.certificador" />
                         </div>
-                    </div>
-                @endif
+                    @else
+                        <div class="grid grid-cols-2 gap-4 py-2">
+                            <div>
+                                <x-jet-label value="Taller:" />
+                                <select wire:model="boleta.taller"
+                                    class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full">
+                                    <option value="">Seleccione Taller Autorizado</option>
+                                    @foreach ($talleres as $taller2)
+                                        <option value="{{ $taller2->id }}">{{ $taller2->nombre }}</option>
+                                    @endforeach
+                                </select>
+                                <x-jet-input-error for="boleta.taller" />
+                            </div>
+                            <div>
+                                <x-jet-label value="Certificador:" />
+                                <select wire:model="boleta.certificador"
+                                    class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full">
+                                    <option value="">Seleccione Taller Autorizado</option>
+                                    @foreach ($inspectores as $ins)
+                                        <option value="{{ $ins->id }}">{{ $ins->name }}</option>
+                                    @endforeach
+                                </select>
+                                <x-jet-input-error for="boleta.certificador" />
+                            </div>
+                        </div>
+                    @endif
+                @endhasanyrole
 
                 <div class="grid grid-cols-3 gap-4 py-2">
                     <div>

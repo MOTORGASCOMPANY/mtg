@@ -140,7 +140,7 @@ class Logona extends Component
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
             //excluir inspectores
             ->whereHas('Inspector', function ($query) {
-                $query->whereNotIn('id', [117, 37, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62, 166, 124]);
+                $query->whereNotIn('id', [117, 37, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62, 166, 124, 52]);
             })
             /* Si es el taller de prueba (ID 13 GASCAR), excluye los registros con externo = 1
              ->whereHas('Taller', function ($query) {
@@ -158,7 +158,7 @@ class Logona extends Component
         $cerPendiente = CertificacionPendiente::IdTalleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
             ->whereHas('Inspector', function ($query) {
-                $query->whereNotIn('id', [117, 37, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62, 166, 124]);
+                $query->whereNotIn('id', [117, 37, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62, 166, 124, 52]);
             })
             //->where('estado', 1)
             //->whereNull('idCertificacion')
@@ -168,7 +168,7 @@ class Logona extends Component
         $desmontes = Desmontes::IdTalleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
             ->whereHas('Inspector', function ($query) {
-                $query->whereNotIn('id', [117, 37, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62, 166, 124]);
+                $query->whereNotIn('id', [117, 37, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62, 166, 124, 52]);
             })
             ->get();
 
@@ -292,7 +292,8 @@ class Logona extends Component
             'Raul Llata Pacheco',
             'Elmer Alvarado Ramos',
             'Carlos Rojas Cule',
-            'Jhossimar Andrew Apolaya Hong'
+            'Jhossimar Andrew Apolaya Hong',
+            'Jhonatan Isaac Garcia Tavara'
         ];
         /* Nombres de los certificadores a excluir para tipos de servicio 1 y 2
          $certTipoServicio = [

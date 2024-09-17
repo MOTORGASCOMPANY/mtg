@@ -196,7 +196,7 @@
                                 <td></td>
                                 <td></td>
                                 <td class="border-r px-6 py-3 dark:border-neutral-500 font-bold">CIERRE DE TALLERES</td>
-                                <td class="border-r px-6 py-3 dark:border-neutral-500 font-bold">S/{{ number_format(collect($aux)->sum('total'), 2) }}</td>
+                                <td class="border-r px-6 py-3 dark:border-neutral-500 font-bold">S/{{ number_format(collect($semanales)->sum('total') + collect($diarios)->sum('total'), 2) }}</td>
                             </tr>
                         </table>
                     </div>

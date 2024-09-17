@@ -152,7 +152,7 @@
                 <td style="padding: 0 5px 0 5px; text-align:center;">13</td>
                 <td>Largo / Ancho / Alto(m)</td>
                 <td>{{--(isset($carro->largo) ? bcdiv($carro->largo, '1', 2) : 'NE') . ' / ' . (isset($carro->ancho) ? bcdiv($carro->ancho, '1', 2) : 'NE') . ' / ' . (isset($carro->altura) ? bcdiv($carro->altura, '1', 2) : 'NE')--}}
-                    {{ (isset($carro->largo) ? $largo : 'NE') . ' / ' . (isset($carro->ancho) ? $carro->ancho : 'NE') . ' / ' . (isset($carro->altura) ? $carro->altura : 'NE') }}
+                    {{ (isset($carro->largo) ? $carro->largo : 'NE') . ' / ' . (isset($carro->ancho) ? $carro->ancho : 'NE') . ' / ' . (isset($carro->altura) ? $carro->altura : 'NE') }}
                 </td>
             </tr>
             <tr>

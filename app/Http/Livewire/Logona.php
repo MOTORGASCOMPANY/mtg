@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Exports\ReporteTallerRsmnExport;
 use App\Models\Certificacion;
 use App\Models\CertificacionPendiente;
 use App\Models\Desmontes;
@@ -9,6 +10,7 @@ use App\Models\ServiciosImportados;
 use App\Models\Taller;
 use App\Models\User;
 use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Facades\Excel;
 use Livewire\Component;
 
 class Logona extends Component
@@ -37,6 +39,7 @@ class Logona extends Component
     
     public $idsTabla2 = ['CONVERSIONES SERPEGAS S.A.C. - 2',
     'CORPORACIÓN PERÚ GAS FJA E.I.R.L.',
+    'TALLER PRUEBA',
     'IMPORTACIONES STAR GAS S.A.C',
     'MEGA FLASH GNV S.A.C',
     'MEGA FLASH GNV S.A.C. - SANTA ROSA',
@@ -44,6 +47,7 @@ class Logona extends Component
     'PJ CONVERSIONES S.A.C.',
     'WILTON MOTORS E.I.R.L -II']; 
 
+    protected $listeners = ['exportarExcel'];
 
     protected $rules = [
         "fechaInicio" => 'required|date',
@@ -123,6 +127,12 @@ class Logona extends Component
         //dd($this->semanales, $this->diarios);
     }
 
+    public function exportarExcel($data)
+    {
+        //dd($data);
+        return Excel::download(new ReporteTallerRsmnExport($data), 'reporte_TallerResumen.xlsx');
+    }
+
     public function generaData()
     {
         $tabla = new Collection();
@@ -130,9 +140,9 @@ class Logona extends Component
         $certificaciones = Certificacion::IdTalleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
             //excluir inspectores
-            /*->whereHas('Inspector', function ($query) {
+            ->whereHas('Inspector', function ($query) {
                 $query->whereNotIn('id', [117, 37, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62, 166, 124]);
-            })*/
+            })
             /* Si es el taller de prueba (ID 13 GASCAR), excluye los registros con externo = 1
              ->whereHas('Taller', function ($query) {
                 $query->where(function ($query) {
@@ -148,9 +158,9 @@ class Logona extends Component
         //TODO CER-PENDIENTES:
         $cerPendiente = CertificacionPendiente::IdTalleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
-            /*->whereHas('Inspector', function ($query) {
+            ->whereHas('Inspector', function ($query) {
                 $query->whereNotIn('id', [117, 37, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62, 166, 124]);
-            })*/
+            })
             //->where('estado', 1)
             //->whereNull('idCertificacion')
             ->get();
@@ -158,9 +168,9 @@ class Logona extends Component
         //TODO DESMONTES:
         $desmontes = Desmontes::IdTalleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
-            /*->whereHas('Inspector', function ($query) {
+            ->whereHas('Inspector', function ($query) {
                 $query->whereNotIn('id', [117, 37, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62, 166, 124]);
-            })*/
+            })
             ->get();
 
         //unificando certificaciones     
@@ -268,7 +278,7 @@ class Logona extends Component
     {
         $disc = new Collection();
         // Nombres de los certificadores a excluir
-        /*$certExcluidos = [
+        $certExcluidos = [
             'Inspector Prueba 2',
             'Inspector Prueba',
             'YERSON JAIRO CAICEDO MORI',
@@ -284,7 +294,7 @@ class Logona extends Component
             'Elmer Alvarado Ramos',
             'Carlos Rojas Cule',
             'Jhossimar Andrew Apolaya Hong'
-        ];*/
+        ];
         /* Nombres de los certificadores a excluir para tipos de servicio 1 y 2
          $certTipoServicio = [
             'Elvis Alexander Matto Perez',
@@ -293,7 +303,7 @@ class Logona extends Component
 
         $dis = ServiciosImportados::Talleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
-            //->whereNotIn('certificador', $certExcluidos)
+            ->whereNotIn('certificador', $certExcluidos)
             /*->where(function($query) use ($certTipoServicio) {
                 $query->where(function($subQuery) use ($certTipoServicio) {
                     $subQuery->whereNotIn('certificador', $certTipoServicio)

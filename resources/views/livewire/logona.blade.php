@@ -69,6 +69,10 @@
                     </button>
                 </div>
                 <div id='data_1'>
+                    <h4 class="text-center text-indigo-600 text-xl font-bold mb-4 mt-4">
+                        {{ 'Resumen de Talleres ' . $fechaInicio . ' al ' . $fechaFin }} 
+                    </h4>
+                    
                     <div class="bg-gray-200 px-8 py-4 rounded-xl w-full mt-2">
                         <table class="min-w-full border text-center text-sm font-light dark:border-neutral-500">
                             <thead class="border-b font-medium dark:border-neutral-500">
@@ -180,6 +184,20 @@
                                     </td>
                                 </tr>
                             </tbody>
+                        </table>
+                    </div>
+
+                    <div class="bg-gray-200 px-8 py-4 rounded-xl w-full mt-2">
+                        <table class="min-w-full border text-center text-sm font-light dark:border-neutral-500">
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td class="border-r px-6 py-3 dark:border-neutral-500 font-bold">CIERRE DE TALLERES</td>
+                                <td class="border-r px-6 py-3 dark:border-neutral-500 font-bold">S/{{ number_format(collect($aux)->sum('total'), 2) }}</td>
+                            </tr>
                         </table>
                     </div>
                 </div>

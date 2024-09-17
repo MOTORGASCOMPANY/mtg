@@ -94,74 +94,99 @@
 
         {{-- TABLA SEMANAL --}}
         @if (isset($grupoTipo))
-
             <div wire.model="resultados">
-                <div class="bg-gray-200 px-8 py-4 rounded-xl w-full mt-4">
-                    <h2 class="text-indigo-600 text-xl font-bold mb-4">Semanal</h2>
-                    @if (!empty($grupoTipo))
-                        <div class="overflow-x-auto m-auto w-full">
-                            <div class="inline-block min-w-full py-2 sm:px-6">
-                                <div class="overflow-hidden">
-                                    <table
-                                        class="min-w-full border text-center text-sm font-light dark:border-neutral-500">
-                                        <thead class="border-b font-medium dark:border-neutral-500">
-                                            <tr class="bg-indigo-200">
-                                                <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
-                                                    Motorgas
-                                                    Company
-                                                </th>
-                                                @foreach (['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'] as $day)
+                <div class="m-auto flex justify-center items-center bg-gray-300 rounded-md w-full p-4 mt-4">
+                    <button wire:click="$emit('exportaData')"
+                        class="bg-green-400 px-6 py-4 w-1/3 text-sm rounded-md text-sm text-white font-semibold tracking-wide cursor-pointer ">
+                        <p class="truncate"><i class="fa-solid fa-file-excel fa-lg"></i> Desc. Excel </p>
+                    </button>
+                </div>
+                <div id='data_1'>
+                    <div class="bg-gray-200 px-8 py-4 rounded-xl w-full mt-4">
+
+                        @if (!empty($grupoTipo))
+                            <div class="overflow-x-auto m-auto w-full">
+                                <div class="inline-block min-w-full py-2 sm:px-6">
+                                    <div class="overflow-hidden">
+                                        <table class="min-w-full border text-center text-sm font-light dark:border-neutral-500">
+                                            <thead class="border-b font-medium dark:border-neutral-500">
+                                                <tr>
+                                                    <th scope="col" class="text-center text-indigo-600 text-xl font-bold mb-4" colspan="9"> 
+                                                        {{ 'Reporte Semanal ' . $fechaInicio . ' al ' . $fechaFin }} 
+                                                    </th>
+                                                </tr>
+                                                <tr colspan="9"></tr>
+                                                <tr class="bg-indigo-200">
                                                     <th scope="col"
                                                         class="border-r px-6 py-4 dark:border-neutral-500">
-                                                        {{ $day }}
+                                                        Motorgas
+                                                        Company
                                                     </th>
-                                                @endforeach
-                                                <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
-                                                    Total
-                                                </th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-                                            @foreach ($grupoTipo as $servicio => $detalle)
-                                                <tr class="border-b dark:border-neutral-500 bg-orange-200">
-                                                    <td class="border-r px-6 py-4 dark:border-neutral-500">
-                                                        {{ $servicio }}
-                                                    </td>
-                                                    @foreach (['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] as $day)
-                                                        <td class="border-r px-6 py-4 dark:border-neutral-500">
-                                                            @if (isset($detalle[$day]))
-                                                                {{ count($detalle[$day]) }}
-                                                            @else
-                                                                0
-                                                            @endif
-                                                        </td>
+                                                    @foreach (['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo'] as $day)
+                                                        <th scope="col"
+                                                            class="border-r px-6 py-4 dark:border-neutral-500">
+                                                            {{ $day }}
+                                                        </th>
                                                     @endforeach
-                                                    <td class="border-r px-6 py-4 dark:border-neutral-500">
-                                                        {{ $detalle['Total'] }}
+                                                    <th scope="col"
+                                                        class="border-r px-6 py-4 dark:border-neutral-500">
+                                                        Total
+                                                    </th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody>
+                                                @foreach ($grupoTipo as $servicio => $detalle)
+                                                    <tr class="border-b dark:border-neutral-500 bg-orange-200">
+                                                        <td class="border-r px-6 py-4 dark:border-neutral-500">
+                                                            {{ $servicio }}
+                                                        </td>
+                                                        @foreach (['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] as $day)
+                                                            <td class="border-r px-6 py-4 dark:border-neutral-500">
+                                                                @if (isset($detalle[$day]))
+                                                                    {{ count($detalle[$day]) }}
+                                                                @else
+                                                                    0
+                                                                @endif
+                                                            </td>
+                                                        @endforeach
+                                                        <td class="border-r px-6 py-4 dark:border-neutral-500">
+                                                            {{ $detalle['Total'] }}
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                                <tr class="border-b dark:border-neutral-500 bg-green-200">
+                                                    <td colspan="8"
+                                                        class="border-r px-6 py-3 dark:border-neutral-500 font-bold text-right">
+                                                        Total:
+                                                    </td>
+                                                    <td class="border-r px-6 py-3 dark:border-neutral-500 font-bold">
+                                                        {{ collect($grupoTipo)->sum('Total') }}
                                                     </td>
                                                 </tr>
-                                            @endforeach
-                                            <tr class="border-b dark:border-neutral-500 bg-green-200">
-                                                <td colspan="8" 
-                                                    class="border-r px-6 py-3 dark:border-neutral-500 font-bold text-right">
-                                                    Total:
-                                                </td>
-                                                <td class="border-r px-6 py-3 dark:border-neutral-500 font-bold">
-                                                    {{ collect($grupoTipo)->sum('Total')}}
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    @endif
+                        @endif
+                    </div>
                 </div>
             </div>
         @endif
-
     </div>
+
+    @push('js')
+        <script>
+            Livewire.on('exportaData', () => {
+                // Obtener los datos de la tabla
+                data = document.getElementById('data_1').innerHTML;
+                console.log(data);
+                // Emitir el evento exportarExcel con los datos de la tabla
+                Livewire.emit('exportarExcel', data);
+            });
+        </script>
+    @endpush
 
 
 </div>

@@ -17,6 +17,33 @@ class Logona extends Component
     public $ins = [], $taller = [];
     public $tabla, $diferencias, $importados, $aux;
     public $tabla2, $tabla3;
+    public $semanales, $diarios;
+    public $idsTabla1 = ['ARTURO MOTORS S.A.C.',
+    'AUTOMOTRIZ D. SALAZAR',
+    'AUTOTRONICA JOEL CARS',
+    'AUTOTRONICA JOEL CARS E.I.R.L. - II',
+    'CITV UNIGAS S.A.C.',
+    'FACTORÍA ANGIE S.A.C.',
+    'GASCAR CONVERSIONES S.A.C',
+    'GEMOL E.I.R.L',
+    'GREEN ENERGY PERU S.A.C',
+    'INVERSIONES FAGONI S.A.C.',
+    'J.R. AUTOMOTRICES S.A.C.',
+    'LIFE GAS COMPANY S.A.C.',
+    'REYCICAR S.A.C.',
+    'REYGAS S.A.C. II',
+    'SERVICIOS MULTIPLES DR SRL',
+    'UNIGAS CONVERSIONES S.A.C.']; 
+    
+    public $idsTabla2 = ['CONVERSIONES SERPEGAS S.A.C. - 2',
+    'CORPORACIÓN PERÚ GAS FJA E.I.R.L.',
+    'IMPORTACIONES STAR GAS S.A.C',
+    'MEGA FLASH GNV S.A.C',
+    'MEGA FLASH GNV S.A.C. - SANTA ROSA',
+    'MISHAEL PERU S.A.C.',
+    'PJ CONVERSIONES S.A.C.',
+    'WILTON MOTORS E.I.R.L -II']; 
+
 
     protected $rules = [
         "fechaInicio" => 'required|date',
@@ -79,14 +106,21 @@ class Logona extends Component
                 'encargado' => $items->first()['representante'],
                 'total' => $items->sum('precio'),
             ];
-        })
-            // Filtrar talleres cuyo total sea mayor que 0
-            ->filter(function ($data) {
-                return $data['total'] > 0;
-            })
-            ->sortBy('taller');
+        })->filter(function ($data) { // Filtrar talleres cuyo total sea mayor que 0
+            return $data['total'] > 0;
+        })->sortBy('taller');
         //dd($this->aux);
         //dd($this->tabla3);
+
+        $this->semanales = $this->aux->filter(function ($item) {
+            return in_array($item['taller'], $this->idsTabla1);
+        });       
+        
+        $this->diarios = $this->aux->filter(function ($item) {
+            return in_array($item['taller'], $this->idsTabla2);
+        });
+
+        //dd($this->semanales, $this->diarios);
     }
 
     public function generaData()
@@ -96,9 +130,9 @@ class Logona extends Component
         $certificaciones = Certificacion::IdTalleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
             //excluir inspectores
-            ->whereHas('Inspector', function ($query) {
+            /*->whereHas('Inspector', function ($query) {
                 $query->whereNotIn('id', [117, 37, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62, 166, 124]);
-            })
+            })*/
             /* Si es el taller de prueba (ID 13 GASCAR), excluye los registros con externo = 1
              ->whereHas('Taller', function ($query) {
                 $query->where(function ($query) {
@@ -114,9 +148,9 @@ class Logona extends Component
         //TODO CER-PENDIENTES:
         $cerPendiente = CertificacionPendiente::IdTalleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
-            ->whereHas('Inspector', function ($query) {
+            /*->whereHas('Inspector', function ($query) {
                 $query->whereNotIn('id', [117, 37, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62, 166, 124]);
-            })
+            })*/
             //->where('estado', 1)
             //->whereNull('idCertificacion')
             ->get();
@@ -124,9 +158,9 @@ class Logona extends Component
         //TODO DESMONTES:
         $desmontes = Desmontes::IdTalleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
-            ->whereHas('Inspector', function ($query) {
+            /*->whereHas('Inspector', function ($query) {
                 $query->whereNotIn('id', [117, 37, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62, 166, 124]);
-            })
+            })*/
             ->get();
 
         //unificando certificaciones     
@@ -234,7 +268,7 @@ class Logona extends Component
     {
         $disc = new Collection();
         // Nombres de los certificadores a excluir
-        $certExcluidos = [
+        /*$certExcluidos = [
             'Inspector Prueba 2',
             'Inspector Prueba',
             'YERSON JAIRO CAICEDO MORI',
@@ -250,7 +284,7 @@ class Logona extends Component
             'Elmer Alvarado Ramos',
             'Carlos Rojas Cule',
             'Jhossimar Andrew Apolaya Hong'
-        ];
+        ];*/
         /* Nombres de los certificadores a excluir para tipos de servicio 1 y 2
          $certTipoServicio = [
             'Elvis Alexander Matto Perez',
@@ -259,7 +293,7 @@ class Logona extends Component
 
         $dis = ServiciosImportados::Talleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
-            ->whereNotIn('certificador', $certExcluidos)
+            //->whereNotIn('certificador', $certExcluidos)
             /*->where(function($query) use ($certTipoServicio) {
                 $query->where(function($subQuery) use ($certTipoServicio) {
                     $subQuery->whereNotIn('certificador', $certTipoServicio)

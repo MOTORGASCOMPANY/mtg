@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Reportes;
 
+use App\Exports\ReporteSemanalExport;
 use App\Models\Certificacion;
 use App\Models\CertificacionPendiente;
 use App\Models\ServiciosImportados;
@@ -11,6 +12,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
 
 use Livewire\Component;
@@ -27,6 +29,8 @@ class ReporteCalcular extends Component
     public $tabla, $diferencias, $importados;
     public $tabla2;
 
+    protected $listeners = ['exportarExcel'];
+
 
     protected $rules = [
         "fechaInicio" => 'required|date',
@@ -38,11 +42,11 @@ class ReporteCalcular extends Component
         $this->inspectores = User::role(['inspector', 'supervisor'])->orderBy('name')->get();
         $this->talleres = Taller::all()->sortBy('nombre');
     }
+
     public function render()
     {
         return view('livewire.reportes.reporte-calcular');
     }
-
 
     public function procesar()
     {
@@ -73,6 +77,12 @@ class ReporteCalcular extends Component
             });
         });
         $this->grupoTipo = $this->completarEstructuraDatos($this->grupoTipo);
+    }
+
+    public function exportarExcel($data)
+    {
+        //dd($data);
+        return Excel::download(new ReporteSemanalExport($data), 'reporte_semanal.xlsx');
     }
 
     public function completarEstructuraDatos($grupoTipo)

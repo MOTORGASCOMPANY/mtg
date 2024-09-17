@@ -60,9 +60,12 @@
         </div>
 
         {{-- Tabla resumen --}}
-        @if ($tabla)
+        @if ($aux)
             <div class="bg-gray-200 px-8 py-4 rounded-xl w-full mt-4">
-                <table class="min-w-full border text-center text-sm font-light dark:border-neutral-500">
+                <h3 class="text-center text-indigo-600 text-base font-bold">
+                    Pagos Semanales
+                </h3>
+                <table class="min-w-full border text-center text-sm font-light dark:border-neutral-500 mt-4">
                     <thead class="border-b font-medium dark:border-neutral-500">
                         <tr class="bg-indigo-200">
                             <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">#</th>
@@ -75,7 +78,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($aux as $data)
+                        @foreach ($semanales as $data)
                             <tr class="border-b dark:border-neutral-500 bg-orange-200">
                                 <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
                                     {{ $loop->iteration }}
@@ -101,13 +104,66 @@
                                 Total:
                             </td>
                             <td class="border-r px-6 py-3 dark:border-neutral-500 font-bold">
-                                S/{{ number_format(collect($aux)->sum('total'), 2) }}
+                                S/{{ number_format(collect($semanales)->sum('total'), 2) }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="bg-gray-200 px-8 py-4 rounded-xl w-full mt-4">
+                <h3 class="text-center text-indigo-600 text-base font-bold">
+                    Pagos Diarios
+                </h3>
+                <table class="min-w-full border text-center text-sm font-light dark:border-neutral-500 mt-4">
+                    <thead class="border-b font-medium dark:border-neutral-500">
+                        <tr class="bg-indigo-200">
+                            <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">#</th>
+                            <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">TALLERES</th>
+                            <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">ENCARGADOS</th>
+                            <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500"></th>
+                            <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">FAC O BOLT</th>
+                            <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">OBSERVACIONES</th>
+                            <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">TOTAL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($diarios as $data)
+                            <tr class="border-b dark:border-neutral-500 bg-orange-200">
+                                <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
+                                    {{ $loop->iteration }}
+                                </td>
+                                <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
+                                    {{ $data['taller'] }}
+                                </td>
+                                <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
+                                    {{ $data['encargado'] ?? 'NA' }}
+                                </td>
+                                <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
+                                    TALLER
+                                </td>
+                                <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500"></td>
+                                <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500"></td>
+                                <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
+                                    {{ number_format($data['total'], 2) }}
+                                </td>
+                            </tr>
+                        @endforeach
+                        <tr class="border-b dark:border-neutral-500 bg-green-200">
+                            <td colspan="6"
+                                class="border-r px-6 py-3 dark:border-neutral-500 font-bold text-right">
+                                Total:
+                            </td>
+                            <td class="border-r px-6 py-3 dark:border-neutral-500 font-bold">
+                                S/{{ number_format(collect($diarios)->sum('total'), 2) }}
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         @endif
+
+
 
 
     </div>

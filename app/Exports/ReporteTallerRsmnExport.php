@@ -11,7 +11,6 @@ use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
-use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
 class ReporteTallerRsmnExport implements FromView, ShouldAutoSize, WithStyles, WithEvents
 {
@@ -56,10 +55,6 @@ class ReporteTallerRsmnExport implements FromView, ShouldAutoSize, WithStyles, W
 
                 // Fórmula para el total de la segunda tabla en G9 (sumar los valores de la columna G)
                 $sheet->setCellValue('G31', '=SUM(G23)'); // Ajusta G8 al rango de valores en tu tabla
-
-                // Formato de número con 2 decimales en la columna "TOTAL" (columna G de ambas tablas)
-                $sheet->getStyle('G3:G19')->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_00); // Primera tabla
-                $sheet->getStyle('G23:G31')->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_00); // Segunda tabla
             },
         ];
     }

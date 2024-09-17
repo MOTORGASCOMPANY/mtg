@@ -9,10 +9,10 @@ use Illuminate\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithStyles;
-use Maatwebsite\Excel\Concerns\WithEvents;
-use Maatwebsite\Excel\Events\AfterSheet;
+//use Maatwebsite\Excel\Concerns\WithEvents;
+//use Maatwebsite\Excel\Events\AfterSheet;
 
-class ReporteTallerRsmnExport implements FromView, ShouldAutoSize, WithStyles, WithEvents
+class ReporteTallerRsmnExport implements FromView, ShouldAutoSize, WithStyles //, WithEvents
 {
     public $data;
 
@@ -44,7 +44,7 @@ class ReporteTallerRsmnExport implements FromView, ShouldAutoSize, WithStyles, W
         ];
     }
 
-    public function registerEvents(): array
+    /*public function registerEvents(): array
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
@@ -57,6 +57,6 @@ class ReporteTallerRsmnExport implements FromView, ShouldAutoSize, WithStyles, W
                 $sheet->setCellValue('G31', '=SUM(G23)'); // Ajusta G8 al rango de valores en tu tabla
             },
         ];
-    }
+    }*/
 
 }

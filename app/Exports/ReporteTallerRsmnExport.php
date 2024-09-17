@@ -32,13 +32,13 @@ class ReporteTallerRsmnExport implements FromView, ShouldAutoSize, WithStyles, W
         $sheet->getStyle('A2:G19')->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
 
         // Bordes a todas las celdas de la segunda tabla (de A7 a G9)
-        $sheet->getStyle('A21:G30')->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
+        $sheet->getStyle('A22:G31')->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
 
         // Encabezado de la primera tabla (negrita en A2:G2)
         $sheet->getStyle('A1:G1')->getFont()->setBold(true);
 
         // Encabezado de la segunda tabla (negrita en A7:G7)
-        $sheet->getStyle('A20:G20')->getFont()->setBold(true);
+        $sheet->getStyle('A21:G21')->getFont()->setBold(true);
 
         return [
             // Puedes agregar más estilos personalizados aquí
@@ -55,11 +55,11 @@ class ReporteTallerRsmnExport implements FromView, ShouldAutoSize, WithStyles, W
                 $sheet->setCellValue('G19', '=SUM(G3)'); // Ajusta G3 al rango de valores en tu tabla
 
                 // Fórmula para el total de la segunda tabla en G9 (sumar los valores de la columna G)
-                $sheet->setCellValue('G30', '=SUM(G22)'); // Ajusta G8 al rango de valores en tu tabla
+                $sheet->setCellValue('G31', '=SUM(G23)'); // Ajusta G8 al rango de valores en tu tabla
 
                 // Formato de número con 2 decimales en la columna "TOTAL" (columna G de ambas tablas)
                 $sheet->getStyle('G3:G19')->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_00); // Primera tabla
-                $sheet->getStyle('G22:G30')->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_00); // Segunda tabla
+                $sheet->getStyle('G23:G31')->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_00); // Segunda tabla
             },
         ];
     }

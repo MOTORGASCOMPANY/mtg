@@ -35,11 +35,13 @@ class Logona extends Component
     'REYCICAR S.A.C.',
     'REYGAS S.A.C. II',
     'SERVICIOS MULTIPLES DR SRL',
+    'UNIGAS HOME S.A.C.',
     'UNIGAS CONVERSIONES S.A.C.']; 
     
     public $idsTabla2 = ['CONVERSIONES SERPEGAS S.A.C. - 2',
     'CORPORACIÓN PERÚ GAS FJA E.I.R.L.',
     'IMPORTACIONES STAR GAS S.A.C',
+    'TALLER PRUEBA',
     'MEGA FLASH GNV S.A.C',
     'MEGA FLASH GNV S.A.C. - SANTA ROSA',
     'MISHAEL PERU S.A.C.',
@@ -82,7 +84,6 @@ class Logona extends Component
             return $item;
         });
         $this->diferencias = $this->encontrarDiferenciaPorPlaca($this->importados, $this->tabla);
-        //$this->diferencias = collect($this->encontrarDiferenciaPorPlaca($this->importados, $this->tabla));
         //Merge para combinar tabla y diferencias -  strtolower para ignorar Mayusculas y Minusculas 
         $this->tabla2 = $this->tabla->merge($this->diferencias, function ($item1, $item2) {
             $inspector1 = strtolower($item1['inspector']);
@@ -93,7 +94,7 @@ class Logona extends Component
             return $comparison;
         });
 
-        // Filtrar los registros de tabla2 según los criterios establecidos
+        // Filtrar excluir externos a gascar
         $this->tabla3 = $this->tabla2->filter(function ($item) {
             return !(
                 ($item['tipo_modelo'] == 'App\Models\Certificacion' || $item['tipo_modelo'] == 'App\Models\CertificacionPendiente') &&
@@ -102,18 +103,57 @@ class Logona extends Component
             );
         });
 
+        // Definir relacion entre talleres e inspectores
+        $mapaTalleresInspectores = [
+            'ARTURO MOTORS S.A.C.' => ['Miguel Alexis Lacerna Aycachi'],
+            'LIFE GAS COMPANY S.A.C.' => ['Julio Roger Cabanillas Cornejo'],
+            'GREEN ENERGY PERU S.A.C' => ['Gris Yordin Bonifacio Rivera'],
+            'WILTON MOTORS E.I.R.L -II' => ['Ricardo Jesus Meza Espinal'],
+            'UNIGAS HOME S.A.C.' => ['Ronaldo Piero Navarro Endara'],
+            'CITV UNIGAS S.A.C.' => ['Adrian Suarez Perez'],
+            'UNIGAS CONVERSIONES S.A.C.' => ['Jhon Antonio Diaz Lobo', 'Ronaldo Piero Navarro Endara'],
+            'MISHAEL PERU S.A.C.' => ['Jhonatan Michael Basilio Soncco', 'Jhon Antonio Diaz Lobo'],
+            'INVERSIONES FAGONI S.A.C.' => ['Elmer Jesus Canares Minaya'],
+            'CORPORACIÓN PERÚ GAS FJA E.I.R.L.' => ['Jhunior Meza Arroyo', 'Cristhian Smith Huanay Condor'],
+            'IMPORTACIONES STAR GAS S.A.C' => ['Gianella Isabel Sanchez Herrera', 'Cristhian David Saenz Nuñez'],
+            'MEGA FLASH GNV S.A.C' => ['Rolly Garcia Barrozo', 'Oscar Enrique Soto Vega'],
+            'MEGA FLASH GNV S.A.C. - SANTA ROSA' => ['Rolly Garcia Barrozo', 'Oscar Enrique Soto Vega'],
+            'J.R. AUTOMOTRICES S.A.C.' => ['Jaison Aurelio Aquino Antunez', 'Jhon Antonio Diaz Lobo'],
+            'CONVERSIONES SERPEGAS S.A.C. - 2' => ['Emanuel Fernando Salazar Martinez'],
+            'REYCICAR S.A.C.' => ['Cristhian David Saenz Nuñez'],
+            'REYGAS S.A.C. II' => ['Jennifer Alexandra Villarreal Polo']          
+        ];
+
         // Agrupamos por taller y sumamos los precios
-        $this->aux = $this->tabla3->groupBy('taller')->map(function ($items) {
+        /*$this->aux = $this->tabla3->groupBy('taller')->map(function ($items) {
             return [
                 'taller' => $items->first()['taller'],
                 'encargado' => $items->first()['representante'],
                 'total' => $items->sum('precio'),
             ];
+         })->filter(function ($data) { // Filtrar talleres cuyo total sea mayor que 0
+            return $data['total'] > 0;
+         })->sortBy('taller');
+        */
+        $this->aux = $this->tabla3->groupBy('taller')->map(function ($items) use ($mapaTalleresInspectores) {
+            $taller = $items->first()['taller'];
+            $inspectoresDesignados = $mapaTalleresInspectores[$taller] ?? null;
+            $itemsFiltrados = $items;
+        
+            if ($inspectoresDesignados) {
+                $itemsFiltrados = $items->filter(function ($item) use ($inspectoresDesignados) {
+                    return in_array($item['inspector'], $inspectoresDesignados);
+                });
+            }
+    
+            return [
+                'taller' => $taller,
+                'encargado' => $itemsFiltrados->first()['representante'] ?? null,
+                'total' => $itemsFiltrados->sum('precio'),
+            ];
         })->filter(function ($data) { // Filtrar talleres cuyo total sea mayor que 0
             return $data['total'] > 0;
         })->sortBy('taller');
-        //dd($this->aux);
-        //dd($this->tabla3);
 
         $this->semanales = $this->aux->filter(function ($item) {
             return in_array($item['taller'], $this->idsTabla1);
@@ -122,13 +162,10 @@ class Logona extends Component
         $this->diarios = $this->aux->filter(function ($item) {
             return in_array($item['taller'], $this->idsTabla2);
         });
-
-        //dd($this->semanales, $this->diarios);
     }
 
     public function exportarExcel($data)
     {
-        //dd($data);
         return Excel::download(new ReporteTallerRsmnExport($data), 'reporte_TallerResumen.xlsx');
     }
 
@@ -142,14 +179,6 @@ class Logona extends Component
             ->whereHas('Inspector', function ($query) {
                 $query->whereNotIn('id', [117, 37, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62, 166, 124, 52]);
             })
-            /* Si es el taller de prueba (ID 13 GASCAR), excluye los registros con externo = 1
-             ->whereHas('Taller', function ($query) {
-                $query->where(function ($query) {
-                    $query->where('id', '!=', 13)
-                        ->orWhere('externo', '!=', 1);
-                });
-             })
-            */
             ->where('pagado', 0)
             ->whereNotIn('estado', [2])
             ->get();
@@ -160,8 +189,6 @@ class Logona extends Component
             ->whereHas('Inspector', function ($query) {
                 $query->whereNotIn('id', [117, 37, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62, 166, 124, 52]);
             })
-            //->where('estado', 1)
-            //->whereNull('idCertificacion')
             ->get();
 
         //TODO DESMONTES:
@@ -295,22 +322,10 @@ class Logona extends Component
             'Jhossimar Andrew Apolaya Hong',
             'Jhonatan Isaac Garcia Tavara'
         ];
-        /* Nombres de los certificadores a excluir para tipos de servicio 1 y 2
-         $certTipoServicio = [
-            'Elvis Alexander Matto Perez',
-         ];
-        */
 
         $dis = ServiciosImportados::Talleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
             ->whereNotIn('certificador', $certExcluidos)
-            /*->where(function($query) use ($certTipoServicio) {
-                $query->where(function($subQuery) use ($certTipoServicio) {
-                    $subQuery->whereNotIn('certificador', $certTipoServicio)
-                             ->orWhereNotIn('tipoServicio', [1, 2]);
-                });
-             })
-            */
             ->get();
 
         foreach ($dis as $registro) {

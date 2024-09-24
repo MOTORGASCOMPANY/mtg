@@ -1994,7 +1994,8 @@
                     {{ $inspector->name }}
                 </td>
                 <td style="border: 1px solid; border-collapse: collapse;width: 25%;">
-                    <img src="{{ './' . Storage::url($inspector->rutaFirma) }}" width="180" height="90" />
+                    {{--<img src="{{ './' . Storage::url($inspector->rutaFirma) }}" width="180" height="90" />--}}
+                    <img src="{{"./".Storage::url($rutaFirma)}}" width="180" height="90" />
                 </td>
                 <td style="border: 1px solid; border-collapse: collapse;width: 25%;text-align: center;">
                     @if($tallerauto) {{ $tallerauto->representante }} @else {{ $taller->representante }} @endif

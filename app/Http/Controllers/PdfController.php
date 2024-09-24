@@ -226,7 +226,17 @@ class PdfController extends Controller
             $certificacion = Certificacion::find($idCert);
             //$hoja=$certificacion->Materiales->where('idTipoMaterial',1)->first();
             $hoja = $certificacion->Hoja;
-            //dd($certificacion->Chip);
+            //dd($certificacion->Chip)
+
+            $inspector = $certificacion->Inspector;
+            $inspectorAutorizado = $inspector->inspectorAutorizado;            
+            if ($inspectorAutorizado) {
+                $rutaFirma = $inspectorAutorizado->rutaFirma;                
+            } else {
+                $rutaFirma = $certificacion->Inspector->rutaFirma;
+            }
+            //dd($rutaFirma); 
+
             $data = [
                 'hoja' => $hoja,
                 "vehiculo" => $certificacion->Vehiculo,
@@ -238,7 +248,9 @@ class PdfController extends Controller
                 "reductor" => $certificacion->ReductorGlp,
                 "cilindros" => $certificacion->CilindrosGlp,
                 "certificacion" => $certificacion,
+                "rutaFirma" => $rutaFirma, // Aquí pasamos la firma que corresponde
             ];
+            
             $pdf = App::make('dompdf.wrapper');
             $pdf->loadView('checkListCilindroArribaGlp', $data);
             //return $pdf->stream($id.'-'.date('d-m-Y').'-cargo.pdf');
@@ -254,6 +266,16 @@ class PdfController extends Controller
             $certificacion = Certificacion::find($idCert);
             //$hoja=$certificacion->Materiales->where('idTipoMaterial',1)->first();
             $hoja = $certificacion->Hoja;
+            $inspector = $certificacion->Inspector;
+            $inspectorAutorizado = $inspector->inspectorAutorizado;            
+            if ($inspectorAutorizado) {
+                $rutaFirma = $inspectorAutorizado->rutaFirma;                
+            } else {
+                $rutaFirma = $certificacion->Inspector->rutaFirma;
+            }
+            //dd($rutaFirma); 
+            
+
             $data = [
                 'hoja' => $hoja,
                 "vehiculo" => $certificacion->Vehiculo,
@@ -265,6 +287,7 @@ class PdfController extends Controller
                 "reductor" => $certificacion->ReductorGlp,
                 "cilindros" => $certificacion->CilindrosGlp,
                 "certificacion" => $certificacion,
+                "rutaFirma" => $rutaFirma, // Aquí pasamos la firma que corresponde
             ];
             $pdf = App::make('dompdf.wrapper');
             $pdf->loadView('checkListCilindroAbajoGlp', $data);

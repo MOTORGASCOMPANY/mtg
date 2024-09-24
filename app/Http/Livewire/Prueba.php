@@ -401,6 +401,20 @@ class Prueba extends Component
             return;
         }
 
+        // Obtener la fecha de hoy
+        $hoy = Carbon::today();
+        if (empty($this->fechaCertificacion)) {
+            $fechaCertificacion = $hoy;
+        } else {
+            $fechaCertificacion = Carbon::parse($this->fechaCertificacion);
+        }
+
+        // Validar que la fecha de certificación esté dentro de los últimos tres días
+        if ($fechaCertificacion->lt($hoy->subDays(3)) || $fechaCertificacion->gt(Carbon::today())) {
+            $this->emit("minAlert", ["titulo" => "AVISO DEL SISTEMA", "mensaje" => "La fecha de certificación debe estar dentro de los últimos tres días", "icono" => "warning"]);
+            return;
+        }
+
         $certi = Certificacion::certificarGlp($taller, $tallerAuto, $servicio, $hoja, $this->vehiculo, Auth::user(), $this->serviexterno);
 
         if ($certi) {

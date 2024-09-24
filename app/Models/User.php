@@ -37,6 +37,7 @@ class User extends Authenticatable
         'rutaFirma',
         'taller',
         'celular',
+        'autorizadoGlp_id', // Agregar el nuevo campo aquí
     ];
 
     /**
@@ -69,6 +70,12 @@ class User extends Authenticatable
         'profile_photo_url',
         'roles_user',
     ];
+
+    /* Relación con el inspector autorizado para firma checkList.*/
+    public function inspectorAutorizado()
+    {
+        return $this->belongsTo(User::class, 'autorizadoGlp_id');
+    }
 
     public function getRolesUserAttribute(): BelongsToMany
     {

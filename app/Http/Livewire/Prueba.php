@@ -791,6 +791,27 @@ class Prueba extends Component
             return null;
         }
     }
+    public function creaDuplicadoExternoGlp()
+    {
+        $this->validate(
+            [
+                "tallerExterno" => "required",
+                "fechaExterno" => "required|date",
+                "servicioExterno" => "required|min:1",
+            ]
+        );
+        $dupli = Duplicado::create([
+            "servicio" => $this->servicioExterno,
+            "taller" => $this->tallerExterno,
+            "externo" => 1,
+            "fecha" => $this->fechaExterno,
+        ]);
+        if ($dupli) {
+            return $dupli;
+        } else {
+            return null;
+        }
+    }
 
     public function creaDuplicado(Certificacion $anterior)
     {
@@ -820,7 +841,7 @@ class Prueba extends Component
                     if ($this->vehiculo->esCertificableGlp) {
                         $servicio = Servicio::find($this->servicio);
 
-                        $duplicado = $this->creaDuplicadoExterno();
+                        $duplicado = $this->creaDuplicadoExternoGlp();
                         $certi = Certificacion::duplicarCertificadoExternoGlp(Auth::user(), $this->vehiculo, $servicio, $taller, $hoja, $duplicado, $this->serviexterno);
                         $this->estado = "certificado";
                         $this->certificacion = $certi;

@@ -227,7 +227,7 @@ class PdfController extends Controller
             //$hoja=$certificacion->Materiales->where('idTipoMaterial',1)->first();
             $hoja = $certificacion->Hoja;
             //dd($certificacion->Chip)
-
+            //para asignar rutaFirma de solo los inspectores autorizados
             $inspector = $certificacion->Inspector;
             $inspectorAutorizado = $inspector->inspectorAutorizado;            
             if ($inspectorAutorizado) {
@@ -266,10 +266,11 @@ class PdfController extends Controller
             $certificacion = Certificacion::find($idCert);
             //$hoja=$certificacion->Materiales->where('idTipoMaterial',1)->first();
             $hoja = $certificacion->Hoja;
+            //para asignar rutaFirma de solo los inspectores autorizados
             $inspector = $certificacion->Inspector;
             $inspectorAutorizado = $inspector->inspectorAutorizado;            
             if ($inspectorAutorizado) {
-                $rutaFirma = $inspectorAutorizado->rutaFirma;                
+                $rutaFirma = $inspectorAutorizado->rutaFirma;
             } else {
                 $rutaFirma = $certificacion->Inspector->rutaFirma;
             }
@@ -287,7 +288,7 @@ class PdfController extends Controller
                 "reductor" => $certificacion->ReductorGlp,
                 "cilindros" => $certificacion->CilindrosGlp,
                 "certificacion" => $certificacion,
-                "rutaFirma" => $rutaFirma, // Aquí pasamos la firma que corresponde
+                "rutaFirma" => $rutaFirma, // Aquí pasamos la firma que corresponde 
             ];
             $pdf = App::make('dompdf.wrapper');
             $pdf->loadView('checkListCilindroAbajoGlp', $data);
@@ -1859,7 +1860,7 @@ class PdfController extends Controller
                     "cargaUtil" => $cargaUtil,
                     "empresa" => "MOTORGAS COMPANY S.A.",
                     "carro" => $duplicado->Vehiculo,
-                    "taller" => $duplicado->Duplicado->taller,
+                    "taller" => $duplicado->Duplicado,
                     "tallerauto" => $duplicado->TallerAuto,
                     "hoja" => $hoja,
                     "fechaCert" => $fechaCert,
@@ -1902,7 +1903,7 @@ class PdfController extends Controller
                     "cargaUtil" => $cargaUtil,
                     "empresa" => "MOTORGAS COMPANY S.A.",
                     "carro" => $duplicado->Vehiculo,
-                    "taller" => $duplicado->Duplicado->taller,
+                    "taller" => $duplicado->Duplicado,
                     "tallerauto" => $duplicado->TallerAuto,
                     "hoja" => $hoja,
                     "fechaCert" => $fechaCert,

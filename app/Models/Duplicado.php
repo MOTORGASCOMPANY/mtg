@@ -21,7 +21,11 @@ class Duplicado extends Model
     ];
 
 
-    
+    //para euplicados externos glp nombre y direccion
+    public function Taller()
+    {
+        return $this->belongsTo(Taller::class, 'taller');
+    }
 
 
 }

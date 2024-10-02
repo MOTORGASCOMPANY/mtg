@@ -353,6 +353,9 @@
                     indicamos que el resultado de la prueba de emisiones contaminantes del vehiculó es aprobatorio.
                 </strong>
             </li>
+            <li>
+                Este certificado es <strong>DUPLICADO</strong> a pedido del cliente porque se le perdió y es <strong>COPIA FIEL DEL ORIGINAL.</strong>
+            </li>
         </ol>
 
         <p>Se expide el presente en la ciudad de Lima, a los {{ $fecha }}</p>

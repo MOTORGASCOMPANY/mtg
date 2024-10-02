@@ -109,18 +109,11 @@
         <p>
             Haber efectuado la evaluación de las condiciones de seguridad respecto de la conversión del
             sistema de combustión a Gas Licuado de Petróleo - GLP. Efectuada por el
-            Taller de Conversión a GLP Autorizado: @if ($tallerauto)
-                {{ $tallerauto->nombre }}
-            @else
-                {{ $taller->nombre }}
-            @endif
+            Taller de Conversión a GLP Autorizado:
+            {{ $taller->Taller->nombre }}
         </p>
         <P>
-            Ubicado : @if ($tallerauto)
-                {{ $tallerauto->direccion }}
-            @else
-                {{ $taller->direccion }}
-            @endif
+            Ubicado : {{ $taller->Taller->direccion }}
 
         </P>
 
@@ -353,7 +346,10 @@
                 <strong>
                     Cumpliendo con el D.S. 047-2001-MTC,modificatorias 009-2012 MINAM, D.S. Nro. 010-2017 - MINAM,
                     indicamos que el resultado de la prueba de emisiones contaminantes del vehiculó es aprobatorio.
-                </strong>
+                </strong>                
+            </li>
+            <li>
+                Este certificado es <strong>DUPLICADO</strong> a pedido del cliente porque se le perdió y es <strong>COPIA FIEL DEL ORIGINAL.</strong>
             </li>
         </ol>
 

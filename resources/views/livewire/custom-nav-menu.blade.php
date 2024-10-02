@@ -281,18 +281,25 @@ Change class "fixed" to "sticky" in "navbar" (l. 33) so the navbar doesn't hide 
                                         @endcan
                                         @can('ServicioModi')
                                             <li class="transition-colors duration-150">
-
                                                 <x-jet-responsive-nav-link class="text-sm" href="{{ route('ServicioModi') }}"
                                                     :active="request()->routeIs('ServicioModi')">
                                                     Nuevo Modificación
                                                 </x-jet-responsive-nav-link>
                                             </li>
-                                        @endcan
+                                        @endcan                                        
                                         @can('ServicioTaller')
                                             <li class="transition-colors duration-150">
                                                 <x-jet-responsive-nav-link class="text-sm" href="{{ route('ServicioTaller') }}"
                                                     :active="request()->routeIs('ServicioTaller')">
                                                     Nuevo Ins.Taller
+                                                </x-jet-responsive-nav-link>
+                                            </li>
+                                        @endcan
+                                        @can('ServicioCarta')
+                                            <li class="transition-colors duration-150">
+                                                <x-jet-responsive-nav-link class="text-sm" href="{{ route('ServicioCarta') }}"
+                                                    :active="request()->routeIs('ServicioCarta')">
+                                                    Nuevo CartaAclaratoria
                                                 </x-jet-responsive-nav-link>
                                             </li>
                                         @endcan

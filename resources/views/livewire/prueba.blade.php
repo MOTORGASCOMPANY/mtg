@@ -980,6 +980,7 @@
             @break
 
             @case(9)
+            
             <div class="max-w-5xl m-auto bg-indigo-300 rounded-lg shadow-md my-4 py-4 px-8 flex flex-row justify-center items-center">
                 <div class="items-center">
                     <h1 class="font-bold">Este servicio aún no esta disponible pero estamos trabajando en ello. 🤝</h1>
@@ -1024,7 +1025,7 @@
                         <div class="w-full block justify-center items-center space-x-2 md:flex">
 
                             <div class="flex items-center w-full mb-0 sm: mb-2 ">
-                                <x-jet-label value="Servicio:" for="servicioExterno" />
+                                <x-jet-label value="Servicio: " for="servicioExterno" />
                                 <select wire:model="servicioExterno"
                                     class="bg-gray-50 border-indigo-500 rounded-md outline-none block w-full -mr-2">
                                     <option value="0">Seleccione</option>
@@ -1034,12 +1035,19 @@
 
                             </div>
                             <div class="flex items-center w-full mb-0 sm: mb-2 ">
-                                <x-jet-label value="Taller:" for="tallerExterno" />
-                                <x-jet-input type="text" wire:model="tallerExterno" class="w-full" />
-
+                                <x-jet-label value="Taller: " />
+                                <select wire:model="tallerExterno"
+                                    class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full">
+                                    <option value="">Seleccione Taller Autorizado</option>
+                                    @foreach ($talleres as $taller2)
+                                        @if ($taller2->autorizado_glp == 1)
+                                            <option value="{{ $taller2->id }}">{{ $taller2->nombre }}</option>
+                                        @endif
+                                    @endforeach
+                                </select>
                             </div>
-                            <div class="flex items-center w-full mb-0 sm: mb-2">
-                                <x-jet-label value="Fecha:" for="fecha" />
+                            <div class="flex items-center mb-0 sm: mb-2">
+                                <x-jet-label value="Fecha: " for="fecha" />
                                 <x-jet-input type="date" wire:model="fechaExterno" class="w-full" />
 
                             </div>
@@ -1118,20 +1126,6 @@
                         @case('esperando')
                             <div class="max-w-5xl m-auto bg-white rounded-lg shadow-md my-4 py-4">
                                 <div class="my-2 flex flex-col md:flex-row justify-evenly items-center">
-                                    @if ($externo)
-                                        <div>
-                                            <select wire:model="tallerAuto"
-                                                class="bg-gray-50 mx-2 border-indigo-500 rounded-md outline-none ml-1 block w-full">
-                                                <option value="">Seleccione Taller Autorizado</option>
-                                                @foreach ($talleres as $taller2)
-                                                    @if ($taller2->autorizado_glp == 1)
-                                                        <option value="{{ $taller2->id }}">{{ $taller2->nombre }}</option>
-                                                    @endif
-                                                @endforeach
-                                            </select>
-                                            <x-jet-input-error for="tallerAuto" />
-                                        </div>
-                                    @endif
                                     <div class="w-full md:w-2/6 flex justify-center items-center">
                                         <x-jet-input type="checkbox" wire:model="serviexterno"
                                             class="w-4 h-4 text-indigo-600 bg-white border-gray-300 rounded outline-none hover:cursor-pointer focus:ring-indigo-600  focus:ring-1 dark:bg-gray-600 dark:border-gray-500" />

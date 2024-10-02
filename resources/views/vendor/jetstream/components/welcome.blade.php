@@ -44,10 +44,17 @@
                     </div>
                 @else
                 @endif
-            @endhasanyrole
-
+            @endhasanyrole           
         </div>
     </div>
+
+    @hasanyrole('Inhabilitar')
+        <div class="max-w-5xl m-auto bg-indigo-300 rounded-lg shadow-md my-4 py-4 px-8 flex flex-row justify-center items-center">
+            <div class="items-center">
+                <h5 class="font-bold">Tu usuario ha sido dado de baja temporalmente, para mas informacion comunicate con oficina. 🤝</h5>
+            </div>
+        </div>
+    @endhasanyrole
 
     <div class="divide-y-2 divide-indigo-400">
         @hasanyrole('administrador|Administrador del sistema')

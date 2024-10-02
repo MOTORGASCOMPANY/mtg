@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Collection as SupportCollection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class RevisionInventario extends Component
@@ -54,15 +55,29 @@ class RevisionInventario extends Component
     {
         $materiales = Material::resumenInventario()->get()->groupBy('idUsuario');
 
-        $usuarios = User::whereIn('id', $materiales->keys())->orderBy('name')->get()->keyBy('id');
+        $usuarios = User::whereIn('id', $materiales->keys())
+            ->orderBy('name')
+            ->get()
+            ->keyBy('id');
 
-        $resumen = $materiales->map(function ($materiales, $idUsuario) use ($usuarios) {
+        // Obtener el conteo de materiales anulados agrupados por usuario
+        $anulados = Material::where('estado', 5)
+        ->whereNull('devuelto') 
+        ->groupBy('idUsuario')
+        ->select('idUsuario', DB::raw('count(*) as total_anulados'))
+        ->pluck('total_anulados', 'idUsuario');
+
+        //dd($anulados);
+
+        // Combinar los datos de materiales en sctock y anulados
+        $resumen = $materiales->map(function ($materiales, $idUsuario) use ($usuarios, $anulados) {
             return [
                 'usuario' => $usuarios[$idUsuario]->name ?? 'Desconocido',
-                'materiales' => $materiales
+                'materiales' => $materiales,
+                'anulados' => $anulados[$idUsuario] ?? 0,
             ];
         });
-    
+
         $this->resumen = $resumen->sortBy('usuario')->values();
     }
 }

@@ -2,7 +2,7 @@
     <div class="container block justify-center m-auto py-12">
         <div class="flex justify-between items-center">
             <h1 class="text-2xl text-center font-bold text-indigo-500 uppercase flex-grow">Consulta de inventario</h1>
-            @hasanyrole('Administrador del sistema')
+            @hasanyrole('Administrador del sistema|administrador')
                 <button class="p-3 bg-indigo-500 rounded-xl text-white text-sm hover:font-bold hover:bg-indigo-700 ml-4"
                     wire:click="resumen">
                     <i class="fa-solid fa-clipboard-list"></i>
@@ -175,7 +175,7 @@
 
         @endif
 
-        @if (isset($resumen))
+        @if (isset($resumen) && $resumen->isNotEmpty())
             <div class="bg-gray-200  px-8 py-4 rounded-xl w-full mt-4">
                 <div class="overflow-x-auto m-auto w-full">
                     <div class="inline-block min-w-full py-2 sm:px-6">
@@ -201,6 +201,9 @@
                                         <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
                                             MODIFICACION
                                         </th>
+                                        <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
+                                            Anulados
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -223,6 +226,9 @@
                                             </td>
                                             <td class="border-r px-6 py-4 dark:border-neutral-500">
                                                 {{ $data['materiales']->where('idTipoMaterial', 4)->first()->total ?? 0 }}
+                                            </td>
+                                            <td class="border-r px-6 py-4 dark:border-neutral-500">
+                                                {{ $data['anulados'] }}
                                             </td>
                                         </tr>
                                     @endforeach

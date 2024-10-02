@@ -268,19 +268,12 @@
         <p>
             El presente Certificado es emitido a solicitud del Taller de Conversión a GLP autorizado:
             <strong>
-                @if ($tallerauto)
-                    {{ $tallerauto->nombre }}
-                @else
-                    {{ $taller->nombre }}
-                @endif
+                    {{ $taller->Taller->nombre }}
             </strong>
         </p>
         <p>
-            Ubicado : @if ($tallerauto)
-                {{ $tallerauto->direccion }}
-            @else
-                {{ $taller->direccion }}
-            @endif
+            Ubicado : 
+                {{ $taller->Taller->direccion }}
         </p>
         <h6>OBSERVACIONES</h6>
         <ul type="1">
@@ -291,7 +284,11 @@
                     contaminantes del vehiculó es aprobatorio.
                 </strong>
             </li>
+            <li>
+                Este certificado es <strong>DUPLICADO</strong> a pedido del cliente porque se le perdió y es <strong>COPIA FIEL DEL ORIGINAL.</strong>
+            </li>
         </ul>
+            
 
         <p>Se expide el presente en la ciudad de Lima, a los {{ $fecha }}</p>
 

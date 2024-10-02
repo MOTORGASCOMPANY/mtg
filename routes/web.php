@@ -268,7 +268,7 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/Admin-otras-certificaciones', AdministracionCerTaller::class)->middleware('can:AdministracionCerTaller')->name('AdministracionCerTaller');
 
         //PARA SERVICIO CARTA ACLARATORIA
-        Route::get('/ServicioCartaAclaratoria', ServicioCartaAclaratoria::class)->name('ServicioCarta');
+        Route::get('/ServicioCartaAclaratoria', ServicioCartaAclaratoria::class)->middleware('can:ServicioCarta')->name('ServicioCarta');
 
         //Prueba Fotos
         Route::get('/CargaFotos', CargaFotos::class)->name('CargaFotos');

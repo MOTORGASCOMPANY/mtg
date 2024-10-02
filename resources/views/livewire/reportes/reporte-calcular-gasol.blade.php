@@ -238,31 +238,17 @@
                                                 S/{{ number_format(collect($precios)->sum(), 2) }}
                                             </td>
                                         </tr>
-
                                     </tbody>
-
-
                                 </table>
                             </div>
                         </div>
                     </div>
                 </div>
-
-
             </div>
         @endif
 
     </div>
     @push('js')
-        {{--
-          <script>
-            Livewire.on('exportaData', () => {
-            data1= document.getElementById('data_1');
-            console.log(data_1);
-
-           });
-         </script>
-        --}}
         <script>
             Livewire.on('exportaData', () => {
                 // Obtener los datos de la tabla

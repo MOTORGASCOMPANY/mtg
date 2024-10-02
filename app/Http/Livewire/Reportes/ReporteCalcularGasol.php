@@ -12,6 +12,7 @@ use App\Exports\ReporteCalcularExport2;
 use App\Exports\ReporteCalcularSimpleExport;
 use App\Models\Certificacion;
 use App\Models\CertificacionPendiente;
+use App\Models\PrecioInspector;
 use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
@@ -51,7 +52,6 @@ class ReporteCalcularGasol extends Component
         $this->tabla = $this->generaData();
         //Carga datos de Servicios Importados
         $this->importados = $this->cargaServiciosGasolution();
-        //dd($this->importados);
         //Trim para eliminar espacios por inspector y taller
         $this->tabla = $this->tabla->map(function ($item) {
             $item['placa'] = trim($item['placa']);
@@ -84,10 +84,43 @@ class ReporteCalcularGasol extends Component
             return $comparison;
         });
 
-        //$this->aux = $this->tabla2->groupBy('inspector')->sortBy();
-        $this->aux = $this->tabla2->groupBy('inspector')->sortBy(function ($item, $key) { //para ordenar 
+        // Lista de inspectores a excluir
+        $insExcluir = [
+            'Adrian Suarez Perez',
+            'Cristhian David Saenz Nuñez',
+            'Cristhian Smith Huanay Condor',
+            'Elmer Jesus Canares Minaya',
+            'Elvis Alexander Matto Perez',
+            'Emanuel Fernando Salazar Martinez',
+            'Gianella Isabel Sanchez Herrera',
+            'Gianfranco Charyv Garcia Camacho',
+            'Gris Yordin Bonifacio Rivera',
+            'Harrinson Jesus Cordova Vilela',
+            'Jaison Aurelio Aquino Antunez',
+            'Javier Alfredo Chevez Parcano',
+            'Jennifer Alexandra Villarreal Polo',
+            'Jhon Antonio Diaz Lobo',
+            'Jhunior Meza Arroyo',
+            'Julio Roger Cabanillas Cornejo',
+            'Luis Alberto Esteban Torres',
+            'Luis Amorr Huacho Cruz',
+            'Miguel Alexis Lacerna Aycachi',
+            'Oscar Enrique Soto Vega',
+            'Raul Llata Pacheco',
+            'Ricardo Jesus Meza Espinal',
+            'Ronaldo Piero Navarro Endara',
+            'York Darly Cruz Ampuero'
+        ];
+
+        // Excluir inspectores del reporte
+        $this->tabla2 = $this->tabla2->reject(function ($item) use ($insExcluir) {
+            return in_array($item['inspector'], $insExcluir);
+        });
+
+        $this->aux = $this->tabla2->groupBy('inspector')->sortBy(function ($item, $key) {
             return $key;
         });
+
         $this->sumaPrecios();
     }
 
@@ -101,8 +134,6 @@ class ReporteCalcularGasol extends Component
             ->where('pagado', 0)
             ->whereIn('estado', [3, 1])
             ->get();
-
-        //Lista2
         foreach ($certificaciones as $certi) {
             $data = [
                 "id" => $certi->id,
@@ -123,31 +154,6 @@ class ReporteCalcularGasol extends Component
         }
         return $tabla;
     }
-
-    /*public function encontrarDiferenciaPorPlaca($lista1, $lista2)
-    {
-        $diferencias = [];
-
-        foreach ($lista1 as $elemento1) {
-            $placa1 = $elemento1['placa'];
-            $encontrado = false;
-
-            foreach ($lista2 as $elemento2) {
-                $placa2 = $elemento2['placa'];
-
-                if ($placa1 === $placa2) {
-                    $encontrado = true;
-                    break;
-                }
-            }
-
-            if (!$encontrado) {
-                $diferencias[] = $elemento1;
-            }
-        }
-
-        return $diferencias;
-    }*/
 
     public function encontrarDiferenciaPorPlaca($lista1, $lista2)
     {
@@ -182,7 +188,6 @@ class ReporteCalcularGasol extends Component
         return $diferencias;
     }
 
-
     public function cargaServiciosGasolution()
     {
         $disc = new Collection();
@@ -190,9 +195,24 @@ class ReporteCalcularGasol extends Component
             ->Inspectores($this->ins)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
             ->get();
-
-        //Lista 1
         foreach ($dis as $registro) {
+            // Buscar el inspector en precios_inspector basado en el name del certificador (inspector)
+            $inspector = User::where('name', $registro->certificador)->first();            
+            $precio = 0; // Inicializar el precio en 0
+            // Verificar si existe el inspector
+            if ($inspector) {
+                // Buscar el servicio en precios_inspector comparando por idServicio
+                $precioInspector = PrecioInspector::where('idUsers', $inspector->id)
+                    ->whereHas('tipoServicio', function ($query) use ($registro) {
+                        // Comparar la descripción del servicio
+                        $query->where('descripcion', $registro->TipoServicio->descripcion);
+                    })
+                    ->first();
+                // Si se encuentra un precio en precios_inspector, asignarlo
+                if ($precioInspector) {
+                    $precio = $precioInspector->precio;
+                }
+            }
             $data = [
                 "id" => $registro->id,
                 "placa" => $registro->placa,
@@ -201,7 +221,7 @@ class ReporteCalcularGasol extends Component
                 "servicio" => $registro->TipoServicio->descripcion,
                 "num_hoja" => Null,
                 "ubi_hoja" => Null,
-                "precio" => $registro->precio,
+                "precio" => $precio,
                 "pagado" => $registro->pagado,
                 "estado" => $registro->estado,
                 "tipo_modelo" => $registro::class,
@@ -216,7 +236,6 @@ class ReporteCalcularGasol extends Component
     public function cuentaServicios($data)
     {
         $cantidades = [];
-        //$todo = $data->groupBy('servicio')->sortBy('servicio');
         $todo = collect($data)->groupBy('servicio')->sortBy('servicio');
         foreach ($todo as $servicio => $item) {
             $cantidades[$servicio] = $item->count();
@@ -242,13 +261,8 @@ class ReporteCalcularGasol extends Component
         // return $precios;
     }
 
-
     public function exportarExcel($data)
     {
-        // Convertir la tabla HTML en un objeto de colección
-        //$tabla = collect([$data]);
-        //dd($tabla);
-        // Generar el archivo de Excel usando la librería Maatwebsite/Excel
         return Excel::download(new ReporteCalcularExport2($data), 'reporte_calculo.xlsx');
     }
 }

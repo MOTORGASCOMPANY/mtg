@@ -67,14 +67,29 @@ class ReporteCalcularExport2 implements FromView, ShouldAutoSize, WithStyles
         // Hacer negrita la tercera fila (encabezados)
         $sheet->getStyle('A3:G3')->getFont()->setBold(true);
 
+        // Recorre cada fila donde tienes datos para asegurar que los valores sean numéricos
+        for ($row = 4; $row < $highestRow; $row++) {
+            // Verifica si el valor en la columna G es un número
+            $currentValue = $sheet->getCell('G' . $row)->getValue();
+
+            // Si no es un número, intenta convertirlo
+            if (!is_numeric($currentValue)) {
+                // Remover comas o espacios innecesarios y convertir a número
+                $numericValue = floatval(str_replace(',', '', $currentValue));
+                $sheet->setCellValueExplicit('G' . $row, $numericValue, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC);
+            }
+        }
+
         // Aplicar fórmula en la columna G para sumar los valores (desde la fila 4 hasta la penúltima fila)
-        // Suponemos que la columna G es la del "Monto"
         $sumRow = $highestRow; // La última fila es donde está el total
 
         // Formula en la celda de Total (fila $sumRow, columna G)
         $sheet->setCellValue('G' . $sumRow, '=SUM(G4:G' . ($sumRow - 1) . ')');
 
-        return [];
+        // Aplicar formato numérico a la columna G (Monto)
+        $sheet->getStyle('G4:G' . $sumRow)
+            ->getNumberFormat()
+            ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1); // Formato para números con comas
 
         return [];
     }

@@ -88,6 +88,11 @@
         ul {
             font-size: 10px;
         }
+
+        /* Estilo adicional para alinear las firmas */
+        .signature {
+            padding-top: 95px; /* Ajusta este valor para controlar el espacio vertical */
+        }
     </style>
 </head>
 
@@ -120,22 +125,16 @@
                 entre los días <strong>{{ $fechaInicio }} al {{ $fechaExpiracion }}</strong>.
             </p>
             <p>
-                SEGUNDO. - EL CONTRATADO cumplirá las funciones de <strong>{{ $cargo }}</strong> en el proceso de Certificaciones
+                SEGUNDO. - EL CONTRATADO cumplirá las funciones de <strong>{{ $cargo }}</strong> en el proceso de
+                Certificaciones
                 Vehiculares de Conversiones a Gas Natural Vehicular – GNV, encargadas por el ministerio de Transportes y
                 Comunicaciones con puntualidad, responsabilidad y cumplimiento con el horario de trabajo y todas las
                 metas establecidas por la empresa y otras funciones que le designe el contratante.
             </p>
             <p>
                 TERCERO. - EL CONTRATANTE se compromete a abonar por sus <strong>HONORARIOS DE INSPECTOR</strong> al
-                CONTRATADO la suma
-                de <strong>{{ $pago }}</strong>, en forma mensual con su asignación familiar por la integridad
-                de
-                los trabajos realizados previa presentación del informe de labores. Si el CONTRATADO realiza
-                <strong>HONORARIOS
-                    DE AREA ADMINISTRATIVA</strong> se considerara la suma de <strong>1200.00 - mil doscientos con
-                    00/200</strong> en forma mensual
-                con su asignación familiar por la integridad de los trabajos realizados previa presentación del informe
-                de labores.
+                CONTRATADO la suma de <strong>{{ $pago }}</strong>, en forma mensual por la integridad de
+                los trabajos realizados previa presentación del informe de labores.
             </p>
             <p>
                 CUARTO. - EL CONTRATADO asume las siguientes obligaciones que están vinculadas a la naturaleza propia
@@ -144,6 +143,12 @@
                 - Mantener la confidencialidad de la información de MOTOR GAS COMPANY S.A. <br>
                 - Por la naturaleza propia de las labores que desempeña el contratado, deberá tener disposición para
                 efectuar viajes por todas las distintas ciudades del País.
+            </p>
+            <p>
+                QUINTO. - EL CONTRATADO en caso de una renuncia voluntaria deberá avisar a la Entidad Certificadora con
+                plazo mínimo de 15 días y a su vez deberá guardar confidencialidad, no brindar información de la Entidad
+                Certificadora a otras personas que no pertenecen a la empresa, en caso de no cumplir la cláusula habrá
+                una penalidad por parte de la Entidad Certificadora.
             </p>
             <p>
                 En caso de que el taller asignado dejará de laboral con nosotros o solicita el cambio de su persona, por
@@ -156,22 +161,11 @@
         <table style="width: 100%;">
             <tr>
                 <td style="text-align: center;">
-                    <p style="text-align: center;"></p>
-                    <img src="{{ public_path('/images/firmLesly.jfif') }}" width="200" height="94" />
+                    <img src="{{ public_path('/images/firmLesly.jfif') }}" width="200" height="95" />
                     <h4>_________________________</h4>
                     <h4><strong>Lesly Pamela Egoavil Lomote</strong> <br> Gerente General </h4>
                 </td>
-                <td style="text-align: center;">
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
+                <td style="text-align: center;" class="signature">
                     <h4>_________________________</h4>
                     <h4><strong>{{ $nombreEmpleado }}</strong> <br>{{ $dniEmpleado }} </h4>
                 </td>

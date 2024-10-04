@@ -98,7 +98,7 @@ class Logona extends Component
         $this->tabla3 = $this->tabla2->filter(function ($item) {
             return !(
                 ($item['tipo_modelo'] == 'App\Models\Certificacion' || $item['tipo_modelo'] == 'App\Models\CertificacionPendiente') &&
-                $item['taller'] == 'GASCAR CONVERSIONES S.A.C' &&
+                $item['taller'] == 'GASCAR CONVERSIONES S.A.C' || $item['taller'] == 'REYCICAR S.A.C.' &&
                 $item['externo'] == 1
             );
         });
@@ -118,7 +118,7 @@ class Logona extends Component
             'IMPORTACIONES STAR GAS S.A.C' => ['Gianella Isabel Sanchez Herrera', 'Cristhian David Saenz Nuñez'],
             'MEGA FLASH GNV S.A.C' => ['Rolly Garcia Barrozo', 'Oscar Enrique Soto Vega'],
             'MEGA FLASH GNV S.A.C. - SANTA ROSA' => ['Rolly Garcia Barrozo', 'Oscar Enrique Soto Vega'],
-            'J.R. AUTOMOTRICES S.A.C.' => ['Jaison Aurelio Aquino Antunez', 'Jhon Antonio Diaz Lobo'],
+            'J.R. AUTOMOTRICES S.A.C.' => ['Jaison Aurelio Aquino Antunez', 'Jhon Antonio Diaz Lobo', 'Elmer Jesus Canares Minaya'],
             'CONVERSIONES SERPEGAS S.A.C. - 2' => ['Emanuel Fernando Salazar Martinez'],
             'REYCICAR S.A.C.' => ['Cristhian David Saenz Nuñez'],
             'REYGAS S.A.C. II' => ['Jennifer Alexandra Villarreal Polo'],

@@ -98,7 +98,7 @@ class Logona extends Component
         $this->tabla3 = $this->tabla2->filter(function ($item) {
             return !(
                 ($item['tipo_modelo'] == 'App\Models\Certificacion' || $item['tipo_modelo'] == 'App\Models\CertificacionPendiente') &&
-                $item['taller'] == 'GASCAR CONVERSIONES S.A.C' || $item['taller'] == 'REYCICAR S.A.C.' &&
+                ($item['taller'] == 'GASCAR CONVERSIONES S.A.C' || $item['taller'] == 'REYCICAR S.A.C.') &&
                 $item['externo'] == 1
             );
         });

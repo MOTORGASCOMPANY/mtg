@@ -121,7 +121,9 @@ class Logona extends Component
             'J.R. AUTOMOTRICES S.A.C.' => ['Jaison Aurelio Aquino Antunez', 'Jhon Antonio Diaz Lobo'],
             'CONVERSIONES SERPEGAS S.A.C. - 2' => ['Emanuel Fernando Salazar Martinez'],
             'REYCICAR S.A.C.' => ['Cristhian David Saenz Nuñez'],
-            'REYGAS S.A.C. II' => ['Jennifer Alexandra Villarreal Polo']          
+            'REYGAS S.A.C. II' => ['Jennifer Alexandra Villarreal Polo'],
+            'AUTOTRONICA JOEL CARS' => ['Luis Alberto Esteban Torres'], 
+            'AUTOTRONICA JOEL CARS E.I.R.L. - II' => ['Luis Alberto Esteban Torres']
         ];
 
         // Agrupamos por taller y sumamos los precios

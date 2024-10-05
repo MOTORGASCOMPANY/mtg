@@ -112,7 +112,7 @@ class Logona extends Component
             'UNIGAS HOME S.A.C.' => ['Ronaldo Piero Navarro Endara'],
             'CITV UNIGAS S.A.C.' => ['Adrian Suarez Perez'],
             'UNIGAS CONVERSIONES S.A.C.' => ['Jhon Antonio Diaz Lobo', 'Ronaldo Piero Navarro Endara'],
-            'MISHAEL PERU S.A.C.' => ['Jhonatan Michael Basilio Soncco', 'Jhon Antonio Diaz Lobo'],
+            'MISHAEL PERU S.A.C.' => ['Jhonatan Michael Basilio Soncco', 'Jhon Antonio Diaz Lobo', 'Gris Yordin Bonifacio Rivera'],
             'INVERSIONES FAGONI S.A.C.' => ['Elmer Jesus Canares Minaya'],
             'CORPORACIÓN PERÚ GAS FJA E.I.R.L.' => ['Jhunior Meza Arroyo', 'Cristhian Smith Huanay Condor'],
             'IMPORTACIONES STAR GAS S.A.C' => ['Gianella Isabel Sanchez Herrera', 'Cristhian David Saenz Nuñez'],

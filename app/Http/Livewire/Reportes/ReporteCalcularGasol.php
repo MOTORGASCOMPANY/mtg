@@ -109,7 +109,10 @@ class ReporteCalcularGasol extends Component
             'Raul Llata Pacheco',
             'Ricardo Jesus Meza Espinal',
             'Ronaldo Piero Navarro Endara',
-            'York Darly Cruz Ampuero'
+            'York Darly Cruz Ampuero',
+            'Cristopher Lee Barzola Carhuancho',
+            'Erick Daniel Pachas Sanchez',
+            'Jhonatan Michael Basilio Soncco'
         ];
 
         // Excluir inspectores del reporte

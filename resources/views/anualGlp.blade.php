@@ -165,7 +165,8 @@
                 <td>{{ $carro->version }}</td>
                 <td style="padding: 0 5px 0 5px; text-align:center;">14</td>
                 <td>Largo / Ancho / Alto(m)</td>
-                <td>{{ (isset($carro->largo) ? $largo : 'NE') . ' / ' . (isset($carro->ancho) ? rtrim($carro->ancho, '0') : 'NE') . ' / ' . (isset($carro->altura) ? rtrim($carro->altura, '0') : 'NE') }}
+                <td>{{-- (isset($carro->largo) ? $largo : 'NE') . ' / ' . (isset($carro->ancho) ? rtrim($carro->ancho, '0') : 'NE') . ' / ' . (isset($carro->altura) ? rtrim($carro->altura, '0') : 'NE') --}}
+                    {{ isset($carro->largo) ? number_format($carro->largo, 2) : 'NE' }} / {{ isset($carro->ancho) ? number_format($carro->ancho, 2) : 'NE' }} / {{ isset($carro->altura) ? number_format($carro->altura, 2) : 'NE' }}
                 </td>
             </tr>
             <tr>

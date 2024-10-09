@@ -54,6 +54,7 @@
                             </div>
                             <div class="max-w-5xl m-auto bg-white rounded-lg shadow-md my-4 py-4">
                                 <div class="my-2 flex flex-col md:flex-row justify-evenly items-center">
+                                    {{-- 
                                     <div>
                                         <input
                                             class="form-input rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
@@ -61,6 +62,7 @@
                                             max="{{ $maxDate }}">
                                         <x-jet-input-error for="fechaCertificacion" />
                                     </div>
+                                    --}}
                                     <div class="w-full md:w-2/6 flex justify-center items-center">
                                         <x-jet-input type="checkbox" wire:model="serviexterno"
                                             class="w-4 h-4 text-indigo-600 bg-white border-gray-300 rounded outline-none hover:cursor-pointer focus:ring-indigo-600  focus:ring-1 dark:bg-gray-600 dark:border-gray-500" />
@@ -200,6 +202,7 @@
                             </div>
                             <div class="max-w-5xl m-auto bg-white rounded-lg shadow-md my-4 py-4">
                                 <div class="my-2 flex flex-col md:flex-row justify-evenly items-center">
+                                    {{-- 
                                     <div>
                                         <input
                                             class="form-input rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
@@ -207,6 +210,7 @@
                                             max="{{ $maxDate }}">
                                         <x-jet-input-error for="fechaCertificacion" />
                                     </div>
+                                    --}}
                                     <div class="w-full md:w-2/6 flex justify-center items-center">
                                         <x-jet-input type="checkbox" wire:model="serviexterno"
                                             class="w-4 h-4 text-indigo-600 bg-white border-gray-300 rounded outline-none hover:cursor-pointer focus:ring-indigo-600  focus:ring-1 dark:bg-gray-600 dark:border-gray-500" />

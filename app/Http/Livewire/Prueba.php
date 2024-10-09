@@ -401,7 +401,7 @@ class Prueba extends Component
             return;
         }
 
-        // Obtener la fecha de hoy
+        /* Obtener la fecha de hoy
         $hoy = Carbon::today();
         if (empty($this->fechaCertificacion)) {
             $fechaCertificacion = $hoy;
@@ -413,7 +413,7 @@ class Prueba extends Component
         if ($fechaCertificacion->lt($hoy->subDays(3)) || $fechaCertificacion->gt(Carbon::today())) {
             $this->emit("minAlert", ["titulo" => "AVISO DEL SISTEMA", "mensaje" => "La fecha de certificación debe estar dentro de los últimos tres días", "icono" => "warning"]);
             return;
-        }
+        }*/
 
         $certi = Certificacion::certificarGlp($taller, $tallerAuto, $servicio, $hoja, $this->vehiculo, Auth::user(), $this->serviexterno);
 
@@ -431,7 +431,7 @@ class Prueba extends Component
             ]);
 
             // Agrega la fecha al modelo Certificacion
-            $certi->update(['created_at' => $this->fechaCertificacion]);
+            //$certi->update(['created_at' => $this->fechaCertificacion]);
 
             $this->guardarFotos($expe);
             guardarArchivosEnExpediente::dispatch($expe, $certi);

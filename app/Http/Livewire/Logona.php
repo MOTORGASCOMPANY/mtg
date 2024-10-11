@@ -118,7 +118,7 @@ class Logona extends Component
             'IMPORTACIONES STAR GAS S.A.C' => ['Gianella Isabel Sanchez Herrera', 'Cristhian David Saenz Nuñez'],
             'MEGA FLASH GNV S.A.C' => ['Rolly Garcia Barrozo', 'Oscar Enrique Soto Vega'],
             'MEGA FLASH GNV S.A.C. - SANTA ROSA' => ['Rolly Garcia Barrozo', 'Oscar Enrique Soto Vega'],
-            'J.R. AUTOMOTRICES S.A.C.' => ['Jaison Aurelio Aquino Antunez', 'Jhon Antonio Diaz Lobo', 'Elmer Jesus Canares Minaya'],
+            'J.R. AUTOMOTRICES S.A.C.' => ['Jaison Aurelio Aquino Antunez', 'Jhon Antonio Diaz Lobo', 'Elmer Jesus Canares Minaya', 'Erick Daniel Pachas Sanchez'],
             'CONVERSIONES SERPEGAS S.A.C. - 2' => ['Emanuel Fernando Salazar Martinez'],
             'REYCICAR S.A.C.' => ['Cristhian David Saenz Nuñez'],
             'REYGAS S.A.C. II' => ['Jennifer Alexandra Villarreal Polo'],

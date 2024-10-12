@@ -16,6 +16,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\AnulacionSolicitud as NotificationsCreateSolicitud;
 use App\Notifications\SolicitudEliminacion;
+use Illuminate\Support\Facades\Log;
 use Livewire\WithFileUploads;
 
 
@@ -139,7 +140,7 @@ class ListaCertificaciones extends Component
         $this->certiId = $certificationId;
     }
 
-    public function guardarSolicitudAnulacion()
+    /*public function guardarSolicitudAnulacion()
     {
         $this->validate([
             'motivo' => 'required',
@@ -169,7 +170,64 @@ class ListaCertificaciones extends Component
         $users = User::role(['administrador  '])->get();
         Notification::send($users, new NotificationsCreateSolicitud($solicitudAnulacion, $certificacion, Auth::user()));
         return redirect('Listado-Certificaciones');
+    }*/
+
+    public function guardarSolicitudAnulacion()
+    {
+        $this->validate([
+            'motivo' => 'required',
+            'imagen' => 'required|image',
+        ]);
+
+        try {
+            $certificacion = Certificacion::find($this->certiId);       
+            $placa = $certificacion->Vehiculo->placa ?? 'SinPlaca'; 
+            $nombreArchivo = $placa . '-' . time() . '.' . $this->imagen->getClientOriginalExtension();
+
+            // Especifica el disco 'public' explícitamente
+            $rutaImagen = $this->imagen->storeAs('anular', $nombreArchivo, 'public');
+
+            // Verifica si la rutaImagen se generó correctamente
+            if (!$rutaImagen) {
+                throw new \Exception('Error al almacenar la imagen.');
+            }
+
+            // Crear la solicitud de anulación
+            $solicitudAnulacion = Anulacion::create([
+                'motivo' => $this->motivo,
+            ]);
+
+            // Crear la entrada en la tabla de imágenes
+            $imagen = Archivo::create([
+                'nombre' => $nombreArchivo,
+                'ruta' => $rutaImagen,
+                'extension' => $this->imagen->getClientOriginalExtension(),
+                'idDocReferenciado' => $solicitudAnulacion->id,
+            ]);
+
+            // Emitir una notificación de éxito
+            $this->emit("CustomAlert", ["titulo" => "Solicitud de anulación enviada", "mensaje" => "Su solicitud de anulación ha sido enviada con éxito.", "icono" => "success"]);
+
+            // Notificar a los usuarios administradores
+            $users = User::role(['administrador'])->get();
+            Notification::send($users, new NotificationsCreateSolicitud($solicitudAnulacion, $certificacion, Auth::user()));
+
+            return redirect('Listado-Certificaciones');
+        } catch (\Exception $e) {
+            // Manejar cualquier excepción y emitir una notificación de error
+            $this->emit("CustomAlert", [
+                "titulo" => "Error",
+                "mensaje" => $e->getMessage(),
+                "icono" => "error"
+            ]);
+
+            // Loguear el error para revisarlo más tarde
+            Log::error('Error al guardar la solicitud de anulación: ' . $e->getMessage());
+
+            return redirect()->back();
+        }
     }
+
 
     public function solicitarEliminacion($certificationId)
     {

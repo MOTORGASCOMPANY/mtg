@@ -6,27 +6,48 @@ namespace App\Http\Livewire\Reportes;
 use Livewire\Component;
 use App\Models\ServiciosImportados;
 use App\Models\Taller;
-use App\Models\TipoServicio;
-use App\Exports\ReporteCalcularExport;
 use App\Exports\ReporteCalcularExport2;
-use App\Exports\ReporteCalcularSimpleExport;
 use App\Models\Certificacion;
 use App\Models\CertificacionPendiente;
+use App\Models\Desmontes;
 use App\Models\PrecioInspector;
 use App\Models\User;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ReporteCalcularGasol extends Component
 {
 
+    //VARIABLES PARA REPORTE 1
     public $fechaInicio, $fechaFin, $resultados, $talleres, $inspectores, $certis;
     public $ins = [], $taller = [];
     public $grupoinspectores;
     public $tabla, $diferencias, $importados, $aux, $precios = [];
     public $tabla2;
+
+    //VARIABLES PARA REPORTE 2
+    public $servicio;
+    public $mtg, $discrepancias, $gasol, $asistir;
+    public $mtg2, $mtg3;
+    public $semanales, $diarios;
+    public $idsTabla1 = [
+        'ARTURO MOTORS S.A.C.',
+        'AUTOMOTRIZ D. SALAZAR',
+        'AUTOTRONICA JOEL CARS',
+        'AUTOTRONICA JOEL CARS E.I.R.L. - II',
+        'TALLER PRUEBA'
+    ];
+
+    public $idsTabla2 = [
+        'CONVERSIONES SERPEGAS S.A.C. - 2',
+        'CORPORACIÓN PERÚ GAS FJA E.I.R.L.',
+        'IMPORTACIONES STAR GAS S.A.C',
+    ];
+
+    //VARIABLE PARA JUNTAR LOS DOS REPORTES
+    public $totalTalleres = 0;
+    public $totalExternos = 0;
+    public $cierreSemanal;
 
     protected $listeners = ['exportarExcel'];
 
@@ -45,9 +66,30 @@ class ReporteCalcularGasol extends Component
         return view('livewire.reportes.reporte-calcular-gasol');
     }
 
-    public function procesar()
+
+
+    public function calcularTotales()
+    {
+        $totalSemanal = collect($this->semanales)->sum('total');
+        $totalDiario = collect($this->diarios)->sum('total');
+        $this->totalTalleres = $totalSemanal + $totalDiario;
+        $this->totalExternos = collect($this->precios)->sum();
+        $this->cierreSemanal = $this->totalTalleres + $this->totalExternos;
+    }
+
+    //JUNTAR REPORTES
+    public function reportes()
     {
         $this->validate();
+        $this->procesar();
+        $this->procesar2();
+        $this->calcularTotales();
+    }
+
+    //PROCESAR 1
+    public function procesar()
+    {
+        //$this->validate();
         //Carga datos de certificacion
         $this->tabla = $this->generaData();
         //Carga datos de Servicios Importados
@@ -127,6 +169,87 @@ class ReporteCalcularGasol extends Component
         $this->sumaPrecios();
     }
 
+    //PROCESAR 2
+    public function procesar2()
+    {
+        //$this->validate();
+        $this->mtg = $this->generaData2();
+        $this->gasol = $this->cargaServiciosGasolution2();
+        $this->mtg = $this->mtg->map(function ($item) {
+            $item['placa'] = trim($item['placa']);
+            $item['inspector'] = trim($item['inspector']);
+            $item['taller'] = trim($item['taller']);
+            return $item;
+        });
+        $this->gasol = $this->gasol->map(function ($item) {
+            $item['placa'] = trim($item['placa']);
+            $item['inspector'] = trim($item['inspector']);
+            $item['taller'] = trim($item['taller']);
+            return $item;
+        });
+        $this->discrepancias = $this->encontrarDiferenciaPorPlaca2($this->gasol, $this->mtg);
+        //Merge para combinar mtg y discrepancias -  strtolower para ignorar Mayusculas y Minusculas 
+        $this->mtg2 = $this->mtg->merge($this->discrepancias, function ($item1, $item2) {
+            $inspector1 = strtolower($item1['inspector']);
+            $inspector2 = strtolower($item2['inspector']);
+            $taller1 = strtolower($item1['taller']);
+            $taller2 = strtolower($item2['taller']);
+            $comparison = strcasecmp($inspector1 . $taller1, $inspector2 . $taller2);
+            return $comparison;
+        });
+
+        // Filtrar excluir externos a gascar
+        $this->mtg3 = $this->mtg2->filter(function ($item) {
+            return !(
+                ($item['tipo_modelo'] == 'App\Models\Certificacion' || $item['tipo_modelo'] == 'App\Models\CertificacionPendiente') &&
+                ($item['taller'] == 'GASCAR CONVERSIONES S.A.C' || $item['taller'] == 'REYCICAR S.A.C.') &&
+                $item['externo'] == 1
+            );
+        });
+
+        // Definir relacion entre talleres e inspectores
+        $mapaTalleresInspectores = [
+            'ARTURO MOTORS S.A.C.' => ['Miguel Alexis Lacerna Aycachi'],
+            'REYGAS S.A.C. II' => ['Jennifer Alexandra Villarreal Polo'],
+            'AUTOTRONICA JOEL CARS' => ['Luis Alberto Esteban Torres'],
+            'AUTOTRONICA JOEL CARS E.I.R.L. - II' => ['Luis Alberto Esteban Torres']
+        ];
+        $this->asistir = $this->mtg3->groupBy('taller')->map(function ($items) use ($mapaTalleresInspectores) {
+            $taller = $items->first()['taller'];
+            $inspectoresDesignados = $mapaTalleresInspectores[$taller] ?? null;
+            $itemsFiltrados = $items;
+
+            if ($inspectoresDesignados) {
+                $itemsFiltrados = $items->filter(function ($item) use ($inspectoresDesignados) {
+                    return in_array($item['inspector'], $inspectoresDesignados);
+                });
+            }
+
+            return [
+                'taller' => $taller,
+                'encargado' => $itemsFiltrados->first()['representante'] ?? null,
+                'total' => $itemsFiltrados->sum('precio'),
+            ];
+        })->filter(function ($data) { // Filtrar talleres cuyo total sea mayor que 0
+            return $data['total'] > 0;
+        })->sortBy('taller');
+
+        $this->semanales = $this->asistir->filter(function ($item) {
+            return in_array($item['taller'], $this->idsTabla1);
+        });
+
+        $this->diarios = $this->asistir->filter(function ($item) {
+            return in_array($item['taller'], $this->idsTabla2);
+        });
+    }
+
+
+    public function exportarExcel($data)
+    {
+        return Excel::download(new ReporteCalcularExport2($data), 'reporte_calculo.xlsx');
+    }
+
+    //FUNCIONES PARA REPORTE 1
     public function generaData()
     {
         $tabla = new Collection();
@@ -200,7 +323,7 @@ class ReporteCalcularGasol extends Component
             ->get();
         foreach ($dis as $registro) {
             // Buscar el inspector en precios_inspector basado en el name del certificador (inspector)
-            $inspector = User::where('name', $registro->certificador)->first();            
+            $inspector = User::where('name', $registro->certificador)->first();
             $precio = 0; // Inicializar el precio en 0
             // Verificar si existe el inspector
             if ($inspector) {
@@ -235,7 +358,6 @@ class ReporteCalcularGasol extends Component
         return $disc;
     }
 
-
     public function cuentaServicios($data)
     {
         $cantidades = [];
@@ -264,8 +386,185 @@ class ReporteCalcularGasol extends Component
         // return $precios;
     }
 
-    public function exportarExcel($data)
+    //FUNCIONES PARA REPORTE 2
+
+    public function generaData2()
     {
-        return Excel::download(new ReporteCalcularExport2($data), 'reporte_calculo.xlsx');
+        $mtg = new Collection();
+        //TODO CERTIFICACIONES:
+        $certificaciones = Certificacion::IdTalleres($this->taller)
+            ->RangoFecha($this->fechaInicio, $this->fechaFin)
+            /*->whereHas('Inspector', function ($query) {
+                $query->whereNotIn('id', [117, 37, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62, 166, 124, 52]);
+            })*/
+            ->where('pagado', 0)
+            ->whereNotIn('estado', [2])
+            ->get();
+
+        //TODO CER-PENDIENTES:
+        $cerPendiente = CertificacionPendiente::IdTalleres($this->taller)
+            ->RangoFecha($this->fechaInicio, $this->fechaFin)
+            /*->whereHas('Inspector', function ($query) {
+                $query->whereNotIn('id', [117, 37, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62, 166, 124, 52]);
+            })*/
+            ->get();
+
+        //TODO DESMONTES:
+        $desmontes = Desmontes::IdTalleres($this->taller)
+            ->RangoFecha($this->fechaInicio, $this->fechaFin)
+            /*->whereHas('Inspector', function ($query) {
+                $query->whereNotIn('id', [117, 37, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62, 166, 124, 52]);
+            })*/
+            ->get();
+
+        //unificando certificaciones     
+        foreach ($certificaciones as $certi) {
+            $data = [
+                "id" => $certi->id,
+                "placa" => $certi->Vehiculo->placa,
+                "taller" => $certi->Taller->nombre,
+                "representante" => $certi->Taller->representante,
+                "inspector" => $certi->Inspector->name,
+                "servicio" => $certi->Servicio->tipoServicio->descripcion,
+                "num_hoja" => $certi->NumHoja,
+                "ubi_hoja" => $certi->UbicacionHoja,
+                "precio" => $certi->precio,
+                "pagado" => $certi->pagado,
+                "estado" => $certi->estado,
+                "externo" => $certi->externo,
+                "tipo_modelo" => $certi::class,
+                "fecha" => $certi->created_at,
+
+            ];
+            $mtg->push($data);
+        }
+
+        foreach ($cerPendiente as $cert_pend) {
+            //modelo preliminar
+            $data = [
+                "id" => $cert_pend->id,
+                "placa" => $cert_pend->Vehiculo->placa,
+                "taller" => $cert_pend->Taller->nombre,
+                "representante" => $cert_pend->Taller->representante,
+                "inspector" => $cert_pend->Inspector->name,
+                "servicio" => 'Activación de chip (Anual)',
+                "num_hoja" => Null,
+                "ubi_hoja" => Null,
+                "precio" => $cert_pend->precio,
+                "pagado" => $cert_pend->pagado,
+                "estado" => $cert_pend->estado,
+                "externo" => $cert_pend->externo,
+                "tipo_modelo" => $cert_pend::class,
+                "fecha" => $cert_pend->created_at,
+            ];
+            $mtg->push($data);
+        }
+
+        foreach ($desmontes as $des) {
+            $data = [
+                "id" => $des->id,
+                "placa" => $des->placa,
+                "taller" => $des->Taller->nombre,
+                "representante" => $des->Taller->representante,
+                "inspector" => $des->Inspector->name,
+                "servicio" => $des->Servicio->tipoServicio->descripcion,
+                "num_hoja" => Null,
+                "ubi_hoja" => Null,
+                "precio" => $des->precio,
+                "pagado" => $des->pagado,
+                "estado" => $des->estado,
+                "externo" => $des->externo,
+                "tipo_modelo" => $des::class,
+                "fecha" => $des->created_at,
+            ];
+            $mtg->push($data);
+        }
+        return $mtg;
+    }
+
+    public function encontrarDiferenciaPorPlaca2($lista1, $lista2)
+    {
+        $discrepancias = [];
+
+        foreach ($lista1 as $elemento1) {
+            $placa1 = $elemento1['placa'];
+            $inspector1 = $elemento1['inspector'];
+            $servicio1 = $elemento1['servicio'];
+            $encontrado = false;
+            // Excluir el servicio 'Revisión anual GNV' para que no muestre como discrepancia 'Activación de chip (Anual)'
+            foreach ($lista2 as $elemento2) {
+                $placa2 = $elemento2['placa'];
+                $inspector2 = $elemento2['inspector'];
+                $servicio2 = $elemento2['servicio'];
+
+                if ($placa1 === $placa2 && $inspector1 === $inspector2) {
+                    if (
+                        ($elemento2['tipo_modelo'] == 'App\Models\CertificacionPendiente' && $servicio1 == 'Revisión anual GNV') ||
+                        ($servicio2 == 'Conversión a GNV + Chip' && $servicio1 == 'Conversión a GNV')
+                    ) {
+                        $encontrado = true;
+                        break;
+                    } else if ($servicio1 === $servicio2) {
+                        $encontrado = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!$encontrado) {
+                $diferencias[] = $elemento1;
+            }
+        }
+        return $discrepancias;
+    }
+
+    public function cargaServiciosGasolution2()
+    {
+        $disc = new Collection();
+        // Nombres de los certificadores a excluir
+        $certExcluidos = [
+            'Inspector Prueba 2',
+            'Inspector Prueba',
+            'YERSON JAIRO CAICEDO MORI',
+            'Beaker Javier Yzaguirre Herrera',
+            'Hector Guillermo Burga Cordova',
+            'Elvis Obregon Espinoza',
+            'Noe Fernandez Salazar',
+            'Carlos Julca Pusma',
+            'Jose Ricarte Guevara Maluquis',
+            'Jose Antonio Quispe De la Cruz',
+            'Victor Hugo Quispe Zapana',
+            'Raul Llata Pacheco',
+            'Elmer Alvarado Ramos',
+            'Carlos Rojas Cule',
+            'Jhossimar Andrew Apolaya Hong',
+            'Jhonatan Isaac Garcia Tavara'
+        ];
+
+        $dis = ServiciosImportados::Talleres($this->taller)
+            ->RangoFecha($this->fechaInicio, $this->fechaFin)
+            ->whereNotIn('certificador', $certExcluidos)
+            ->get();
+
+        foreach ($dis as $registro) {
+            $data = [
+                "id" => $registro->id,
+                "placa" => $registro->placa,
+                "taller" => $registro->taller,
+                "representante" => $registro->representante,
+                "inspector" => $registro->certificador,
+                "servicio" => $registro->TipoServicio->descripcion,
+                "num_hoja" => Null,
+                "ubi_hoja" => Null,
+                "precio" => $registro->precio,
+                "pagado" => $registro->pagado,
+                "estado" => $registro->estado,
+                "externo" => Null,
+                "tipo_modelo" => $registro::class,
+                "fecha" => $registro->fecha,
+            ];
+            $disc->push($data);
+        }
+        return $disc;
     }
 }

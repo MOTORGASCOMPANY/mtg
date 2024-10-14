@@ -6,7 +6,7 @@
                 <div class="p-2 w-64 my-4 md:w-full">
                     <h2 class="text-indigo-600 font-bold text-3xl">
                         <i class="fa-solid fa-square-poll-vertical fa-xl"></i>
-                        &nbsp;REPORTE MTG EXTERNO
+                        &nbsp;REPORTE MTG COMPLETO
                     </h2>
                 </div>
 
@@ -85,33 +85,28 @@
                     CARGANDO <i class="fa-solid fa-spinner animate-spin"></i>
                 </div>
             </div>
-
-
         </div>
+
+        
+
 
         {{-- Tabla reporte 1 --}}
         @if (isset($tabla))
             <div wire.model="resultados">
-                {{-- 
                 <div class="m-auto flex justify-center items-center bg-gray-300 rounded-md w-full p-4 mt-4">
                     <button wire:click="$emit('exportaData')"
                         class="bg-green-400 px-6 py-4 w-1/3 text-sm rounded-md text-sm text-white font-semibold tracking-wide cursor-pointer ">
                         <p class="truncate"><i class="fa-solid fa-file-excel fa-lg"></i> Desc. Excel </p>
                     </button>
-                </div>
-                --}}
-
+                </div>  
                 <div class="bg-gray-200  px-8 py-4 rounded-xl w-full mt-4">
                     <div class="overflow-x-auto m-auto w-full">
                         <div class="inline-block min-w-full py-2 sm:px-6">
                             <div class="overflow-hidden">
-                                <table class="min-w-full border text-center text-sm font-light dark:border-neutral-500"
-                                    id='data_1'>
+                                <table class="min-w-full border text-center text-sm font-light dark:border-neutral-500" id='data_1'>
                                     <thead class="border-b font-medium dark:border-neutral-500">
                                         <tr>
-                                            <th scope="col"
-                                                class="text-center text-indigo-600 text-xl font-bold mb-4"
-                                                colspan="7">
+                                            <th scope="col" class="text-center text-indigo-600 text-xl font-bold mb-4" colspan="7">
                                                 {{ 'Reporte Externos ' . $fechaInicio . ' al ' . $fechaFin }}
                                             </th>
                                         </tr>
@@ -142,7 +137,6 @@
                                             </th>
                                         </tr>
                                     </thead>
-
                                     <tbody>
                                         @foreach ($aux as $nombre => $servicio)
                                             <tr class="border-b dark:border-neutral-500 bg-orange-200">
@@ -201,14 +195,26 @@
 
         {{-- Tabla reporte 2 --}}
         @if ($asistir)
-            <div wire:model="">
+            <div wire:model="" id='data_2'>
                 <div class="bg-gray-200 px-8 py-4 rounded-xl w-full mt-2">
-                    <h4 class="text-center text-indigo-600 text-xl font-bold mb-4 mt-4">
-                        {{ 'Resumen de Talleres ' . $fechaInicio . ' al ' . $fechaFin }}
-                    </h4>
                     <table class="min-w-full border text-center text-sm font-light dark:border-neutral-500">
                         <thead class="border-b font-medium dark:border-neutral-500">
-                            <h4 class="text-indigo-600 text-xl font-bold mb-4">Pagos Semanales</h4>
+                            <tr>
+                                <th scope="col" class="text-center text-indigo-600 text-xl font-bold mb-4" colspan="7">
+                                    {{ 'Resumen Talleres ' . $fechaInicio . ' al ' . $fechaFin }}
+                                </th>
+                            </tr>
+                            <tr>
+                                <td colspan="7" style="height: 20px;"></td>
+                            </tr>
+                            <tr>
+                                <th scope="col" class="text-center text-indigo-600 text-xl font-bold mb-4" colspan="7">
+                                    {{ 'Pagos Semanales '}}
+                                </th>
+                            </tr>
+                            <tr>
+                                <td colspan="7" style="height: 20px;"></td>
+                            </tr>
                             <tr class="bg-indigo-200">
                                 <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">#</th>
                                 <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">TALLERES</th>
@@ -250,7 +256,7 @@
                                     Total:
                                 </td>
                                 <td class="border-r px-6 py-3 dark:border-neutral-500 font-bold">
-                                    S/{{ number_format(collect($semanales)->sum('total'), 2) }}
+                                    {{ number_format(collect($semanales)->sum('total'), 2) }}
                                 </td>
                             </tr>
                         </tbody>
@@ -258,7 +264,14 @@
 
                     <table class="min-w-full border text-center text-sm font-light dark:border-neutral-500">
                         <thead class="border-b font-medium dark:border-neutral-500">
-                            <h4 class="text-indigo-600 text-xl font-bold mb-4 mt-4">Pagos Diarios</h4>
+                            <tr>
+                                <th scope="col" class="text-center text-indigo-600 text-xl font-bold mb-4" colspan="7">
+                                    {{ 'Pagos Diarios '}}
+                                </th>
+                            </tr>
+                            <tr>
+                                <td colspan="7" style="height: 20px;"></td>
+                            </tr>
                             <tr class="bg-indigo-200">
                                 <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">#</th>
                                 <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">TALLERES</th>
@@ -300,7 +313,7 @@
                                     Total:
                                 </td>
                                 <td class="border-r px-6 py-3 dark:border-neutral-500 font-bold">
-                                    S/{{ number_format(collect($diarios)->sum('total'), 2) }}
+                                    {{ number_format(collect($diarios)->sum('total'), 2) }}
                                 </td>
                             </tr>
                         </tbody>
@@ -336,13 +349,30 @@
 
     </div>
     @push('js')
-        <script>
+        <!--script>
             Livewire.on('exportaData', () => {
                 // Obtener los datos de la tabla
                 data = document.getElementById('data_1').innerHTML;
                 console.log(data);
                 // Emitir el evento exportarExcel con los datos de la tabla
-                Livewire.emit('exportarExcel', data);
+                Livewire.emit('exportarPdf', data);
+            });
+        </script-->
+        <script>
+            Livewire.on('exportaData', () => {
+                // Obtener los datos de ambas tablas
+                const data1 = document.getElementById('data_1').innerHTML;
+                const data2 = document.getElementById('data_2').innerHTML;
+        
+                // Crear un objeto para enviar ambos conjuntos de datos
+                const exportData = {
+                    data1: data1,
+                    data2: data2
+                };
+        
+                console.log(exportData);
+                // Emitir el evento exportarPdf con los datos de ambas tablas
+                Livewire.emit('exportarExcel', exportData);
             });
         </script>
         <script>

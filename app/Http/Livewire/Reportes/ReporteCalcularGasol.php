@@ -12,6 +12,7 @@ use App\Models\CertificacionPendiente;
 use App\Models\Desmontes;
 use App\Models\PrecioInspector;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -30,19 +31,33 @@ class ReporteCalcularGasol extends Component
     public $mtg, $discrepancias, $gasol, $asistir;
     public $mtg2, $mtg3;
     public $semanales, $diarios;
-    public $idsTabla1 = [
-        'ARTURO MOTORS S.A.C.',
-        'AUTOMOTRIZ D. SALAZAR',
-        'AUTOTRONICA JOEL CARS',
-        'AUTOTRONICA JOEL CARS E.I.R.L. - II',
-        'TALLER PRUEBA'
-    ];
+    public $idsTabla1 = ['ARTURO MOTORS S.A.C.',
+    'AUTOMOTRIZ D. SALAZAR',
+    'AUTOTRONICA JOEL CARS',
+    'AUTOTRONICA JOEL CARS E.I.R.L. - II',
+    'CITV UNIGAS S.A.C.',
+    'FACTORÍA ANGIE S.A.C.',
+    'GASCAR CONVERSIONES S.A.C',
+    'GEMOL E.I.R.L',
+    'GREEN ENERGY PERU S.A.C',
+    'INVERSIONES FAGONI S.A.C.',
+    'J.R. AUTOMOTRICES S.A.C.',
+    'LIFE GAS COMPANY S.A.C.',
+    'REYCICAR S.A.C.',
+    'REYGAS S.A.C. II',
+    'SERVICIOS MULTIPLES DR SRL',
+    'UNIGAS HOME S.A.C.',
+    'UNIGAS CONVERSIONES S.A.C.'];
 
-    public $idsTabla2 = [
-        'CONVERSIONES SERPEGAS S.A.C. - 2',
-        'CORPORACIÓN PERÚ GAS FJA E.I.R.L.',
-        'IMPORTACIONES STAR GAS S.A.C',
-    ];
+    public $idsTabla2 = ['CONVERSIONES SERPEGAS S.A.C. - 2',
+    'CORPORACIÓN PERÚ GAS FJA E.I.R.L.',
+    'IMPORTACIONES STAR GAS S.A.C',
+    'TALLER PRUEBA',
+    'MEGA FLASH GNV S.A.C',
+    'MEGA FLASH GNV S.A.C. - SANTA ROSA',
+    'MISHAEL PERU S.A.C.',
+    'PJ CONVERSIONES S.A.C.',
+    'WILTON MOTORS E.I.R.L -II'];
 
     //VARIABLE PARA JUNTAR LOS DOS REPORTES
     public $totalTalleres = 0;
@@ -210,10 +225,26 @@ class ReporteCalcularGasol extends Component
         // Definir relacion entre talleres e inspectores
         $mapaTalleresInspectores = [
             'ARTURO MOTORS S.A.C.' => ['Miguel Alexis Lacerna Aycachi'],
+            'LIFE GAS COMPANY S.A.C.' => ['Julio Roger Cabanillas Cornejo'],
+            'GREEN ENERGY PERU S.A.C' => ['Gris Yordin Bonifacio Rivera'],
+            'WILTON MOTORS E.I.R.L -II' => ['Ricardo Jesus Meza Espinal'],
+            'UNIGAS HOME S.A.C.' => ['Ronaldo Piero Navarro Endara'],
+            'CITV UNIGAS S.A.C.' => ['Adrian Suarez Perez'],
+            'UNIGAS CONVERSIONES S.A.C.' => ['Jhon Antonio Diaz Lobo', 'Ronaldo Piero Navarro Endara'],
+            'MISHAEL PERU S.A.C.' => ['Jhonatan Michael Basilio Soncco', 'Jhon Antonio Diaz Lobo', 'Gris Yordin Bonifacio Rivera'],
+            'INVERSIONES FAGONI S.A.C.' => ['Elmer Jesus Canares Minaya'],
+            'CORPORACIÓN PERÚ GAS FJA E.I.R.L.' => ['Jhunior Meza Arroyo', 'Cristhian Smith Huanay Condor'],
+            'IMPORTACIONES STAR GAS S.A.C' => ['Gianella Isabel Sanchez Herrera', 'Cristhian David Saenz Nuñez'],
+            'MEGA FLASH GNV S.A.C' => ['Rolly Garcia Barrozo', 'Oscar Enrique Soto Vega'],
+            'MEGA FLASH GNV S.A.C. - SANTA ROSA' => ['Rolly Garcia Barrozo', 'Oscar Enrique Soto Vega'],
+            'J.R. AUTOMOTRICES S.A.C.' => ['Jaison Aurelio Aquino Antunez', 'Jhon Antonio Diaz Lobo', 'Elmer Jesus Canares Minaya', 'Erick Daniel Pachas Sanchez'],
+            'CONVERSIONES SERPEGAS S.A.C. - 2' => ['Emanuel Fernando Salazar Martinez'],
+            'REYCICAR S.A.C.' => ['Cristhian David Saenz Nuñez'],
             'REYGAS S.A.C. II' => ['Jennifer Alexandra Villarreal Polo'],
-            'AUTOTRONICA JOEL CARS' => ['Luis Alberto Esteban Torres'],
+            'AUTOTRONICA JOEL CARS' => ['Luis Alberto Esteban Torres'], 
             'AUTOTRONICA JOEL CARS E.I.R.L. - II' => ['Luis Alberto Esteban Torres']
         ];
+        
         $this->asistir = $this->mtg3->groupBy('taller')->map(function ($items) use ($mapaTalleresInspectores) {
             $taller = $items->first()['taller'];
             $inspectoresDesignados = $mapaTalleresInspectores[$taller] ?? null;
@@ -244,10 +275,12 @@ class ReporteCalcularGasol extends Component
     }
 
 
-    public function exportarExcel($data)
+    
+    public function exportarExcel($exportData)
     {
-        return Excel::download(new ReporteCalcularExport2($data), 'reporte_calculo.xlsx');
+        return Excel::download(new ReporteCalcularExport2($exportData), 'reporte_calculo.xlsx');
     }
+
 
     //FUNCIONES PARA REPORTE 1
     public function generaData()

@@ -1991,7 +1991,7 @@
         <table style="width: 100%; border: 1px solid; border-collapse: collapse; margin: auto;">
             <tr>
                 <td style="border: 1px solid; border-collapse: collapse;width: 25%;text-align: center;">
-                    {{ $inspector->name }}
+                    {{ $rutaNombre }}
                 </td>
                 <td style="border: 1px solid; border-collapse: collapse;width: 25%;">
                     {{--<img src="{{ './' . Storage::url($inspector->rutaFirma) }}" width="180" height="90" />--}}

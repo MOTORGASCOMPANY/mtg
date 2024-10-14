@@ -231,9 +231,11 @@ class PdfController extends Controller
             $inspector = $certificacion->Inspector;
             $inspectorAutorizado = $inspector->inspectorAutorizado;            
             if ($inspectorAutorizado) {
-                $rutaFirma = $inspectorAutorizado->rutaFirma;                
+                $rutaFirma = $inspectorAutorizado->rutaFirma;
+                $rutaNombre = $inspectorAutorizado->name;            
             } else {
                 $rutaFirma = $certificacion->Inspector->rutaFirma;
+                $rutaNombre = $certificacion->Inspector->name;
             }
             //dd($rutaFirma); 
 
@@ -249,6 +251,7 @@ class PdfController extends Controller
                 "cilindros" => $certificacion->CilindrosGlp,
                 "certificacion" => $certificacion,
                 "rutaFirma" => $rutaFirma, // Aquí pasamos la firma que corresponde
+                "rutaNombre" => $rutaNombre, 
             ];
             
             $pdf = App::make('dompdf.wrapper');
@@ -271,8 +274,10 @@ class PdfController extends Controller
             $inspectorAutorizado = $inspector->inspectorAutorizado;            
             if ($inspectorAutorizado) {
                 $rutaFirma = $inspectorAutorizado->rutaFirma;
+                $rutaNombre = $inspectorAutorizado->name;
             } else {
                 $rutaFirma = $certificacion->Inspector->rutaFirma;
+                $rutaNombre = $certificacion->Inspector->name;
             }
             //dd($rutaFirma); 
             
@@ -289,6 +294,7 @@ class PdfController extends Controller
                 "cilindros" => $certificacion->CilindrosGlp,
                 "certificacion" => $certificacion,
                 "rutaFirma" => $rutaFirma, // Aquí pasamos la firma que corresponde 
+                "rutaNombre" => $rutaNombre, 
             ];
             $pdf = App::make('dompdf.wrapper');
             $pdf->loadView('checkListCilindroAbajoGlp', $data);

@@ -13,21 +13,30 @@ use Maatwebsite\Excel\Concerns\WithStyles;
 
 class ReporteCalcularExport2 implements FromView, ShouldAutoSize, WithStyles
 {
-    public $data;
+    public $exportData;
 
-    public function __construct($data)
+    public function __construct($exportData)
     {
-        $this->data = $data;
+        $this->exportData = $exportData;
     }
+
     /*public function view(): View
     {
-        //dd($this->data);
-        return view('reporteCalcular', ['data' => $this->data]);
+        return view('reporteCalcular', ['data' => new HtmlString($this->exportData)]);
     }*/
+
     public function view(): View
     {
-        return view('reporteCalcular', ['data' => new HtmlString($this->data)]);
+        // Suponiendo que exportData es un array con las claves 'data1' y 'data2'
+        $data1 = $this->exportData['data1'];
+        $data2 = $this->exportData['data2'];
+
+        return view('reporteCalcular', [
+            'data1' => new HtmlString($data1),
+            'data2' => new HtmlString($data2)
+        ]);
     }
+
 
     /*public function styles(Worksheet $sheet)
     {
@@ -47,7 +56,7 @@ class ReporteCalcularExport2 implements FromView, ShouldAutoSize, WithStyles
 
     public function styles(Worksheet $sheet)
     {
-        // Estilo para el título en la primera fila (opcional)
+        /*/ Estilo para el título en la primera fila (opcional)
         $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(12);
         $sheet->mergeCells('A1:G1'); // Fusionar celdas de la primera fila para el título
         $sheet->getStyle('A1')->getAlignment()->setHorizontal('center'); // Centrar el texto en la celda
@@ -65,9 +74,9 @@ class ReporteCalcularExport2 implements FromView, ShouldAutoSize, WithStyles
             ->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
         // Hacer negrita la tercera fila (encabezados)
-        $sheet->getStyle('A3:G3')->getFont()->setBold(true);
+        $sheet->getStyle('A3:G3')->getFont()->setBold(true);*/
 
-        // Recorre cada fila donde tienes datos para asegurar que los valores sean numéricos
+        /*/ Recorre cada fila donde tienes datos para asegurar que los valores sean numéricos
         for ($row = 4; $row < $highestRow; $row++) {
             // Verifica si el valor en la columna G es un número
             $currentValue = $sheet->getCell('G' . $row)->getValue();
@@ -91,6 +100,6 @@ class ReporteCalcularExport2 implements FromView, ShouldAutoSize, WithStyles
             ->getNumberFormat()
             ->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1); // Formato para números con comas
 
-        return [];
+        return [];*/
     }
 }

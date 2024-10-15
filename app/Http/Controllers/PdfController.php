@@ -14,6 +14,7 @@ use App\Models\Expediente;
 use App\Models\Memorando;
 use App\Models\Salida;
 use App\Models\User;
+use App\Models\VacacionAsignada;
 use DateTime;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
@@ -1617,6 +1618,42 @@ class PdfController extends Controller
             return $decenas[$decena] . ($unidad ? ' y ' . $unidades[$unidad] : ''); // Devolver la combinación de decena y unidad
         }
         return $unidades[$monto];
+    }
+
+    //Vista para generar constancia de vacacion asignada
+    public function generaPdfVacacionAsig($id)
+    {
+        $vacac = VacacionAsignada::findOrFail($id);
+        if ($vacac) {
+            $meses = array("Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre");
+            $fechaCert = is_string($vacac->created_at) ? new DateTime($vacac->created_at) : $vacac->created_at;
+            $fechaForma = $fechaCert->format('d') . ' días del mes de ' . $meses[$fechaCert->format('m') - 1] . ' del ' . $fechaCert->format('Y');
+            $inspector = $vacac->Vacacion->contrato->empleado->name ?? null;
+            $cargo = $vacac->Vacacion->contrato->cargo ?? null;
+
+            $emp = is_string($vacac->f_inicio) ? new DateTime($vacac->f_inicio) : $vacac->f_inicio;
+            $empieza = $emp->format('d') . ' de ' . $meses[$emp->format('m') - 1] . ' del ' . $emp->format('Y');
+
+            // Sumar los días tomados a la fecha de inicio
+            $term = is_string($vacac->f_inicio) ? new DateTime($vacac->f_inicio) : $vacac->f_inicio;
+            $term->modify('+' . ($vacac->d_tomados - 1) . ' days');  // Sumar los días tomados
+            $termina = $term->format('d') . ' de ' . $meses[$term->format('m') - 1] . ' del ' . $term->format('Y');
+
+
+            $data = [
+                'fechaBase' => $fechaForma,
+                'inspector' => $inspector,
+                'cargo' => $cargo,
+                'empieza' => $empieza,
+                'termina' => $termina,
+            ];
+
+            $pdf = App::make('dompdf.wrapper');
+            $pdf->loadView('rptacomple', $data);
+            return $pdf->stream($vacac->id . '-vacacionAsig.pdf');
+        } else {
+            abort(404);
+        }
     }
 
     //Genera pdf boleta / vaucher

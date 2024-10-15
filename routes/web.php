@@ -343,6 +343,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
             Route::get('/contrato/{id}', 'generaPdfContrato')->name("contratoTrabajo");
             Route::get('/contrato/{id}/descargar', 'descargaPdfContrato')->name("descargarContratoTrabajo");
 
+            //Rutas para ver constacncia de vacaciones
+            Route::get('/VacacionAsig/{id}', 'generaPdfVacacionAsig')->name("VacacionAsig");
+
 
             //Rutas para boletas y vaucher
             Route::get('/boletas/{id}', 'generaPdfBoleta')->name("generaPdfBoleta");

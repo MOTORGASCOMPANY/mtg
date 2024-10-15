@@ -310,7 +310,7 @@ class ServicioModi extends Component
             ]);
 
             // Agrega la fecha al modelo Certificacion
-            $certi->update(['created_at' => $this->fechaCertificacion]);
+            //$certi->update(['created_at' => $this->fechaCertificacion]);
 
             $this->guardarFotos($expe);
             guardarArchivosEnExpediente::dispatch($expe, $certi);

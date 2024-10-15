@@ -92,14 +92,15 @@
                         </td>
                         <td class="">
                             <div class="flex space-x-2">
-                                <button wire:click=""
-                                    class="group flex py-2 px-2 text-center items-center rounded-md bg-yellow-300 font-bold text-white cursor-pointer hover:bg-yellow-400 hover:animate-pulse">
-                                    <i class="fas fa-eye"></i>
-                                    <span
-                                        class="group-hover:opacity-100 transition-opacity bg-gray-800 px-1 text-sm text-gray-100 rounded-md absolute left-1/2-translate-x-1/2 translate-y-full opacity-0 m-4 mx-auto z-50">
-                                        Ver
-                                    </span>
-                                </button>
+                                <a href="{{ route('VacacionAsig', ['id' => $vac->id]) }}"
+                                    target="_blank"
+                                    class="group flex py-2 px-2 text-center items-center rounded-md bg-blue-300 font-bold text-white cursor-pointer hover:bg-blue-400 hover:animate-pulse">
+                                     <i class="fas fa-eye"></i>
+                                     <span
+                                         class="group-hover:opacity-100 transition-opacity bg-gray-800 px-1 text-sm text-gray-100 rounded-md absolute left-1/2-translate-x-1/2 translate-y-full opacity-0 m-4 mx-auto z-50">
+                                         Constancia
+                                     </span>
+                                 </a>
                                 @hasanyrole('administrador|Administrador del sistema')
                                     <button wire:click="abrirModal({{ $vac->id }})"
                                         class="group flex py-2 px-2 text-center items-center rounded-md bg-orange-300 font-bold text-white cursor-pointer hover:bg-orange-400 hover:animate-pulse">

@@ -11,6 +11,7 @@ use App\Http\Livewire\Talleres;
 use App\Models\Certificacion;
 use App\Models\CertificacionPendiente;
 use App\Models\Desmontes;
+use App\Models\PrecioInspector;
 use App\Models\User;
 use Illuminate\Cache\NullStore;
 use Illuminate\Support\Collection;
@@ -41,7 +42,8 @@ class ReportesGasolution extends Component
             ->orderBy('name')
             ->get();
         $this->talleres = Taller::orderBy('nombre')->get();
-        $this->tipos = TipoServicio::all();
+        //$this->tipos = TipoServicio::all();
+        $this->tipos = TipoServicio::whereIn('id', [1, 2, 6, 8])->get();
         $this->user = Auth::user();
     }
 
@@ -55,12 +57,32 @@ class ReportesGasolution extends Component
         $this->validate();
         $this->tabla = $this->generaData();
         $this->importados = $this->cargaServiciosGasolution();
+        //Trim para eliminar espacios por inspector y taller
+        $this->tabla = $this->tabla->map(function ($item) {
+            $item['placa'] = trim($item['placa']);
+            $item['inspector'] = trim($item['inspector']);
+            $item['taller'] = trim($item['taller']);
+            return $item;
+        });
+        $this->importados = $this->importados->map(function ($item) {
+            $item['placa'] = trim($item['placa']);
+            $item['inspector'] = trim($item['inspector']);
+            $item['taller'] = trim($item['taller']);
+            return $item;
+        });
+
         $this->diferencias = $this->encontrarDiferenciaPorPlaca($this->tabla, $this->importados);
-        $serviciosPermitidos = ['Conversión a GLP', 'Revisión anual GLP', 'Modificación', 'Duplicado GNV', 'Conversión a GNV + Chip', 'Chip por deterioro', 'Pre-inicial GNV', 'Pre-inicial GLP'];
+        /*$serviciosPermitidos = ['Conversión a GLP', 'Revisión anual GLP', 'Modificación', 'Duplicado GNV', 'Conversión a GNV + Chip', 'Chip por deterioro', 'Pre-inicial GNV', 'Pre-inicial GLP'];
         $servisrestantes = $this->diferencias->filter(function ($item) use ($serviciosPermitidos) {
             return in_array($item['servicio'], $serviciosPermitidos);
+        });*/
+
+        // Filtrar las diferencias que tienen 'servicio' = 'Duplicado GNV'
+        $duplicadosGNV = $this->diferencias->filter(function ($item) {
+            return $item['servicio'] === 'Duplicado GNV';
         });
-        $this->tabla2 = $this->importados->merge($servisrestantes, function ($item1, $item2) {
+
+        $this->tabla2 = $this->importados->merge($duplicadosGNV, function ($item1, $item2) {
             $inspector1 = strtolower($item1['inspector']);
             $inspector2 = strtolower($item2['inspector']);
             $taller1 = strtolower($item1['taller']);
@@ -69,8 +91,43 @@ class ReportesGasolution extends Component
             return $comparison;
         });
 
-        $this->grupoinspectores = $this->tabla2->groupBy('inspector');
+        // Lista de inspectores a excluir
+        $insExcluir = [
+            'Adrian Suarez Perez',
+            'Cristhian David Saenz Nuñez',
+            'Cristhian Smith Huanay Condor',
+            'Elmer Jesus Canares Minaya',
+            'Elvis Alexander Matto Perez',
+            'Emanuel Fernando Salazar Martinez',
+            'Gianella Isabel Sanchez Herrera',
+            'Gianfranco Charyv Garcia Camacho',
+            'Gris Yordin Bonifacio Rivera',
+            'Harrinson Jesus Cordova Vilela',
+            'Jaison Aurelio Aquino Antunez',
+            'Javier Alfredo Chevez Parcano',
+            'Jennifer Alexandra Villarreal Polo',
+            'Jhon Antonio Diaz Lobo',
+            'Jhunior Meza Arroyo',
+            'Julio Roger Cabanillas Cornejo',
+            'Luis Alberto Esteban Torres',
+            'Luis Amorr Huacho Cruz',
+            'Miguel Alexis Lacerna Aycachi',
+            'Oscar Enrique Soto Vega',
+            'Raul Llata Pacheco',
+            'Ricardo Jesus Meza Espinal',
+            'Ronaldo Piero Navarro Endara',
+            'York Darly Cruz Ampuero',
+            'Cristopher Lee Barzola Carhuancho',
+            'Erick Daniel Pachas Sanchez',
+            'Jhonatan Michael Basilio Soncco'
+        ];
 
+        // Excluir inspectores del reporte
+        $this->tabla2 = $this->tabla2->reject(function ($item) use ($insExcluir) {
+            return in_array($item['inspector'], $insExcluir);
+        });
+
+        $this->grupoinspectores = $this->tabla2->groupBy('inspector');
     }
 
     public function exportarExcel()
@@ -79,7 +136,7 @@ class ReportesGasolution extends Component
         $data = $this->tabla2;
         if ($data) {
             $fecha = now()->format('d-m-Y');
-            return Excel::download(new ReporteDetalladoGasolExport($data), 'ReporteCalcular' . $fecha . '.xlsx');
+            return Excel::download(new ReporteDetalladoGasolExport($data), 'RptaExternos(Gasolution)-' . $fecha . '.xlsx');
         }
     }
 
@@ -90,30 +147,13 @@ class ReportesGasolution extends Component
         $certificaciones = Certificacion::idTalleres($this->taller)
             ->IdInspectores($this->ins)
             ->IdTipoServicio($this->servicio)
-            ->whereHas('Inspector', function ($query) {
-                $query->whereNotIn('id', [37, 117, 201]);
-            })
             ->rangoFecha($this->fechaInicio, $this->fechaFin)
             ->where('pagado', 0)
             ->whereIn('estado', [3, 1])
             ->get();
 
-        //TODO CER-PENDIENTES PARA OFICINA:
-        $cerPendiente = CertificacionPendiente::idTalleres($this->taller)
-            ->IdInspectores($this->ins)
-            ->IdTipoServicios($this->servicio)
-            ->whereHas('Inspector', function ($query) {
-                $query->whereNotIn('id', [37, 117, 201]);
-            })
-            ->rangoFecha($this->fechaInicio, $this->fechaFin)
-            //->where('estado', 1)
-            //->whereNull('idCertificacion')
-            ->get();
-
-
         //UNIFICANDO CERTIFICACIONES    
         foreach ($certificaciones as $certi) {
-            //modelo preliminar
             $data = [
                 "id" => $certi->id,
                 "placa" => $certi->Vehiculo->placa,
@@ -131,26 +171,6 @@ class ReportesGasolution extends Component
             ];
             $tabla->push($data);
         }
-
-        foreach ($cerPendiente as $cert_pend) {
-            //modelo preliminar
-            $data = [
-                "id" => $cert_pend->id,
-                "placa" => $cert_pend->Vehiculo->placa,
-                "taller" => $cert_pend->Taller->nombre,
-                "inspector" => $cert_pend->Inspector->name,
-                "servicio" => 'Activación de chip (Anual)', // es ese tipo de servicio por defecto
-                "num_hoja" => Null,
-                "ubi_hoja" => Null,
-                "precio" => $cert_pend->precio,
-                "pagado" => $cert_pend->pagado,
-                "estado" => $cert_pend->estado,
-                "tipo_modelo" => $cert_pend::class,
-                "fecha" => $cert_pend->created_at,
-            ];
-            $tabla->push($data);
-        }
-
         //$this->grupoinspectores = $tabla->groupBy('inspector');
         return $tabla;
     }
@@ -158,15 +178,13 @@ class ReportesGasolution extends Component
     public function cargaServiciosGasolution()
     {
         $disc = new Collection();
-        //TODO SER-IMPORTADOS PARA OFICINA:
         $dis = ServiciosImportados::Talleres($this->taller)
             ->Inspectores($this->ins)
             ->TipoServicio($this->servicio)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
             ->get();
 
-
-        foreach ($dis as $registro) {
+        /*foreach ($dis as $registro) {
             $data = [
                 "id" => $registro->id,
                 "placa" => $registro->placa,
@@ -182,8 +200,41 @@ class ReportesGasolution extends Component
                 "fecha" => $registro->fecha,
             ];
             $disc->push($data);
+        }*/
+        foreach ($dis as $registro) {
+            // Buscar el inspector en precios_inspector basado en el name del certificador (inspector)
+            $inspector = User::where('name', $registro->certificador)->first();
+            $precio = 0; // Inicializar el precio en 0
+            // Verificar si existe el inspector
+            if ($inspector) {
+                // Buscar el servicio en precios_inspector comparando por idServicio
+                $precioInspector = PrecioInspector::where('idUsers', $inspector->id)
+                    ->whereHas('tipoServicio', function ($query) use ($registro) {
+                        // Comparar la descripción del servicio
+                        $query->where('descripcion', $registro->TipoServicio->descripcion);
+                    })
+                    ->first();
+                // Si se encuentra un precio en precios_inspector, asignarlo
+                if ($precioInspector) {
+                    $precio = $precioInspector->precio;
+                }
+            }
+            $data = [
+                "id" => $registro->id,
+                "placa" => $registro->placa,
+                "taller" => $registro->taller,
+                "inspector" => $registro->certificador,
+                "servicio" => $registro->TipoServicio->descripcion,
+                "num_hoja" => Null,
+                "ubi_hoja" => Null,
+                "precio" => $precio,
+                "pagado" => $registro->pagado,
+                "estado" => $registro->estado,
+                "tipo_modelo" => $registro::class,
+                "fecha" => $registro->fecha,
+            ];
+            $disc->push($data);
         }
-
         //$this->grupoinspectores = $disc->groupBy('inspector');
         return $disc;
     }
@@ -230,14 +281,12 @@ class ReportesGasolution extends Component
             $servicio1 = $elemento1['servicio'];
             $encontrado = false;
 
-
-
             foreach ($lista2 as $elemento2) {
                 $placa2 = $elemento2['placa'];
                 $inspector2 = $elemento2['inspector'];
                 $servicio2 = $elemento2['servicio'];
 
-                if ($placa1 === $placa2 && $inspector1 === $inspector2) {
+                /*if ($placa1 === $placa2 && $inspector1 === $inspector2) {
                     if (
                         ($elemento2['tipo_modelo'] == 'App\Models\CertificacionPendiente' && $servicio1 == 'Revisión anual GNV') ||
                         ($servicio2 == 'Conversión a GNV + Chip' && $servicio1 == 'Conversión a GNV')
@@ -248,11 +297,16 @@ class ReportesGasolution extends Component
                         $encontrado = true;
                         break;
                     }
+                }*/
+                if ($placa1 === $placa2 && $inspector1 === $inspector2 && $servicio1 === $servicio2) {
+                    $encontrado = true;
+                    break;
                 }
             }
 
             if (!$encontrado) {
-                $diferencias[] = $elemento1;
+                //$diferencias[] = $elemento1;
+                $diferencias->push(collect($elemento1));
             }
         }
 

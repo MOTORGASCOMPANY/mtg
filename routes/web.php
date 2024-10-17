@@ -246,8 +246,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::get('/Reporte-semanal', ReporteCalcular::class)->middleware('can:reportes.reporteCalcular')->name('reportes.reporteCalcular'); //3 Reporte Semanal
         Route::get('/Reporte-MTG', ReportesMtg::class)->middleware('can:reportes.reporteMTG')->name('reportes.reporteMTG'); //4 Reporte detallado MTG mejorar descarga excell
         Route::get('/Reporte-Gasol', ReportesGasolution::class)->middleware('can:reportes.reporteGasol')->name('reportes.reporteGasol'); //5 Reporte detallado Gasol
-        Route::get('/Reporte-actualizar-mtg', ActualizarPrecios::class)->middleware('can:reportes.reporteActualizarPrecio')->name('reportes.reporteActualizarPrecio'); //6 Reporte Actualizar MTG
-        Route::get('/Reporte-actualizar-gasol', ActualizarPreciosGasol::class)->middleware('can:reportes.reporteActualizarGasol')->name('reportes.reporteActualizarGasol'); //7  Reporte Actualizar GASOL
+        Route::get('/Reporte-actualizar-mtg', ActualizarPrecios::class)->middleware('can:reportes.reporteActualizarPrecio')->name('reportes.reporteActualizarPrecio'); //6 Reporte Actualizar precios MTG
+        Route::get('/Reporte-actualizar-gasol', ActualizarPreciosGasol::class)->middleware('can:reportes.reporteActualizarGasol')->name('reportes.reporteActualizarGasol'); //7  Reporte Actualizar precios GASOL
 
         //RUTAS PARA VER LOS REPORTES DE MATERIALES
         Route::get('/Reporte-salida-materiales', ReporteSalidaMateriales::class)->middleware('can:reportes.reporteSalidaMateriales')->name('reportes.reporteSalidaMateriales'); // reporte salida materiales

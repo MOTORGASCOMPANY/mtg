@@ -36,10 +36,10 @@ class ReporteTallerRsmnExport implements FromView, ShouldAutoSize, WithStyles
         $sheet->getStyle('F34:G34')->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
 
         // Encabezado de la primera tabla (negrita en A2:G2)
-        $sheet->getStyle('A2:G2')->getFont()->setBold(true);
+        //$sheet->getStyle('A2:G2')->getFont()->setBold(true);
 
         // Encabezado de la segunda tabla (negrita en A7:G7)
-        $sheet->getStyle('A22:G22')->getFont()->setBold(true);
+        //$sheet->getStyle('A22:G22')->getFont()->setBold(true);
 
         // Formato de dos decimales para la columna G (totales)
         $sheet->getStyle('G:G')->getNumberFormat()->setFormatCode('#,##0.00');

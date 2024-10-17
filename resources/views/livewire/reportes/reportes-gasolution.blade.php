@@ -4,54 +4,11 @@
             <div class="p-2 w-64 my-4 md:w-full">
                 <h2 class="text-indigo-600 font-bold text-3xl">
                     <i class="fa-solid fa-square-poll-vertical fa-xl"></i>
-                    &nbsp;REPORTE GENERAL DETALLADO GASOLUTION
+                    &nbsp;REPORTE DETALLADO EXTERNOS (GASOLUTION)
                 </h2>
             </div>
             <div class="flex flex-wrap items-center space-x-2">
-                {{--
-                    <div x-data="{ isOpen: false }" class="flex bg-white items-center p-2 rounded-md mb-4">
-                        <span class="mr-1">Taller: </span>
-                        <div class="relative">
-                            <div x-on:click="isOpen = !isOpen" class="cursor-pointer">
-                                <input wire:model="taller" type="text" placeholder="Seleccione" readonly
-                                    class="bg-gray-50 border-indigo-500 rounded-md outline-none px-4 py-2 w-full md:w-80">
-                            </div>
-                            <div x-show="isOpen" x-on:click.away="isOpen = false"
-                                class="absolute z-10 mt-2 bg-white border rounded-md shadow-md max-h-96 overflow-y-auto w-full md:w-80">
-                                @isset($talleres)
-                                    @foreach ($talleres as $tallerItem)
-                                        <label for="taller_{{ $tallerItem->id }}" class="block px-4 py-2 cursor-pointer">
-                                            <input id="taller_{{ $tallerItem->id }}" wire:model="taller" type="checkbox"
-                                                value="{{ $tallerItem->id }}" class="mr-2">
-                                            {{ $tallerItem->nombre }}
-                                        </label>
-                                    @endforeach
-                                @endisset
-                            </div>
-                        </div>
-                    </div>
-
-                    <div x-data="{ isOpen: false }" class="flex bg-white items-center p-2 rounded-md mb-4">
-                        <span class="mr-1">Inspector: </span>
-                        <div class="relative">
-                            <div x-on:click="isOpen = !isOpen" class="cursor-pointer">
-                                <input wire:model="ins" type="text" placeholder="Seleccione" readonly
-                                    class="bg-gray-50 border-indigo-500 rounded-md outline-none px-4 py-2 w-full md:w-80">
-                            </div>
-                            <div x-show="isOpen" x-on:click.away="isOpen = false"
-                                class="absolute z-10 mt-2 bg-white border rounded-md shadow-md max-h-96 overflow-y-auto w-full md:w-80">
-                                @foreach ($inspectores as $inspector)
-                                    <label for="inspector_{{ $inspector->id }}" class="block px-4 py-2 cursor-pointer">
-                                        <input id="inspector_{{ $inspector->id }}" wire:model="ins" type="checkbox"
-                                            value="{{ $inspector->id }}" class="mr-2">
-                                        {{ $inspector->name }}
-                                    </label>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-                --}}
-
+                {{-- FILTRO PARA TALLER 
                 <div x-data="tallerFilter" class="flex bg-white items-center p-2 rounded-md mb-4">
                     <span class="mr-1">Taller: </span>
                     <div class="relative">
@@ -72,8 +29,8 @@
                             </template>
                         </div>
                     </div>
-                </div>
-
+                </div>--}}
+                {{-- FILTRO PARA INSPECTOR --}}
                 <div x-data="inspectorFilter" class="flex bg-white items-center p-2 rounded-md mb-4">
                     <span class="mr-1">Inspector: </span>
                     <div class="relative">
@@ -95,7 +52,7 @@
                         </div>
                     </div>
                 </div>
-
+                {{-- FILTRO PARA SERVICIO --}}
                 <div class="flex bg-gray-50 items-center p-2 rounded-md mb-4 ">
                     <span class="mr-1">Servicio: </span>
                     <select wire:model="servicio"
@@ -108,7 +65,7 @@
                         @endisset
                     </select>
                 </div>
-
+                
                 <div class="flex bg-white items-center p-2 w-48 rounded-md mb-4 ">
                     <span>Desde: </span>
                     <x-date-picker wire:model="fechaInicio" placeholder="Fecha de inicio"
@@ -163,32 +120,36 @@
                                             <tr class="bg-indigo-200">
                                                 <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">#
                                                 </th>
+                                                {{-- 
                                                 <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">ID
                                                 </th>
+                                                --}}
                                                 <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
-                                                    Taller
+                                                    FECHA
                                                 </th>
                                                 <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
-                                                    Inspector
+                                                    HOJA
                                                 </th>
                                                 <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
-                                                    Hoja
+                                                    TALLER
                                                 </th>
                                                 <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
-                                                    Vehículo</th>
+                                                    INSPECTOR
+                                                </th>                                                
                                                 <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
-                                                    Servicio</th>
-                                                <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
-                                                    Fecha
+                                                    VEHICULO
                                                 </th>
                                                 <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
-                                                    Estado
+                                                    SERVICIO
                                                 </th>
                                                 <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
-                                                    Pagado
+                                                    FAC O BOLT
                                                 </th>
                                                 <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
-                                                    Precio
+                                                    OBSERVACION
+                                                </th>
+                                                <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
+                                                    MONTO
                                                 </th>
                                             </tr>
                                         </thead>
@@ -196,30 +157,27 @@
                                         <tbody>
                                             @foreach ($certificacion as $key => $data)
                                                 <tr class="border-b dark:border-neutral-500 bg-orange-200">
-                                                    <td
-                                                        class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
+                                                    <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
                                                         {{ $key + 1 }}
                                                     </td>
-                                                    <td
-                                                        class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
-                                                        {{-- is_object($certificacionesInspector) ? $certificacionesInspector->id ?? 'N.A' : 'N.A' --}}
+                                                    {{-- 
+                                                    <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
                                                         {{ $data['id'] }}
                                                     </td>
-                                                    <td
-                                                        class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
+                                                    --}}
+                                                    <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
+                                                        {{ $data['fecha'] ?? 'S.F' }}</td>
+                                                    </td>
+                                                    <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
+                                                        {{ $data['num_hoja'] ?? null }}
+                                                    </td>
+                                                    <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
                                                         {{ $data['taller'] ?? 'N.A' }}
                                                     </td>
-                                                    <td
-                                                        class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
+                                                    <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
                                                         {{ $data['inspector'] ?? 'N.A' }}
-                                                    </td>
-                                                    <td
-                                                        class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
-                                                        {{ $data['num_hoja'] ?? 'N.A' }}
-                                                    </td>
-                                                    <td
-                                                        class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
-                                                        {{-- {{ $data['placa'] ?? 'En tramite' }} --}}
+                                                    </td>                                                    
+                                                    <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
                                                         @if ($data['servicio'] == 'Chip por deterioro')
                                                             @php
                                                                 $ubicacionParts = explode('/', $data['ubi_hoja']);
@@ -232,58 +190,20 @@
                                                             {{ $data['placa'] ?? 'En tramite' }}
                                                         @endif
                                                     </td>
-                                                    <td
-                                                        class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
-                                                        {{ $data['servicio'] ?? 'N.E' }}</td>
-                                                    <td
-                                                        class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
-                                                        {{ $data['fecha'] ?? 'S.F' }}</td>
+                                                    <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
+                                                        {{ $data['servicio'] ?? 'N.E' }}
+                                                    </td>                                                    
+                                                    <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
                                                     </td>
-                                                    <td
-                                                        class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
-                                                        <div class="flex items-center justify-center">
-
-                                                            @switch($data['estado'])
-                                                                @case(1)
-                                                                    <i class="far fa-check-circle fa-lg"
-                                                                        style="color: forestgreen;"></i>
-                                                                @break
-
-                                                                @case(2)
-                                                                    <i class="far fa-times-circle fa-lg"
-                                                                        style="color: red;"></i>
-                                                                @break
-
-                                                                @case(3)
-                                                                    <i
-                                                                        class="fa-regular fa-circle-pause fa-lg text-amber-400"></i>
-                                                                @break
-
-                                                                @default
-                                                                    NA
-                                                            @endswitch
-                                                        </div>
+                                                    <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
                                                     </td>
-                                                    <td
-                                                        class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
-
-
-                                                        @if ($data['pagado'] == 0)
-                                                            Sin cobrar
-                                                        @elseif ($data['pagado'] == 1)
-                                                            Cobrado
-                                                        @else
-                                                            Cert. Pendiente
-                                                        @endif
-
-                                                    <td
-                                                        class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
+                                                    <td class="whitespace-nowrap border-r px-6 py-3 dark:border-neutral-500">
                                                         {{ $data['precio'] ?? 'S.P' }}
                                                     </td>
                                                 </tr>
                                             @endforeach
                                             <tr class="border-b dark:border-neutral-500 bg-green-200">
-                                                <td colspan="10" {{-- {{$mostrar ? '9':'8'}} --}}
+                                                <td colspan="9" {{-- {{$mostrar ? '9':'8'}} --}}
                                                     class="border-r px-6 py-3 dark:border-neutral-500 font-bold text-right">
                                                     Total: {{-- ({{ $certificacionesInspector[0]->nombre }}) --}}
                                                 </td>

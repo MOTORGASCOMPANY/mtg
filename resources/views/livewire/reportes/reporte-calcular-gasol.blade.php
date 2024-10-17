@@ -217,16 +217,10 @@
                                     </th>
                                 </tr>
                                 <tr>
-                                    <td colspan="7" style="height: 20px;"></td>
-                                </tr>
-                                <tr>
                                     <th scope="col" class="text-center text-indigo-600 text-xl font-bold mb-4"
                                         colspan="7">
                                         {{ 'Pagos Semanales ' }}
                                     </th>
-                                </tr>
-                                <tr>
-                                    <td colspan="7" style="height: 20px;"></td>
                                 </tr>
                                 <tr class="bg-indigo-200">
                                     <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">#</th>
@@ -237,8 +231,7 @@
                                     <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500"></th>
                                     <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">FAC O BOLT
                                     </th>
-                                    <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">
-                                        OBSERVACIONES
+                                    <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">OBSERVACIONES
                                     </th>
                                     <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">TOTAL</th>
                                 </tr>
@@ -284,9 +277,6 @@
                                         colspan="7">
                                         {{ 'Pagos Diarios ' }}
                                     </th>
-                                </tr>
-                                <tr>
-                                    <td colspan="7" style="height: 20px;"></td>
                                 </tr>
                                 <tr class="bg-indigo-200">
                                     <th scope="col" class="border-r px-6 py-4 dark:border-neutral-500">#</th>
@@ -340,6 +330,11 @@
                     <div class="bg-gray-200 px-8 py-4 rounded-xl w-full mt-2">
                         <table class="min-w-full border text-center text-sm font-light dark:border-neutral-500">
                             <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                                 <td class="border-r px-6 py-3 dark:border-neutral-500 font-bold">CIERRE TALLERES</td>
                                 <td class="border-r px-6 py-3 dark:border-neutral-500 font-bold">
                                     S/{{ number_format(collect($semanales)->sum('total') + collect($diarios)->sum('total'), 2) }}
@@ -351,6 +346,11 @@
                     <div class="bg-gray-200 px-8 py-4 rounded-xl w-full mt-2">
                         <table class="min-w-full border text-center text-sm font-light dark:border-neutral-500">
                             <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
                                 <td class="border-r px-6 py-3 dark:border-neutral-500 font-bold">CIERRE SEMANAL</td>
                                 <td class="border-r px-6 py-3 dark:border-neutral-500 font-bold">
                                     S/{{ number_format($cierreSemanal, 2) }}

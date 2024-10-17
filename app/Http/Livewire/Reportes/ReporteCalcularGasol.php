@@ -2,7 +2,7 @@
 
 namespace App\Http\Livewire\Reportes;
 
-
+use App\Exports\ReporteTallerRsmnExport;
 use Livewire\Component;
 use App\Models\ServiciosImportados;
 use App\Models\Taller;
@@ -31,40 +31,43 @@ class ReporteCalcularGasol extends Component
     public $mtg, $discrepancias, $gasol, $asistir;
     public $mtg2, $mtg3;
     public $semanales, $diarios;
-    public $idsTabla1 = ['ARTURO MOTORS S.A.C.',
-    'AUTOMOTRIZ D. SALAZAR',
-    'AUTOTRONICA JOEL CARS',
-    'AUTOTRONICA JOEL CARS E.I.R.L. - II',
-    'CITV UNIGAS S.A.C.',
-    'FACTORÍA ANGIE S.A.C.',
-    'GASCAR CONVERSIONES S.A.C',
-    'GEMOL E.I.R.L',
-    'GREEN ENERGY PERU S.A.C',
-    'INVERSIONES FAGONI S.A.C.',
-    'J.R. AUTOMOTRICES S.A.C.',
-    'LIFE GAS COMPANY S.A.C.',
-    'REYCICAR S.A.C.',
-    'REYGAS S.A.C. II',
-    'SERVICIOS MULTIPLES DR SRL',
-    'UNIGAS HOME S.A.C.',
-    'UNIGAS CONVERSIONES S.A.C.'];
-
-    public $idsTabla2 = ['CONVERSIONES SERPEGAS S.A.C. - 2',
-    'CORPORACIÓN PERÚ GAS FJA E.I.R.L.',
-    'IMPORTACIONES STAR GAS S.A.C',
-    'TALLER PRUEBA',
-    'MEGA FLASH GNV S.A.C',
-    'MEGA FLASH GNV S.A.C. - SANTA ROSA',
-    'MISHAEL PERU S.A.C.',
-    'PJ CONVERSIONES S.A.C.',
-    'WILTON MOTORS E.I.R.L -II'];
+    public $idsTabla1 = [
+        'ARTURO MOTORS S.A.C.',
+        'AUTOMOTRIZ D. SALAZAR',
+        'AUTOTRONICA JOEL CARS',
+        'AUTOTRONICA JOEL CARS E.I.R.L. - II',
+        'CITV UNIGAS S.A.C.',
+        'FACTORÍA ANGIE S.A.C.',
+        'GASCAR CONVERSIONES S.A.C',
+        'GEMOL E.I.R.L',
+        'GREEN ENERGY PERU S.A.C',
+        'INVERSIONES FAGONI S.A.C.',
+        'J.R. AUTOMOTRICES S.A.C.',
+        'LIFE GAS COMPANY S.A.C.',
+        'REYCICAR S.A.C.',
+        'REYGAS S.A.C. II',
+        'SERVICIOS MULTIPLES DR SRL',
+        'UNIGAS HOME S.A.C.',
+        'UNIGAS CONVERSIONES S.A.C.'
+    ];
+    public $idsTabla2 = [
+        'CONVERSIONES SERPEGAS S.A.C. - 2',
+        'CORPORACIÓN PERÚ GAS FJA E.I.R.L.',
+        'IMPORTACIONES STAR GAS S.A.C',
+        'TALLER PRUEBA',
+        'MEGA FLASH GNV S.A.C',
+        'MEGA FLASH GNV S.A.C. - SANTA ROSA',
+        'MISHAEL PERU S.A.C.',
+        'PJ CONVERSIONES S.A.C.',
+        'WILTON MOTORS E.I.R.L -II'
+    ];
 
     //VARIABLE PARA JUNTAR LOS DOS REPORTES
     public $totalTalleres = 0;
     public $totalExternos = 0;
     public $cierreSemanal;
 
-    protected $listeners = ['exportarExcel'];
+    protected $listeners = ['exportarExcelExterno', 'exportarExcelRsmn'];
 
     protected $rules = [
         "fechaInicio" => 'required|date',
@@ -79,18 +82,7 @@ class ReporteCalcularGasol extends Component
     public function render()
     {
         return view('livewire.reportes.reporte-calcular-gasol');
-    }
-
-
-
-    public function calcularTotales()
-    {
-        $totalSemanal = collect($this->semanales)->sum('total');
-        $totalDiario = collect($this->diarios)->sum('total');
-        $this->totalTalleres = $totalSemanal + $totalDiario;
-        $this->totalExternos = collect($this->precios)->sum();
-        $this->cierreSemanal = $this->totalTalleres + $this->totalExternos;
-    }
+    }    
 
     //JUNTAR REPORTES
     public function reportes()
@@ -101,7 +93,17 @@ class ReporteCalcularGasol extends Component
         $this->calcularTotales();
     }
 
-    //PROCESAR 1
+    public function calcularTotales()
+    {
+        $totalSemanal = collect($this->semanales)->sum('total');
+        $totalDiario = collect($this->diarios)->sum('total');
+        $this->totalTalleres = $totalSemanal + $totalDiario;
+        $this->totalExternos = collect($this->precios)->sum();
+        $this->cierreSemanal = $this->totalTalleres + $this->totalExternos;
+    }
+
+
+    //FUNCIONES PARA REPORTE 1
     public function procesar()
     {
         //$this->validate();
@@ -123,7 +125,8 @@ class ReporteCalcularGasol extends Component
             return $item;
         });
         //Diferencias entre tabla e importados
-        $this->diferencias = $this->encontrarDiferenciaPorPlaca($this->tabla, $this->importados);
+        //$this->diferencias = $this->encontrarDiferenciaPorPlaca($this->tabla, $this->importados);
+        $this->diferencias = $this->encontrarDiferenciaPorPlaca($this->tabla, $this->importados, true);
         //$this->tabla2 = $this->tabla->merge($this->diferencias);
 
         // Filtrar las diferencias que tienen 'servicio' = 'Duplicado GNV'
@@ -184,105 +187,6 @@ class ReporteCalcularGasol extends Component
         $this->sumaPrecios();
     }
 
-    //PROCESAR 2
-    public function procesar2()
-    {
-        //$this->validate();
-        $this->mtg = $this->generaData2();
-        $this->gasol = $this->cargaServiciosGasolution2();
-        $this->mtg = $this->mtg->map(function ($item) {
-            $item['placa'] = trim($item['placa']);
-            $item['inspector'] = trim($item['inspector']);
-            $item['taller'] = trim($item['taller']);
-            return $item;
-        });
-        $this->gasol = $this->gasol->map(function ($item) {
-            $item['placa'] = trim($item['placa']);
-            $item['inspector'] = trim($item['inspector']);
-            $item['taller'] = trim($item['taller']);
-            return $item;
-        });
-        $this->discrepancias = $this->encontrarDiferenciaPorPlaca2($this->gasol, $this->mtg);
-        //Merge para combinar mtg y discrepancias -  strtolower para ignorar Mayusculas y Minusculas 
-        $this->mtg2 = $this->mtg->merge($this->discrepancias, function ($item1, $item2) {
-            $inspector1 = strtolower($item1['inspector']);
-            $inspector2 = strtolower($item2['inspector']);
-            $taller1 = strtolower($item1['taller']);
-            $taller2 = strtolower($item2['taller']);
-            $comparison = strcasecmp($inspector1 . $taller1, $inspector2 . $taller2);
-            return $comparison;
-        });
-
-        // Filtrar excluir externos a gascar
-        $this->mtg3 = $this->mtg2->filter(function ($item) {
-            return !(
-                ($item['tipo_modelo'] == 'App\Models\Certificacion' || $item['tipo_modelo'] == 'App\Models\CertificacionPendiente') &&
-                ($item['taller'] == 'GASCAR CONVERSIONES S.A.C' || $item['taller'] == 'REYCICAR S.A.C.') &&
-                $item['externo'] == 1
-            );
-        });
-
-        // Definir relacion entre talleres e inspectores
-        $mapaTalleresInspectores = [
-            'ARTURO MOTORS S.A.C.' => ['Miguel Alexis Lacerna Aycachi'],
-            'LIFE GAS COMPANY S.A.C.' => ['Julio Roger Cabanillas Cornejo'],
-            'GREEN ENERGY PERU S.A.C' => ['Gris Yordin Bonifacio Rivera'],
-            'WILTON MOTORS E.I.R.L -II' => ['Ricardo Jesus Meza Espinal'],
-            'UNIGAS HOME S.A.C.' => ['Ronaldo Piero Navarro Endara'],
-            'CITV UNIGAS S.A.C.' => ['Adrian Suarez Perez'],
-            'UNIGAS CONVERSIONES S.A.C.' => ['Jhon Antonio Diaz Lobo', 'Ronaldo Piero Navarro Endara'],
-            'MISHAEL PERU S.A.C.' => ['Jhonatan Michael Basilio Soncco', 'Jhon Antonio Diaz Lobo', 'Gris Yordin Bonifacio Rivera'],
-            'INVERSIONES FAGONI S.A.C.' => ['Elmer Jesus Canares Minaya'],
-            'CORPORACIÓN PERÚ GAS FJA E.I.R.L.' => ['Jhunior Meza Arroyo', 'Cristhian Smith Huanay Condor'],
-            'IMPORTACIONES STAR GAS S.A.C' => ['Gianella Isabel Sanchez Herrera', 'Cristhian David Saenz Nuñez'],
-            'MEGA FLASH GNV S.A.C' => ['Rolly Garcia Barrozo', 'Oscar Enrique Soto Vega'],
-            'MEGA FLASH GNV S.A.C. - SANTA ROSA' => ['Rolly Garcia Barrozo', 'Oscar Enrique Soto Vega'],
-            'J.R. AUTOMOTRICES S.A.C.' => ['Jaison Aurelio Aquino Antunez', 'Jhon Antonio Diaz Lobo', 'Elmer Jesus Canares Minaya', 'Erick Daniel Pachas Sanchez'],
-            'CONVERSIONES SERPEGAS S.A.C. - 2' => ['Emanuel Fernando Salazar Martinez'],
-            'REYCICAR S.A.C.' => ['Cristhian David Saenz Nuñez'],
-            'REYGAS S.A.C. II' => ['Jennifer Alexandra Villarreal Polo'],
-            'AUTOTRONICA JOEL CARS' => ['Luis Alberto Esteban Torres'], 
-            'AUTOTRONICA JOEL CARS E.I.R.L. - II' => ['Luis Alberto Esteban Torres']
-        ];
-        
-        $this->asistir = $this->mtg3->groupBy('taller')->map(function ($items) use ($mapaTalleresInspectores) {
-            $taller = $items->first()['taller'];
-            $inspectoresDesignados = $mapaTalleresInspectores[$taller] ?? null;
-            $itemsFiltrados = $items;
-
-            if ($inspectoresDesignados) {
-                $itemsFiltrados = $items->filter(function ($item) use ($inspectoresDesignados) {
-                    return in_array($item['inspector'], $inspectoresDesignados);
-                });
-            }
-
-            return [
-                'taller' => $taller,
-                'encargado' => $itemsFiltrados->first()['representante'] ?? null,
-                'total' => $itemsFiltrados->sum('precio'),
-            ];
-        })->filter(function ($data) { // Filtrar talleres cuyo total sea mayor que 0
-            return $data['total'] > 0;
-        })->sortBy('taller');
-
-        $this->semanales = $this->asistir->filter(function ($item) {
-            return in_array($item['taller'], $this->idsTabla1);
-        });
-
-        $this->diarios = $this->asistir->filter(function ($item) {
-            return in_array($item['taller'], $this->idsTabla2);
-        });
-    }
-
-
-    
-    public function exportarExcel($exportData)
-    {
-        return Excel::download(new ReporteCalcularExport2($exportData), 'reporte_calculo.xlsx');
-    }
-
-
-    //FUNCIONES PARA REPORTE 1
     public function generaData()
     {
         $tabla = new Collection();
@@ -314,7 +218,7 @@ class ReporteCalcularGasol extends Component
         return $tabla;
     }
 
-    public function encontrarDiferenciaPorPlaca($lista1, $lista2)
+    /*public function encontrarDiferenciaPorPlaca($lista1, $lista2)
     {
         //$diferencias = [];
         $diferencias = collect();
@@ -345,7 +249,7 @@ class ReporteCalcularGasol extends Component
         }
 
         return $diferencias;
-    }
+    }*/
 
     public function cargaServiciosGasolution()
     {
@@ -419,7 +323,97 @@ class ReporteCalcularGasol extends Component
         // return $precios;
     }
 
+
     //FUNCIONES PARA REPORTE 2
+    public function procesar2()
+    {
+        //$this->validate();
+        $this->mtg = $this->generaData2();
+        $this->gasol = $this->cargaServiciosGasolution2();
+        $this->mtg = $this->mtg->map(function ($item) {
+            $item['placa'] = trim($item['placa']);
+            $item['inspector'] = trim($item['inspector']);
+            $item['taller'] = trim($item['taller']);
+            return $item;
+        });
+        $this->gasol = $this->gasol->map(function ($item) {
+            $item['placa'] = trim($item['placa']);
+            $item['inspector'] = trim($item['inspector']);
+            $item['taller'] = trim($item['taller']);
+            return $item;
+        });
+        //$this->discrepancias = $this->encontrarDiferenciaPorPlaca2($this->gasol, $this->mtg);
+        $this->discrepancias = $this->encontrarDiferenciaPorPlaca($this->gasol, $this->mtg, false);
+        //dd($this->discrepancias);
+        //Merge para combinar mtg y discrepancias -  strtolower para ignorar Mayusculas y Minusculas 
+        $this->mtg2 = $this->mtg->merge($this->discrepancias, function ($item1, $item2) {
+            $inspector1 = strtolower($item1['inspector']);
+            $inspector2 = strtolower($item2['inspector']);
+            $taller1 = strtolower($item1['taller']);
+            $taller2 = strtolower($item2['taller']);
+            $comparison = strcasecmp($inspector1 . $taller1, $inspector2 . $taller2);
+            return $comparison;
+        });
+        // Filtrar excluir externos a gascar
+        $this->mtg3 = $this->mtg2->filter(function ($item) {
+            return !(
+                ($item['tipo_modelo'] == 'App\Models\Certificacion' || $item['tipo_modelo'] == 'App\Models\CertificacionPendiente') &&
+                ($item['taller'] == 'GASCAR CONVERSIONES S.A.C' || $item['taller'] == 'REYCICAR S.A.C.') &&
+                $item['externo'] == 1
+            );
+        });
+
+        // Definir relacion entre talleres e inspectores
+        $mapaTalleresInspectores = [
+            'ARTURO MOTORS S.A.C.' => ['Miguel Alexis Lacerna Aycachi'],
+            'LIFE GAS COMPANY S.A.C.' => ['Julio Roger Cabanillas Cornejo'],
+            'GREEN ENERGY PERU S.A.C' => ['Gris Yordin Bonifacio Rivera'],
+            'WILTON MOTORS E.I.R.L -II' => ['Ricardo Jesus Meza Espinal'],
+            'UNIGAS HOME S.A.C.' => ['Ronaldo Piero Navarro Endara'],
+            'CITV UNIGAS S.A.C.' => ['Adrian Suarez Perez'],
+            'UNIGAS CONVERSIONES S.A.C.' => ['Jhon Antonio Diaz Lobo', 'Ronaldo Piero Navarro Endara'],
+            'MISHAEL PERU S.A.C.' => ['Jhonatan Michael Basilio Soncco', 'Jhon Antonio Diaz Lobo', 'Gris Yordin Bonifacio Rivera'],
+            'INVERSIONES FAGONI S.A.C.' => ['Elmer Jesus Canares Minaya'],
+            'CORPORACIÓN PERÚ GAS FJA E.I.R.L.' => ['Jhunior Meza Arroyo', 'Cristhian Smith Huanay Condor'],
+            'IMPORTACIONES STAR GAS S.A.C' => ['Gianella Isabel Sanchez Herrera', 'Cristhian David Saenz Nuñez'],
+            'MEGA FLASH GNV S.A.C' => ['Rolly Garcia Barrozo', 'Oscar Enrique Soto Vega'],
+            'MEGA FLASH GNV S.A.C. - SANTA ROSA' => ['Rolly Garcia Barrozo', 'Oscar Enrique Soto Vega'],
+            'J.R. AUTOMOTRICES S.A.C.' => ['Jaison Aurelio Aquino Antunez', 'Jhon Antonio Diaz Lobo', 'Elmer Jesus Canares Minaya', 'Erick Daniel Pachas Sanchez'],
+            'CONVERSIONES SERPEGAS S.A.C. - 2' => ['Emanuel Fernando Salazar Martinez'],
+            'REYCICAR S.A.C.' => ['Cristhian David Saenz Nuñez'],
+            'REYGAS S.A.C. II' => ['Jennifer Alexandra Villarreal Polo'],
+            'AUTOTRONICA JOEL CARS' => ['Luis Alberto Esteban Torres'],
+            'AUTOTRONICA JOEL CARS E.I.R.L. - II' => ['Luis Alberto Esteban Torres']
+        ];
+
+        $this->asistir = $this->mtg3->groupBy('taller')->map(function ($items) use ($mapaTalleresInspectores) {
+            $taller = $items->first()['taller'];
+            $inspectoresDesignados = $mapaTalleresInspectores[$taller] ?? null;
+            $itemsFiltrados = $items;
+
+            if ($inspectoresDesignados) {
+                $itemsFiltrados = $items->filter(function ($item) use ($inspectoresDesignados) {
+                    return in_array($item['inspector'], $inspectoresDesignados);
+                });
+            }
+
+            return [
+                'taller' => $taller,
+                'encargado' => $itemsFiltrados->first()['representante'] ?? null,
+                'total' => $itemsFiltrados->sum('precio'),
+            ];
+        })->filter(function ($data) { // Filtrar talleres cuyo total sea mayor que 0
+            return $data['total'] > 0;
+        })->sortBy('taller');
+
+        $this->semanales = $this->asistir->filter(function ($item) {
+            return in_array($item['taller'], $this->idsTabla1);
+        });
+
+        $this->diarios = $this->asistir->filter(function ($item) {
+            return in_array($item['taller'], $this->idsTabla2);
+        });
+    }
 
     public function generaData2()
     {
@@ -427,9 +421,9 @@ class ReporteCalcularGasol extends Component
         //TODO CERTIFICACIONES:
         $certificaciones = Certificacion::IdTalleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
-            /*->whereHas('Inspector', function ($query) {
+            ->whereHas('Inspector', function ($query) {
                 $query->whereNotIn('id', [117, 37, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62, 166, 124, 52]);
-            })*/
+            })
             ->where('pagado', 0)
             ->whereNotIn('estado', [2])
             ->get();
@@ -437,17 +431,17 @@ class ReporteCalcularGasol extends Component
         //TODO CER-PENDIENTES:
         $cerPendiente = CertificacionPendiente::IdTalleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
-            /*->whereHas('Inspector', function ($query) {
+            ->whereHas('Inspector', function ($query) {
                 $query->whereNotIn('id', [117, 37, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62, 166, 124, 52]);
-            })*/
+            })
             ->get();
 
         //TODO DESMONTES:
         $desmontes = Desmontes::IdTalleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
-            /*->whereHas('Inspector', function ($query) {
+            ->whereHas('Inspector', function ($query) {
                 $query->whereNotIn('id', [117, 37, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62, 166, 124, 52]);
-            })*/
+            })
             ->get();
 
         //unificando certificaciones     
@@ -515,42 +509,6 @@ class ReporteCalcularGasol extends Component
         return $mtg;
     }
 
-    public function encontrarDiferenciaPorPlaca2($lista1, $lista2)
-    {
-        $discrepancias = [];
-
-        foreach ($lista1 as $elemento1) {
-            $placa1 = $elemento1['placa'];
-            $inspector1 = $elemento1['inspector'];
-            $servicio1 = $elemento1['servicio'];
-            $encontrado = false;
-            // Excluir el servicio 'Revisión anual GNV' para que no muestre como discrepancia 'Activación de chip (Anual)'
-            foreach ($lista2 as $elemento2) {
-                $placa2 = $elemento2['placa'];
-                $inspector2 = $elemento2['inspector'];
-                $servicio2 = $elemento2['servicio'];
-
-                if ($placa1 === $placa2 && $inspector1 === $inspector2) {
-                    if (
-                        ($elemento2['tipo_modelo'] == 'App\Models\CertificacionPendiente' && $servicio1 == 'Revisión anual GNV') ||
-                        ($servicio2 == 'Conversión a GNV + Chip' && $servicio1 == 'Conversión a GNV')
-                    ) {
-                        $encontrado = true;
-                        break;
-                    } else if ($servicio1 === $servicio2) {
-                        $encontrado = true;
-                        break;
-                    }
-                }
-            }
-
-            if (!$encontrado) {
-                $diferencias[] = $elemento1;
-            }
-        }
-        return $discrepancias;
-    }
-
     public function cargaServiciosGasolution2()
     {
         $disc = new Collection();
@@ -599,5 +557,61 @@ class ReporteCalcularGasol extends Component
             $disc->push($data);
         }
         return $disc;
+    }
+
+    //FUNCIONES PARA AMBOS REPORTES
+    public function encontrarDiferenciaPorPlaca($lista1, $lista2, $useCollect = true)
+    {
+        // Dependiendo de $useCollect, se usará collect() o un array simple
+        $diferencias = $useCollect ? collect() : [];
+
+        foreach ($lista1 as $elemento1) {
+            $placa1 = $elemento1['placa'];
+            $inspector1 = $elemento1['inspector'];
+            $servicio1 = $elemento1['servicio'];
+            $encontrado = false;
+
+            foreach ($lista2 as $elemento2) {
+                $placa2 = $elemento2['placa'];
+                $inspector2 = $elemento2['inspector'];
+                $servicio2 = $elemento2['servicio'];
+
+                // Verificar si las placas e inspectores son iguales
+                if ($placa1 === $placa2 && $inspector1 === $inspector2) {
+                    // Si estamos en el caso de procesar2, aplicar la lógica de exclusión especial
+                    if (
+                        ($elemento2['tipo_modelo'] == 'App\Models\CertificacionPendiente' && $servicio1 == 'Revisión anual GNV') ||
+                        ($servicio2 == 'Conversión a GNV + Chip' && $servicio1 == 'Conversión a GNV')
+                    ) {
+                        $encontrado = true;
+                        break;
+                    } else if ($servicio1 === $servicio2) {
+                        $encontrado = true;
+                        break;
+                    }
+                }
+            }
+
+            // Si no fue encontrado, agregar a la lista de diferencias
+            if (!$encontrado) {
+                if ($useCollect) {
+                    $diferencias->push(collect($elemento1));
+                } else {
+                    $diferencias[] = $elemento1;
+                }
+            }
+        }
+
+        return $diferencias;
+    }
+
+    public function exportarExcelExterno($datae)
+    {
+        return Excel::download(new ReporteCalcularExport2($datae), 'reporte_Externos.xlsx');
+    }
+
+    public function exportarExcelRsmn($data)
+    {
+        return Excel::download(new ReporteTallerRsmnExport($data), 'reporte_TallerResumen.xlsx');
     }
 }

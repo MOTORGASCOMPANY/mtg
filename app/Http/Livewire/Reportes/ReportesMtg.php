@@ -27,6 +27,7 @@ class ReportesMtg extends Component
     public $grupoinspectores;
     public $tabla, $diferencias, $importados, $chartData;
     public $user;
+    public $certNoImportadas;
 
 
 
@@ -70,8 +71,8 @@ class ReportesMtg extends Component
             $item['taller'] = trim($item['taller']);
             return $item;
         });
+
         $this->diferencias = $this->encontrarDiferenciaPorPlaca($this->importados, $this->tabla);
-        //dd($this->diferencias);
 
         // Generar datos para gráficos
         $chartData = $this->generateChartData();
@@ -79,7 +80,7 @@ class ReportesMtg extends Component
         // Emitir evento Livewire para actualizar los datos del gráfico en JavaScript
         $this->emit('updateChartData', $chartData);
     }
-
+    
     public function generateChartData()
     {
         // Agrupar por servicio
@@ -103,7 +104,7 @@ class ReportesMtg extends Component
     {
         $datosCombinados = $this->tabla->concat($this->diferencias);
         $data = $datosCombinados;
-        if ($data) {
+        if ($data->isNotEmpty()) {
             $fecha = now()->format('d-m-Y');
             return Excel::download(new ReporteCalcularExport($data), 'ReporteCalcular' . $fecha . '.xlsx');
         }
@@ -149,14 +150,16 @@ class ReportesMtg extends Component
             $certificaciones = Certificacion::idTalleres($this->taller)
                 ->IdInspectores($this->ins)
                 ->IdTipoServicio($this->servicio)
-                ->whereHas('Inspector', function ($query) {
+                /*->whereHas('Inspector', function ($query) {
                     $query->whereNotIn('id', [37, 117, 201]);
-                })
+                })*/
                 ->rangoFecha($this->fechaInicio, $this->fechaFin)
                 ->where('pagado', 0)
                 //->whereIn('estado', [3, 1])
                 ->get();
 
+            // Obtener los registros de ServiciosImportados para verificar las diferencias
+            $importados = $this->cargaServiciosGasolution();
             //TODO CER-PENDIENTES PARA OFICINA:
             $cerPendiente = CertificacionPendiente::idTalleres($this->taller)
                 ->IdInspectores($this->ins)
@@ -182,6 +185,20 @@ class ReportesMtg extends Component
 
         //UNIFICANDO CERTIFICACIONES    
         foreach ($certificaciones as $certi) {
+            // Inicializamos la bandera de si está en ServiciosImportados
+            $existeEnImportados = false;
+
+            // Verificar si la certificación actual está en ServiciosImportados
+            foreach ($importados as $importado) {
+                if (
+                    $certi->Vehiculo->placa == $importado['placa'] && 
+                    $certi->Inspector->name == $importado['inspector'] && 
+                    $certi->Servicio->tipoServicio->descripcion == $importado['servicio']
+                ) {
+                    $existeEnImportados = true;
+                    break;
+                }
+            }
             //modelo preliminar
             $data = [
                 "id" => $certi->id,
@@ -197,6 +214,7 @@ class ReportesMtg extends Component
                 "externo" => $certi->externo,
                 "tipo_modelo" => $certi::class,
                 "fecha" => $certi->created_at,
+                "solo_en_certificacion" => !$existeEnImportados
 
             ];
             $tabla->push($data);
@@ -245,7 +263,6 @@ class ReportesMtg extends Component
         $this->grupoinspectores = $tabla->groupBy('inspector');
         return $tabla;
     }
-
 
     /*public function encontrarDiferenciaPorPlaca($lista1, $lista2)
     {
@@ -311,14 +328,12 @@ class ReportesMtg extends Component
             $servicio1 = $elemento1['servicio'];
             $encontrado = false;
 
-
-
             foreach ($lista2 as $elemento2) {
                 $placa2 = $elemento2['placa'];
                 $inspector2 = $elemento2['inspector'];
                 $servicio2 = $elemento2['servicio'];
 
-                /* Igualar el modelo 'App\Models\CertificacionPendiente' que es el servicio 'Activación de chip (Anual)' con el servicio 'Revisión anual GNV' para que no muestre como discrepancia 
+                /*Igualar el modelo 'App\Models\CertificacionPendiente' que es el servicio 'Activación de chip (Anual)' con el servicio 'Revisión anual GNV' para que no muestre como discrepancia 
                 if ($elemento2['tipo_modelo'] == 'App\Models\CertificacionPendiente') {
                     //dd($elemento1);
                     if ($placa1 === $placa2 && $inspector1 === $inspector2 && $servicio1 == 'Revisión anual GNV') {
@@ -368,8 +383,6 @@ class ReportesMtg extends Component
 
         return $diferencias;
     }
-
-
 
     public function cargaServiciosGasolution()
     {

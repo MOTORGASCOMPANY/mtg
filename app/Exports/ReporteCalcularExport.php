@@ -92,6 +92,12 @@ class ReporteCalcularExport implements FromCollection, WithHeadings, WithMapping
 
         $externo = isset($data['externo']) ? ($data['externo'] == 1 ? 'Externo' : null) : null;
 
+        // Definir el valor en la columna "Observaciones" para diferenciar si solo está en Certificacion
+        $observacion = isset($data['solo_en_certificacion']) && $data['solo_en_certificacion'] ? 'null' : '';
+        // Concatenar externoyanulado y observacion
+        $observacionFinal = trim($externoyanulado . ($externoyanulado && $observacion ? ', ' : '') . $observacion);
+        $observacionFinal = $observacionFinal !== '' ? $observacionFinal : null; // Si está vacío, poner null
+
         $mappedData = [];
 
         switch ($data['tipo_modelo']) {
@@ -105,7 +111,7 @@ class ReporteCalcularExport implements FromCollection, WithHeadings, WithMapping
                     $secondPart,
                     $data['servicio'] ?? 'N.A',
                     '',
-                    $externoyanulado ?? null,
+                    $observacionFinal ?? null,
                     $precio ?? 'S.P',
                     'certificacion',
                 ];
@@ -185,7 +191,7 @@ class ReporteCalcularExport implements FromCollection, WithHeadings, WithMapping
                     ->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
             }
 
-            // Colorear de rojo las filas de certificaciones anuladas
+            // Colorear de amarillo las filas de certificaciones anuladas
             $dataRow = $this->data[$i - 2]; // Ajustar índice por la fila de encabezado
             if ($dataRow['tipo_modelo'] === 'App\Models\Certificacion' && $dataRow['estado'] == 2) {
                 $sheet->getStyle('A' . $i . ':J' . $i)->applyFromArray([

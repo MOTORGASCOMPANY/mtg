@@ -157,7 +157,6 @@
                     </div>
                     @foreach ($grupoinspectores as $nombre => $certificacion)
                         <div class="bg-gray-200  px-8 py-4 rounded-xl w-full mt-4">
-
                             <div class="p-2 w-full justify-between m-auto flex items-space-around">
                                 <h2 class="text-indigo-600 text-xl font-bold mb-4">{{ $nombre }}</h2>
                             </div>
@@ -210,7 +209,6 @@
                                                     </th>
                                                 </tr>
                                             </thead>
-
                                             <tbody>
                                                 @foreach ($certificacion as $key => $data)
                                                     <tr class="border-b dark:border-neutral-500 bg-orange-200">
@@ -363,7 +361,6 @@
                 <!-- Tabla discrepancias -->
                 <div class="bg-gray-200  px-8 py-4 rounded-xl w-full mt-4">
                     <h2 class="text-indigo-600 text-xl font-bold mb-4">Discrepancias</h2>
-
                     @if (!empty($diferencias) && count($diferencias) > 0)
                         <div class="overflow-x-auto m-auto w-full">
                             <div class="inline-block min-w-full py-2 sm:px-6">
@@ -440,6 +437,9 @@
                 </div>
             @endif
         </div>
+
+
+        
         {{-- JS --}}
         @push('js')
             <script>
@@ -469,7 +469,6 @@
                     });
                 });
             </script>
-
             <script>
                 document.addEventListener('alpine:init', () => {
                     Alpine.data('inspectorFilter', () => ({

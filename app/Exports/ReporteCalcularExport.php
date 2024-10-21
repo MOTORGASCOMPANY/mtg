@@ -93,10 +93,15 @@ class ReporteCalcularExport implements FromCollection, WithHeadings, WithMapping
         $externo = isset($data['externo']) ? ($data['externo'] == 1 ? 'Externo' : null) : null;
 
         // Definir el valor en la columna "Observaciones" para diferenciar si solo está en Certificacion
-        $observacion = isset($data['solo_en_certificacion']) && $data['solo_en_certificacion'] ? 'null' : '';
+        $observacion = isset($data['solo_en_certificacion']) && $data['solo_en_certificacion'] ? 'MTG' : '';
+
         // Concatenar externoyanulado y observacion
         $observacionFinal = trim($externoyanulado . ($externoyanulado && $observacion ? ', ' : '') . $observacion);
         $observacionFinal = $observacionFinal !== '' ? $observacionFinal : null; // Si está vacío, poner null
+
+        // Concatenar externo y observacion
+        $obserFinalPendi = trim($externo . ($externo && $observacion ? ', ' : '') . $observacion);
+        $obserFinalPendi = $obserFinalPendi !== '' ? $obserFinalPendi : null; // Si está vacío, poner null
 
         $mappedData = [];
 
@@ -126,7 +131,7 @@ class ReporteCalcularExport implements FromCollection, WithHeadings, WithMapping
                     $data['placa'] ?? 'EN TRAMITE',
                     $data['servicio'] ?? 'N.A',
                     '',
-                    $externo ?? null,
+                    $obserFinalPendi ?? null,
                     $precio ?? 'S.P',
                     'certificacion pendiente',
                 ];

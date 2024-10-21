@@ -80,7 +80,7 @@ class ReportesMtg extends Component
         // Emitir evento Livewire para actualizar los datos del gráfico en JavaScript
         $this->emit('updateChartData', $chartData);
     }
-    
+
     public function generateChartData()
     {
         // Agrupar por servicio
@@ -113,7 +113,8 @@ class ReportesMtg extends Component
     public function generaData()
     {
         $tabla = new Collection();
-
+        // Obtener los registros de ServiciosImportados para verificar las diferencias
+        $importados = $this->cargaServiciosGasolution();
         if ($this->user->hasRole('inspector')) {
             //TODO CERTIFICACIONES PARA INSPECTOR:
             $certificaciones = Certificacion::idTalleres($this->taller)
@@ -150,16 +151,14 @@ class ReportesMtg extends Component
             $certificaciones = Certificacion::idTalleres($this->taller)
                 ->IdInspectores($this->ins)
                 ->IdTipoServicio($this->servicio)
-                /*->whereHas('Inspector', function ($query) {
+                ->whereHas('Inspector', function ($query) {
                     $query->whereNotIn('id', [37, 117, 201]);
-                })*/
+                })
                 ->rangoFecha($this->fechaInicio, $this->fechaFin)
                 ->where('pagado', 0)
                 //->whereIn('estado', [3, 1])
-                ->get();
-
-            // Obtener los registros de ServiciosImportados para verificar las diferencias
-            $importados = $this->cargaServiciosGasolution();
+                ->get();           
+            
             //TODO CER-PENDIENTES PARA OFICINA:
             $cerPendiente = CertificacionPendiente::idTalleres($this->taller)
                 ->IdInspectores($this->ins)
@@ -171,7 +170,7 @@ class ReportesMtg extends Component
                 //->where('estado', 1)   //Analizar esto - se comento porque algunas cer-pendientes se realizan en la misma semana y no muestra ni activacion ni revision
                 //->whereNull('idCertificacion') //Analizar esto - se comento porque algunas cer-pendientes se realizan en la misma semana y no muestra ni activacion ni revision
                 ->get();
-
+            
             //TODO DESMONTES PARA OFICINA:
             $desmontes = Desmontes::idTalleres($this->taller)
                 ->IdInspectores($this->ins)
@@ -190,15 +189,35 @@ class ReportesMtg extends Component
 
             // Verificar si la certificación actual está en ServiciosImportados
             foreach ($importados as $importado) {
+                // Comparación por placa e inspector
                 if (
-                    $certi->Vehiculo->placa == $importado['placa'] && 
-                    $certi->Inspector->name == $importado['inspector'] && 
-                    $certi->Servicio->tipoServicio->descripcion == $importado['servicio']
+                    $certi->Vehiculo->placa == $importado['placa'] &&
+                    $certi->Inspector->name == $importado['inspector']
                 ) {
-                    $existeEnImportados = true;
-                    break;
+                    // Verificar si el servicio coincide o si es el caso especial
+                    if (
+                        $certi->Servicio->tipoServicio->descripcion == $importado['servicio'] ||
+                        (
+                            $importado['servicio'] == 'Conversión a GNV' &&
+                            $certi->Servicio->tipoServicio->descripcion == 'Conversión a GNV + Chip'
+                        )
+                    ) {
+                        $existeEnImportados = true;
+    
+                        // Actualizar el servicio a 'Conversión a GNV + Chip' en caso de coincidencia especial
+                        if ($importado['servicio'] == 'Conversión a GNV') {
+                            $importado['servicio'] = 'Conversión a GNV + Chip';
+                        }
+    
+                        break;
+                    }
                 }
             }
+
+            // Lógica para determinar si la observación será 'null' solo para los servicios específicos
+            $serviciosEspecificos = ['Revisión anual GNV', 'Activación de chip (Anual)', 'Conversión a GNV + Chip'];
+            $soloEnCertificacion = !$existeEnImportados && in_array($certi->Servicio->tipoServicio->descripcion, $serviciosEspecificos);
+
             //modelo preliminar
             $data = [
                 "id" => $certi->id,
@@ -214,13 +233,38 @@ class ReportesMtg extends Component
                 "externo" => $certi->externo,
                 "tipo_modelo" => $certi::class,
                 "fecha" => $certi->created_at,
-                "solo_en_certificacion" => !$existeEnImportados
+                //"solo_en_certificacion" => !$existeEnImportados
+                "solo_en_certificacion" => $soloEnCertificacion
 
             ];
             $tabla->push($data);
         }
 
         foreach ($cerPendiente as $cert_pend) {
+            // Inicializamos la bandera de si está en ServiciosImportados
+            $existeEnImportados = false;
+
+            // Verificar si la certificación actual está en ServiciosImportados
+            foreach ($importados as $importado) {
+                if (
+                    $cert_pend->Vehiculo->placa == $importado['placa'] &&
+                    $cert_pend->Inspector->name == $importado['inspector']
+                ) {
+                    if (
+                        $importado['servicio'] == 'Revisión anual GNV' ||
+                        $importado['servicio'] == 'Activación de chip (Anual)'
+                    ) {
+                        $existeEnImportados = true;
+    
+                        // Actualizar el servicio en caso de coincidencia especial
+                        if ($importado['servicio'] == 'Revisión anual GNV') {
+                            $importado['servicio'] = 'Activación de chip (Anual)';
+                        }
+    
+                        break;
+                    }
+                }
+            }
             //modelo preliminar
             $data = [
                 "id" => $cert_pend->id,
@@ -236,6 +280,7 @@ class ReportesMtg extends Component
                 "externo" => $cert_pend->externo,
                 "tipo_modelo" => $cert_pend::class,
                 "fecha" => $cert_pend->created_at,
+                "solo_en_certificacion" => !$existeEnImportados
             ];
             $tabla->push($data);
         }
@@ -366,6 +411,9 @@ class ReportesMtg extends Component
                     if (
                         ($elemento2['tipo_modelo'] == 'App\Models\CertificacionPendiente' && $servicio1 == 'Revisión anual GNV') ||
                         ($servicio2 == 'Conversión a GNV + Chip' && $servicio1 == 'Conversión a GNV')
+                        /*($servicio1 == 'Revisión anual GNV' && $servicio2 == 'Activación de chip (Anual)') ||
+                        ($servicio1 == 'Conversión a GNV' && $servicio2 == 'Conversión a GNV + Chip') ||
+                        $servicio1 === $servicio2*/
                     ) {
                         $encontrado = true;
                         break;

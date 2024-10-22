@@ -271,16 +271,26 @@
         </select>
         <x-jet-input-error for="taller.idDistrito"/>
     </div>
-    <div class="mb-4 w-full justify-start items-center">
-        <div class="w-full ml-0 md:w-2/6 flex justify-start items-center">                                        
-            <x-jet-input type="checkbox" wire:model="taller.autorizado_glp" class="w-4 h-4 text-indigo-600 bg-white border-gray-300 rounded outline-none hover:cursor-pointer focus:ring-indigo-600  focus:ring-1 dark:bg-gray-600 dark:border-gray-500" />
-            <x-jet-label value="Autorizado GLP" class="py-2 ml-2 text-sm font-medium text-gray-900 select-none hover:cursor-pointer " />
+    <div class="mb-4 w-full flex flex-wrap justify-start items-center">
+        <div class="w-full ml-0 md:w-1/4 flex justify-start items-center">                                        
+            <x-jet-input type="checkbox" wire:model="taller.autorizado_glp" class="w-4 h-4 text-indigo-600 bg-white border-gray-300 rounded outline-none hover:cursor-pointer focus:ring-indigo-600 focus:ring-1 dark:bg-gray-600 dark:border-gray-500" />
+            <x-jet-label value="Autorizado GLP" class="py-2 ml-2 text-sm font-medium text-gray-900 select-none hover:cursor-pointer" />
             <x-jet-input-error for="taller.autorizado_glp" />
         </div>
-        <div class="w-full md:w-2/6 flex justify-start items-center">                                        
-            <x-jet-input type="checkbox" wire:model="taller.autorizado_gnv" class="w-4 h-4 text-indigo-600 bg-white border-gray-300 rounded outline-none hover:cursor-pointer focus:ring-indigo-600  focus:ring-1 dark:bg-gray-600 dark:border-gray-500" />
-            <x-jet-label value="Autorizado GNV" class="py-2 ml-2 text-sm font-medium text-gray-900 select-none hover:cursor-pointer " />
+        <div class="w-full md:w-1/4 flex justify-start items-center">                                        
+            <x-jet-input type="checkbox" wire:model="taller.autorizado_gnv" class="w-4 h-4 text-indigo-600 bg-white border-gray-300 rounded outline-none hover:cursor-pointer focus:ring-indigo-600 focus:ring-1 dark:bg-gray-600 dark:border-gray-500" />
+            <x-jet-label value="Autorizado GNV" class="py-2 ml-2 text-sm font-medium text-gray-900 select-none hover:cursor-pointer" />
             <x-jet-input-error for="taller.autorizado_gnv" />
+        </div>
+        <div class="w-full md:w-1/4 flex justify-start items-center">                                        
+            <x-jet-input type="checkbox" wire:model="taller.es_diario" class="w-4 h-4 text-indigo-600 bg-white border-gray-300 rounded outline-none hover:cursor-pointer focus:ring-indigo-600 focus:ring-1 dark:bg-gray-600 dark:border-gray-500" />
+            <x-jet-label value="Es diario" class="py-2 ml-2 text-sm font-medium text-gray-900 select-none hover:cursor-pointer" />
+            <x-jet-input-error for="taller.es_diario" />
+        </div>
+        <div class="w-full md:w-1/4 flex justify-start items-center">                                        
+            <x-jet-input type="checkbox" wire:model="taller.es_semanal" class="w-4 h-4 text-indigo-600 bg-white border-gray-300 rounded outline-none hover:cursor-pointer focus:ring-indigo-600 focus:ring-1 dark:bg-gray-600 dark:border-gray-500" />
+            <x-jet-label value="Es semanal" class="py-2 ml-2 text-sm font-medium text-gray-900 select-none hover:cursor-pointer" />
+            <x-jet-input-error for="taller.es_semanal" />
         </div>
     </div>
 

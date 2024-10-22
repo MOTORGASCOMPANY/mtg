@@ -62,6 +62,8 @@ class Talleres extends Component
       'taller.servicios.*.precio'=> 'required|numeric',
       'taller.autorizado_gnv'=> 'nullable',
       'taller.autorizado_glp'=> 'nullable',
+      'taller.es_diario'=> 'nullable',
+      'taller.es_semanal'=> 'nullable',
       'taller.telefono'=> 'nullable',
       'taller.autorizacion'=> 'nullable',
       'logoNuevo'=>'nullable|mimes:jpg,bmp,png,jpeg,tif,tiff',

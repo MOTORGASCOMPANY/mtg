@@ -8,6 +8,7 @@ use App\Models\CertificacionPendiente;
 use App\Models\Desmontes;
 use App\Models\ServiciosImportados;
 use App\Models\Taller;
+use App\Models\TallerInspector;
 use App\Models\User;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Facades\Excel;
@@ -20,33 +21,6 @@ class Logona extends Component
     public $tabla, $diferencias, $importados, $aux;
     public $tabla2, $tabla3;
     public $semanales, $diarios;
-    public $idsTabla1 = ['ARTURO MOTORS S.A.C.',
-    'AUTOMOTRIZ D. SALAZAR',
-    'AUTOTRONICA JOEL CARS',
-    'AUTOTRONICA JOEL CARS E.I.R.L. - II',
-    'CITV UNIGAS S.A.C.',
-    'FACTORÍA ANGIE S.A.C.',
-    'GASCAR CONVERSIONES S.A.C',
-    'GEMOL E.I.R.L',
-    'GREEN ENERGY PERU S.A.C',
-    'INVERSIONES FAGONI S.A.C.',
-    'J.R. AUTOMOTRICES S.A.C.',
-    'LIFE GAS COMPANY S.A.C.',
-    'REYCICAR S.A.C.',
-    'REYGAS S.A.C. II',
-    'SERVICIOS MULTIPLES DR SRL',
-    'UNIGAS HOME S.A.C.',
-    'UNIGAS CONVERSIONES S.A.C.']; 
-    
-    public $idsTabla2 = ['CONVERSIONES SERPEGAS S.A.C. - 2',
-    'CORPORACIÓN PERÚ GAS FJA E.I.R.L.',
-    'IMPORTACIONES STAR GAS S.A.C',
-    'TALLER PRUEBA',
-    'MEGA FLASH GNV S.A.C',
-    'MEGA FLASH GNV S.A.C. - SANTA ROSA',
-    'MISHAEL PERU S.A.C.',
-    'PJ CONVERSIONES S.A.C.',
-    'WILTON MOTORS E.I.R.L -II']; 
 
     protected $listeners = ['exportarExcel'];
 
@@ -122,7 +96,7 @@ class Logona extends Component
             'CONVERSIONES SERPEGAS S.A.C. - 2' => ['Emanuel Fernando Salazar Martinez'],
             'REYCICAR S.A.C.' => ['Cristhian David Saenz Nuñez'],
             'REYGAS S.A.C. II' => ['Jennifer Alexandra Villarreal Polo'],
-            'AUTOTRONICA JOEL CARS' => ['Luis Alberto Esteban Torres'], 
+            'AUTOTRONICA JOEL CARS' => ['Luis Alberto Esteban Torres'],
             'AUTOTRONICA JOEL CARS E.I.R.L. - II' => ['Luis Alberto Esteban Torres']
         ];
 
@@ -137,17 +111,38 @@ class Logona extends Component
             return $data['total'] > 0;
          })->sortBy('taller');
         */
-        $this->aux = $this->tabla3->groupBy('taller')->map(function ($items) use ($mapaTalleresInspectores) {
+        /*$this->aux = $this->tabla3->groupBy('taller')->map(function ($items) use ($mapaTalleresInspectores) {
             $taller = $items->first()['taller'];
             $inspectoresDesignados = $mapaTalleresInspectores[$taller] ?? null;
             $itemsFiltrados = $items;
-        
+
+            if ($inspectoresDesignados) {
+                $itemsFiltrados = $items->filter(function ($item) use ($inspectoresDesignados) {
+                    return in_array($item['inspector'], $inspectoresDesignados);
+                });
+            }*/
+        $this->aux = $this->tabla3->groupBy('taller')->map(function ($items) {
+            $taller = $items->first()['taller'];
+
+            // Obtener los IDs de los inspectores para el taller
+            $inspectoresIds = TallerInspector::where('taller_id', Taller::where('nombre', $taller)->value('id'))
+                ->pluck('inspector_id')
+                ->toArray();
+
+            // Obtener los nombres de los inspectores usando los IDs
+            $inspectoresDesignados = User::whereIn('id', $inspectoresIds)
+                ->pluck('name')
+                ->toArray();
+
+            // Filtrar los ítems según los inspectores designados
+            $itemsFiltrados = $items;
+
             if ($inspectoresDesignados) {
                 $itemsFiltrados = $items->filter(function ($item) use ($inspectoresDesignados) {
                     return in_array($item['inspector'], $inspectoresDesignados);
                 });
             }
-    
+
             return [
                 'taller' => $taller,
                 'encargado' => $itemsFiltrados->first()['representante'] ?? null,
@@ -157,12 +152,13 @@ class Logona extends Component
             return $data['total'] > 0;
         })->sortBy('taller');
 
+        // Filtrar los talleres según los nuevos campos es_diario y es_semanal
         $this->semanales = $this->aux->filter(function ($item) {
-            return in_array($item['taller'], $this->idsTabla1);
-        });       
-        
+            return Taller::where('nombre', $item['taller'])->value('es_semanal') == 1;
+        });
+
         $this->diarios = $this->aux->filter(function ($item) {
-            return in_array($item['taller'], $this->idsTabla2);
+            return Taller::where('nombre', $item['taller'])->value('es_diario') == 1;
         });
     }
 
@@ -178,9 +174,9 @@ class Logona extends Component
         $certificaciones = Certificacion::IdTalleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
             //excluir inspectores
-            ->whereHas('Inspector', function ($query) {
+            /*->whereHas('Inspector', function ($query) {
                 $query->whereNotIn('id', [117, 37, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62, 166, 124, 52]);
-            })
+            })*/
             ->where('pagado', 0)
             ->whereNotIn('estado', [2])
             ->get();
@@ -188,17 +184,17 @@ class Logona extends Component
         //TODO CER-PENDIENTES:
         $cerPendiente = CertificacionPendiente::IdTalleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
-            ->whereHas('Inspector', function ($query) {
+            /*->whereHas('Inspector', function ($query) {
                 $query->whereNotIn('id', [117, 37, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62, 166, 124, 52]);
-            })
+            })*/
             ->get();
 
         //TODO DESMONTES:
         $desmontes = Desmontes::IdTalleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
-            ->whereHas('Inspector', function ($query) {
+            /*->whereHas('Inspector', function ($query) {
                 $query->whereNotIn('id', [117, 37, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62, 166, 124, 52]);
-            })
+            })*/
             ->get();
 
         //unificando certificaciones     
@@ -327,7 +323,7 @@ class Logona extends Component
 
         $dis = ServiciosImportados::Talleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
-            ->whereNotIn('certificador', $certExcluidos)
+            //->whereNotIn('certificador', $certExcluidos)
             ->get();
 
         foreach ($dis as $registro) {

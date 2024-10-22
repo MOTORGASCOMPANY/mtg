@@ -77,6 +77,7 @@ use App\Http\Livewire\ServicioModi;
 use App\Http\Livewire\ServicioTaller;
 use App\Http\Livewire\TallerRevision;
 use App\Http\Livewire\Tablas\Tiposservicios;
+use App\Http\Livewire\TalleresInspectores;
 use App\Http\Livewire\TiposDocumentosEmple;
 use App\Http\Livewire\TiposManual;
 use App\Http\Livewire\Usuarios;
@@ -269,6 +270,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
 
         //PARA SERVICIO CARTA ACLARATORIA
         Route::get('/ServicioCartaAclaratoria', ServicioCartaAclaratoria::class)->middleware('can:ServicioCarta')->name('ServicioCarta');
+
+        //PARA RELACION ENTRE TALLERES E INSPECTORES PARA RPTA TALLER RESUMEN
+        Route::get('/TalleresInspector', TalleresInspectores::class)->middleware('can:TalleresInspector')->name('TalleresInspector');
 
         //Prueba Fotos
         Route::get('/CargaFotos', CargaFotos::class)->name('CargaFotos');

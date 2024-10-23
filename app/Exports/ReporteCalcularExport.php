@@ -177,8 +177,22 @@ class ReporteCalcularExport implements FromCollection, WithHeadings, WithMapping
 
         // Aplicar estilos condicionales
         for ($i = 2; $i <= $lastRow; $i++) {
-            $style = $sheet->getCell('K' . $i)->getValue();
+            // Obtener el valor de la columna I (Observaciones)
+        $observaciones = $sheet->getCell('I' . $i)->getValue();
 
+        // Verificar si la observación contiene 'MTG'
+        if (strpos($observaciones, 'MTG') !== false) {
+            // Pintar la fila de color plomo (gris)
+            $sheet->getStyle('A' . $i . ':J' . $i)->applyFromArray([
+                'fill' => [
+                    'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                    'startColor' => ['rgb' => 'D3D3D3'], // Código de color para plomo (gris claro)
+                ],
+            ]);
+        }
+
+
+            $style = $sheet->getCell('K' . $i)->getValue();
             if ($style === 'certificacion') {
                 $sheet->getStyle('A1:J' . $sheet->getHighestRow())
                     ->getBorders()

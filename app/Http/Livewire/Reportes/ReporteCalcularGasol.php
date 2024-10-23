@@ -11,6 +11,7 @@ use App\Models\Certificacion;
 use App\Models\CertificacionPendiente;
 use App\Models\Desmontes;
 use App\Models\PrecioInspector;
+use App\Models\TallerInspector;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Collection;
@@ -82,7 +83,7 @@ class ReporteCalcularGasol extends Component
     public function render()
     {
         return view('livewire.reportes.reporte-calcular-gasol');
-    }    
+    }
 
     //JUNTAR REPORTES
     public function reportes()
@@ -386,9 +387,30 @@ class ReporteCalcularGasol extends Component
             'AUTOTRONICA JOEL CARS E.I.R.L. - II' => ['Luis Alberto Esteban Torres']
         ];
 
-        $this->asistir = $this->mtg3->groupBy('taller')->map(function ($items) use ($mapaTalleresInspectores) {
+        /*$this->asistir = $this->mtg3->groupBy('taller')->map(function ($items) use ($mapaTalleresInspectores) {
             $taller = $items->first()['taller'];
             $inspectoresDesignados = $mapaTalleresInspectores[$taller] ?? null;
+            $itemsFiltrados = $items;
+
+            if ($inspectoresDesignados) {
+                $itemsFiltrados = $items->filter(function ($item) use ($inspectoresDesignados) {
+                    return in_array($item['inspector'], $inspectoresDesignados);
+                });
+            }*/
+        $this->asistir = $this->mtg3->groupBy('taller')->map(function ($items) {
+            $taller = $items->first()['taller'];
+
+            // Obtener los IDs de los inspectores para el taller
+            $inspectoresIds = TallerInspector::where('taller_id', Taller::where('nombre', $taller)->value('id'))
+                ->pluck('inspector_id')
+                ->toArray();
+
+            // Obtener los nombres de los inspectores usando los IDs
+            $inspectoresDesignados = User::whereIn('id', $inspectoresIds)
+                ->pluck('name')
+                ->toArray();
+
+            // Filtrar los ítems según los inspectores designados
             $itemsFiltrados = $items;
 
             if ($inspectoresDesignados) {
@@ -406,12 +428,13 @@ class ReporteCalcularGasol extends Component
             return $data['total'] > 0;
         })->sortBy('taller');
 
+        // Filtrar los talleres según los nuevos campos es_diario y es_semanal
         $this->semanales = $this->asistir->filter(function ($item) {
-            return in_array($item['taller'], $this->idsTabla1);
+            return Taller::where('nombre', $item['taller'])->value('es_semanal') == 1;
         });
 
         $this->diarios = $this->asistir->filter(function ($item) {
-            return in_array($item['taller'], $this->idsTabla2);
+            return Taller::where('nombre', $item['taller'])->value('es_diario') == 1;
         });
     }
 

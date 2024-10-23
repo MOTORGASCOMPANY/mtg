@@ -174,9 +174,9 @@ class Logona extends Component
         $certificaciones = Certificacion::IdTalleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
             //excluir inspectores
-            /*->whereHas('Inspector', function ($query) {
+            ->whereHas('Inspector', function ($query) {
                 $query->whereNotIn('id', [117, 37, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62, 166, 124, 52]);
-            })*/
+            })
             ->where('pagado', 0)
             ->whereNotIn('estado', [2])
             ->get();
@@ -184,17 +184,17 @@ class Logona extends Component
         //TODO CER-PENDIENTES:
         $cerPendiente = CertificacionPendiente::IdTalleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
-            /*->whereHas('Inspector', function ($query) {
+            ->whereHas('Inspector', function ($query) {
                 $query->whereNotIn('id', [117, 37, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62, 166, 124, 52]);
-            })*/
+            })
             ->get();
 
         //TODO DESMONTES:
         $desmontes = Desmontes::IdTalleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
-            /*->whereHas('Inspector', function ($query) {
+            ->whereHas('Inspector', function ($query) {
                 $query->whereNotIn('id', [117, 37, 201, 59, 55, 61, 78, 176, 98, 122, 116, 120, 62, 166, 124, 52]);
-            })*/
+            })
             ->get();
 
         //unificando certificaciones     
@@ -323,7 +323,7 @@ class Logona extends Component
 
         $dis = ServiciosImportados::Talleres($this->taller)
             ->RangoFecha($this->fechaInicio, $this->fechaFin)
-            //->whereNotIn('certificador', $certExcluidos)
+            ->whereNotIn('certificador', $certExcluidos)
             ->get();
 
         foreach ($dis as $registro) {
